@@ -1,0 +1,10 @@
+# Landscape 主题站点级覆盖配置
+# 覆盖 node_modules/hexo-theme-landscape/_config.yml 中的同名项
+
+menu:
+  Home: /
+  学习路径: /learning/
+  Archives: /archives
+
+links:
+  github: https://github.com/dongxuanmang
