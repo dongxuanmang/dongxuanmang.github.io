@@ -14,7 +14,7 @@
 <meta property="og:description" content="转型做 Agent 开发之后，我有个不好意思说出口的执念：总觉得 agent 干不好活，是因为模型不够聪明。于是换更好的模型、堆更长的上下文、找更玄的提示词——直到读完李博杰《深入理解 AI Agent》的第一章，才发现这本书开篇就在拆我的台。 公式书里给了一个看起来平平无奇的公式： 1Agent &#x3D; LLM + 上下文 + 工具  大脑、眼睛、手脚，没什么玄的。真正让我停下划线笔的是它的生产形态">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-15T13:51:56.000Z">
-<meta property="article:modified_time" content="2026-09-15T13:56:10.946Z">
+<meta property="article:modified_time" content="2026-09-15T13:59:34.478Z">
 <meta property="article:author" content="东玄蟒">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="Harness">
@@ -132,14 +132,10 @@
 </blockquote>
 <p>这话有实证。LangChain 在 Terminal Bench 2.0 上把得分从 52.8% 提到 66.5%，排行榜三十名开外冲进前五——改的不是模型，是 Harness：让 Agent 自动检查自己的执行结果、检测是否在绕圈、优化思考策略。</p>
 <p>各家模型越来越接近的今天，分出高下的地方，在模型之外。</p>
-<h2 id="扩张史"><a href="#扩张史" class="headerlink" title="扩张史"></a>扩张史</h2><p>第一章后半段的发展史，我读出了一个 pattern：<strong>观察空间和动作空间的扩张史</strong>。</p>
+<h2 id="一条线索"><a href="#一条线索" class="headerlink" title="一条线索"></a>一条线索</h2><p>第一章后半段的发展史，我读出了一条线索：观察空间和动作空间的扩张。</p>
 <p>最早，Deep Research、Coding、Computer Use 三条路线各自为政，各家 agent 活在各自的玻璃房里。Manus 是第一个把三者并进一个产品的——云端虚拟机里，虚拟浏览器把观察空间拉开，文件系统和命令行把动作空间拉开。</p>
 <p>到 OpenClaw 又往外推了一层：干脆跑在你自己的电脑上，本地优先。WhatsApp、Telegram 随叫随到；授权之后，Drive、Notion、本地文件——你散落在各处的数字生活——都进了同一个观察空间。</p>
-<p>回头看这条线：谁扩大了观察与动作空间，谁就重新定义了 agent 的能力边界。</p>
-<h2 id="我的位置"><a href="#我的位置" class="headerlink" title="我的位置"></a>我的位置</h2><p>读完第一章，最让我兴奋的反而是「约束、验证、纠正」这六个字。</p>
-<p>它们让我意识到，Agent 时代的治理层和后端的稳定性工程几乎是同构的：权限分级、结果校验、熔断回滚——这些我在大厂磨了几年的东西，正是 Claude Code 的 Harness 里占代码量大头的部分。书里特意点了一句：工具本身只占一小部分。</p>
-<p>模型大家用的都一样。差距在治理层。</p>
-<p>这可能就是我转型时最该占住的位置。</p>
+<p>当然，agent 的演进不止这一条线（评估、后训练、多智能体都在后头等着），但至少在第一章里，能力边界的每次挪动，都踩在观察与动作空间的扩张上。</p>
 <h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><p>第二章是全书最关键的一章（官方原话），讲上下文工程。在那之前，先把第一章的 <code>context</code> 实验跑起来——纸上得来终觉浅，最小 Harness 值得亲手搭一遍。</p>
 <hr>
 <p><em>参考来源：<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter1.md">《深入理解 AI Agent：设计原理与工程实践》第一章</a>，李博杰著，GitHub 开源。本文是<a href="/agent-book/">精读专题</a>第一篇，覆盖第一章「三要素与 Harness 工程」部分。</em></p>
@@ -147,7 +143,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidyX0ShSy4xbX2BN7kUnoAv" data-title="Agent 精读（一）：差距不在模型" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidgvJ1dUv_KIqJjCclIiXwf" data-title="Agent 精读（一）：差距不在模型" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
