@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>《深入理解 AI Agent》精读 | 东玄蟒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="《深入理解 AI Agent》精读 这是我的精读专题：逐章读李博杰的开源书《深入理解 AI Agent：设计原理与工程实践》，每一章写下我自己的理解和输出——不是摘抄，是用我的话重新讲一遍，加上我的追问和实践。  全书围绕一个公式展开： graph LR     LLM[&quot;🧠 LLM大脑&quot;] --- CTX[&quot;👁️ 上下文眼睛&quot;]     CTX --- TOOLS[&quot;🤲 工具手脚&quot;]">
+<meta property="og:type" content="website">
+<meta property="og:title" content="《深入理解 AI Agent》精读">
+<meta property="og:url" content="https://dongxuanmang.github.io/agent-book/index.html">
+<meta property="og:site_name" content="东玄蟒">
+<meta property="og:description" content="《深入理解 AI Agent》精读 这是我的精读专题：逐章读李博杰的开源书《深入理解 AI Agent：设计原理与工程实践》，每一章写下我自己的理解和输出——不是摘抄，是用我的话重新讲一遍，加上我的追问和实践。  全书围绕一个公式展开： graph LR     LLM[&quot;🧠 LLM大脑&quot;] --- CTX[&quot;👁️ 上下文眼睛&quot;]     CTX --- TOOLS[&quot;🤲 工具手脚&quot;]">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-15T14:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-15T13:20:43.871Z">
+<meta property="article:author" content="东玄蟒">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="东玄蟒" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<!-- hexo injector head_end start --><script src="/js/mermaid.min.js"></script><script>(function () {  function renderMermaid() {    if (!document.querySelector(".mermaid") || typeof mermaid === "undefined") return;    mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });  }  if (document.readyState === "loading") {    document.addEventListener("DOMContentLoaded", renderMermaid);  } else {    renderMermaid();  }})();</script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">东玄蟒</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">乱花渐欲迷人眼，浅草才能没马蹄</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/learning/">学习路径</a>
+        
+          <a class="main-nav-link" href="/agent-book/">Agent 精读</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/dongxuanmang"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://dongxuanmang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="page-" class="h-entry article article-type-page" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/agent-book/index.html" class="article-date">
+  <time class="dt-published" datetime="2026-09-15T14:30:00.000Z" itemprop="datePublished">2026-09-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      《深入理解 AI Agent》精读
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="《深入理解-AI-Agent》精读"><a href="#《深入理解-AI-Agent》精读" class="headerlink" title="《深入理解 AI Agent》精读"></a>《深入理解 AI Agent》精读</h1><blockquote>
+<p>这是我的精读专题：逐章读李博杰的<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">开源书《深入理解 AI Agent：设计原理与工程实践》</a>，<strong>每一章写下我自己的理解和输出</strong>——不是摘抄，是用我的话重新讲一遍，加上我的追问和实践。</p>
+</blockquote>
+<p>全书围绕一个公式展开：</p>
+<div class="mermaid">graph LR
+    LLM["🧠 LLM<br/>大脑"] --- CTX["👁️ 上下文<br/>眼睛"]
+    CTX --- TOOLS["🤲 工具<br/>手脚"]
+    TOOLS --- LLM
+    AGENT["Agent = LLM + 上下文 + 工具"]
+    style AGENT fill:#fff3cd,stroke:#b8860b</div>
+
+<p>进生产环境后同一个系统改写为 <strong>Agent &#x3D; Model + Harness</strong>，其中 Harness &#x3D; 上下文管理 + 工具接口 + 约束 + 验证 + 纠正——<strong>能跑的 Demo 与可靠产品之间的差距在 Harness，不在模型</strong>。这句是全书题眼，也正好打在我后端工程的积累上。</p>
+<h2 id="读法约定"><a href="#读法约定" class="headerlink" title="读法约定"></a>读法约定</h2><ul>
+<li>每章产出：一篇「我的理解」文章（按<a href="/2026/09/14/about-me/">我的写作方法</a>：痛点开场、递进讲清、结尾给行动），跑通该章至少一个 Starter 实验</li>
+<li>难度分级来自官方：🟢 入门 → 🔵 进阶 → 🟣 高级 → 🟡 工程 → 🔴 专家 → 🟠 应用</li>
+<li>完成的章在下面清单里变成链接</li>
+</ul>
+<h2 id="章节清单与我的输出"><a href="#章节清单与我的输出" class="headerlink" title="章节清单与我的输出"></a>章节清单与我的输出</h2><h3 id="构建篇（第-1–6-章）"><a href="#构建篇（第-1–6-章）" class="headerlink" title="构建篇（第 1–6 章）"></a>构建篇（第 1–6 章）</h3><table>
+<thead>
+<tr>
+<th align="center">章</th>
+<th>主题</th>
+<th align="center">官方难度</th>
+<th align="center">我的理解与输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td>AI Agent 入门：三要素、ReAct 循环、Harness 工程</td>
+<td align="center">🟢</td>
+<td align="center">📋 未开始</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td>上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章）</td>
+<td align="center">🟢</td>
+<td align="center">📋 未开始</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td>用户记忆和知识库：记忆策略、RAG、知识图谱</td>
+<td align="center">🔵</td>
+<td align="center">📋 未开始</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td>工具：MCP 协议、五类工具、主动工具发现</td>
+<td align="center">🔵</td>
+<td align="center">📋 未开始</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td>Coding Agent 与通用 Agent：代码是创造工具的元能力</td>
+<td align="center">🟣</td>
+<td align="center">📋 未开始</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td>交互：语音、Computer Use、机器人（模态 × 时序）</td>
+<td align="center">🟣</td>
+<td align="center">📋 未开始</td>
+</tr>
+</tbody></table>
+<h3 id="提升篇（第-7–10-章）"><a href="#提升篇（第-7–10-章）" class="headerlink" title="提升篇（第 7–10 章）"></a>提升篇（第 7–10 章）</h3><table>
+<thead>
+<tr>
+<th align="center">章</th>
+<th>主题</th>
+<th align="center">官方难度</th>
+<th align="center">我的理解与输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">7</td>
+<td>Agent 的评估：环境、指标、LLM-as-a-Judge</td>
+<td align="center">🟡</td>
+<td align="center">📋 未开始</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td>模型后训练：SFT&#x2F;RL、奖励设计、蒸馏</td>
+<td align="center">🔴</td>
+<td align="center">📋 未开始</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td>持续进化：从轨迹学习，四种更新载体</td>
+<td align="center">🟠</td>
+<td align="center">📋 未开始</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td>多 Agent 协作：A2A、失败模式、Agent 社会</td>
+<td align="center">🟠</td>
+<td align="center">📋 未开始</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>每读完一章，把「📋 未开始」替换成文章链接。实验代码在<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">书仓库</a>按章安装（Python 3.11–3.13，支持 uv 复现环境）。</p>
+</blockquote>
+<h2 id="为什么值得精读"><a href="#为什么值得精读" class="headerlink" title="为什么值得精读"></a>为什么值得精读</h2><ol>
+<li><strong>对路</strong>：我要做的就是生产级 agent，这本书的核心论点（差距在 Harness 不在模型）就是工程视角，和我的后端底子同构</li>
+<li><strong>能动手</strong>：每章配可复现实验，正好用 <a href="/learning/">学习路径</a> 里「自己造」的阶段做练手场</li>
+<li><strong>有对照</strong>：读的时候带着问题——我此前理解的 agent 开发和书里讲的差在哪？每篇笔记都会写这个对照</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/agent-book/index.html" data-id="cuidfLkPIYoyU0oSii57MJf6C" data-title="《深入理解 AI Agent》精读" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">九月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/14/about-me/">关于我</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 东玄蟒<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/learning/" class="mobile-nav-link">学习路径</a>
+  
+    <a href="/agent-book/" class="mobile-nav-link">Agent 精读</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
