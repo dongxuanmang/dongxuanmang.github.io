@@ -6,15 +6,15 @@
   
   <title>Agent 精读（一）：差距不在模型 | 东玄蟒</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="转型做 Agent 开发之后，我有个不好意思说出口的执念：总觉得 agent 干不好活，是因为模型不够聪明。于是换更好的模型、堆更长的上下文、找更玄的提示词——直到读完李博杰《深入理解 AI Agent》的第一章，才发现这本书开篇就在拆我的台。 公式书里给了一个看起来平平无奇的公式： 1Agent &#x3D; LLM + 上下文 + 工具  大脑、眼睛、手脚，没什么玄的。真正让我停下划线笔的是它的生产形态">
+  <meta name="description" content="读李博杰《深入理解 AI Agent》的第一章。全书的核心论点在开篇就摆了出来：**能跑的 Demo 和可靠的产品之间，差距不在模型，在 Harness。**以下是我的理解。 Agent &#x3D; Model + Harness书里给了一个看起来平平无奇的公式： 1Agent &#x3D; LLM + 上下文 + 工具  大脑、眼睛、手脚，没什么玄的。真正让我停下划线笔的是它的生产形态： 12Agent">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Agent 精读（一）：差距不在模型">
 <meta property="og:url" content="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/index.html">
 <meta property="og:site_name" content="东玄蟒">
-<meta property="og:description" content="转型做 Agent 开发之后，我有个不好意思说出口的执念：总觉得 agent 干不好活，是因为模型不够聪明。于是换更好的模型、堆更长的上下文、找更玄的提示词——直到读完李博杰《深入理解 AI Agent》的第一章，才发现这本书开篇就在拆我的台。 公式书里给了一个看起来平平无奇的公式： 1Agent &#x3D; LLM + 上下文 + 工具  大脑、眼睛、手脚，没什么玄的。真正让我停下划线笔的是它的生产形态">
+<meta property="og:description" content="读李博杰《深入理解 AI Agent》的第一章。全书的核心论点在开篇就摆了出来：**能跑的 Demo 和可靠的产品之间，差距不在模型，在 Harness。**以下是我的理解。 Agent &#x3D; Model + Harness书里给了一个看起来平平无奇的公式： 1Agent &#x3D; LLM + 上下文 + 工具  大脑、眼睛、手脚，没什么玄的。真正让我停下划线笔的是它的生产形态： 12Agent">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-15T13:51:56.000Z">
-<meta property="article:modified_time" content="2026-09-15T14:02:28.797Z">
+<meta property="article:modified_time" content="2026-09-15T14:06:36.637Z">
 <meta property="article:author" content="东玄蟒">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="Harness">
@@ -114,8 +114,8 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>转型做 Agent 开发之后，我有个不好意思说出口的执念：总觉得 agent 干不好活，是因为模型不够聪明。于是换更好的模型、堆更长的上下文、找更玄的提示词——直到读完李博杰<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">《深入理解 AI Agent》</a>的第一章，才发现这本书开篇就在拆我的台。</p>
-<h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h2><p>书里给了一个看起来平平无奇的公式：</p>
+        <p>读<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰《深入理解 AI Agent》</a>的第一章。全书的核心论点在开篇就摆了出来：**能跑的 Demo 和可靠的产品之间，差距不在模型，在 Harness。**以下是我的理解。</p>
+<h2 id="Agent-Model-Harness"><a href="#Agent-Model-Harness" class="headerlink" title="Agent &#x3D; Model + Harness"></a>Agent &#x3D; Model + Harness</h2><p>书里给了一个看起来平平无奇的公式：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Agent = LLM + 上下文 + 工具</span><br></pre></td></tr></table></figure>
 
 <p>大脑、眼睛、手脚，没什么玄的。真正让我停下划线笔的是它的生产形态：</p>
@@ -123,7 +123,7 @@
 
 <p>我原以为 Harness 是个工程脚手架，读完才发现它是个治理层。模型负责「想」，Harness 负责让「想」变成「可靠地做」——权限收口在它手上，验证在它手上，出错回滚也在它手上。</p>
 <p>而且书里把边界划得很死：Harness 在 Agent 边界内、<strong>模型之外</strong>。沙箱里随行动变化的文件、外部的数据库、网页、用户，统统算环境——哪怕它们和 Agent 跑在同一个进程里。这个边界以后判断「一段代码该不该归入 Harness」全靠它。</p>
-<h2 id="判词"><a href="#判词" class="headerlink" title="判词"></a>判词</h2><p>Agent 和外部世界打交道，只走两扇门：观察通道和动作接口。</p>
+<h2 id="许多问题只是接口问题"><a href="#许多问题只是接口问题" class="headerlink" title="许多问题只是接口问题"></a>许多问题只是接口问题</h2><p>Agent 和外部世界打交道，只走两扇门：观察通道和动作接口。</p>
 <p>上下文是眼睛。它不是我以前理解的「聊天记录」，而是每个决策点模型能看到的全部——环境观察、用户记忆、领域知识、自身状态、任务进展。没进上下文的信息，对模型来说不存在。</p>
 <p>工具是手脚。没被动作接口放行的操作，模型就算知道该怎么办，也只能停留在文字建议上。</p>
 <p>所以原文那句话，我愿意称之为全书第一章的判词：</p>
@@ -132,7 +132,7 @@
 </blockquote>
 <p>这话有实证。LangChain 在 Terminal Bench 2.0 上把得分从 52.8% 提到 66.5%，排行榜三十名开外冲进前五——改的不是模型，是 Harness：让 Agent 自动检查自己的执行结果、检测是否在绕圈、优化思考策略。</p>
 <p>各家模型越来越接近的今天，分出高下的地方，在模型之外。</p>
-<h2 id="扩张"><a href="#扩张" class="headerlink" title="扩张"></a>扩张</h2><p>第一章后半段的发展史，我读出了一个 pattern：<strong>观察空间和动作空间的扩张</strong>。</p>
+<h2 id="观察与动作空间的扩张"><a href="#观察与动作空间的扩张" class="headerlink" title="观察与动作空间的扩张"></a>观察与动作空间的扩张</h2><p>第一章后半段的发展史，我读出了一个 pattern：<strong>观察空间和动作空间的扩张</strong>。</p>
 <p>最早，Deep Research、Coding、Computer Use 三条路线各自为政，各家 agent 活在各自的玻璃房里。Manus 是第一个把三者并进一个产品的——云端虚拟机里，虚拟浏览器把观察空间拉开，文件系统和命令行把动作空间拉开。</p>
 <p>到 OpenClaw 又往外推了一层：干脆跑在你自己的电脑上，本地优先。WhatsApp、Telegram 随叫随到；授权之后，Drive、Notion、本地文件——你散落在各处的数字生活——都进了同一个观察空间。</p>
 <p>回头看这条线：谁扩大了观察与动作空间，谁就重新定义了 agent 的能力边界。</p>
@@ -143,7 +143,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidvV3qNBK_frh4bEbVX-Eg0" data-title="Agent 精读（一）：差距不在模型" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuiduQc5JLBCsLlPtahggTEsy" data-title="Agent 精读（一）：差距不在模型" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
