@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: dongxuanmang 的博客
-subtitle: '记录、思考与分享'
-description: '个人博客：技术记录与生活分享'
+title: 东玄蟒
+subtitle: '乱花渐欲迷人眼，浅草才能没马蹄'
+description: '东玄蟒的个人博客：AI Agent 开发转型笔记、AI 短视频赛道探索与投资思考'
 keywords:
-author: dongxuanmang
+author: 东玄蟒
 language: zh-CN
 timezone: 'Asia/Shanghai'
 
