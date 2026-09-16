@@ -1,5 +1,5 @@
 ---
-title: Agent 精读（四）：从 Demo 到生产，隔着 Harness
+title: Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计
 date: 2026-09-16 23:50:00
 categories:
   - Agent 精读
