@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Agent 精读（三）：模型即 Agent？循环只是搬到了服务端 | 东玄蟒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第三篇。读的是李博杰的开源书第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。  先补个尾巴：ReAct 循环第一篇留了个钩子：ReAct 循环没展开，这次补上。 Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考和行动两个词，循环其实有三个环节：模型先">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端">
+<meta property="og:url" content="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/index.html">
+<meta property="og:site_name" content="东玄蟒">
+<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第三篇。读的是李博杰的开源书第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。  先补个尾巴：ReAct 循环第一篇留了个钩子：ReAct 循环没展开，这次补上。 Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考和行动两个词，循环其实有三个环节：模型先">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-16T15:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-16T13:34:16.407Z">
+<meta property="article:author" content="东玄蟒">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="模型即 Agent">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="东玄蟒" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<!-- hexo injector head_end start --><script src="/js/mermaid.min.js"></script><script>(function () {  function renderMermaid() {    if (!document.querySelector(".mermaid") || typeof mermaid === "undefined") return;    mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });  }  if (document.readyState === "loading") {    document.addEventListener("DOMContentLoaded", renderMermaid);  } else {    renderMermaid();  }})();</script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">东玄蟒</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">乱花渐欲迷人眼，浅草才能没马蹄</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/learning/">学习路径</a>
+        
+          <a class="main-nav-link" href="/agent-book/">Agent 精读</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/dongxuanmang"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://dongxuanmang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-agent-book-ch1-model-as-agent" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/16/agent-book-ch1-model-as-agent/" class="article-date">
+  <time class="dt-published" datetime="2026-09-16T15:00:00.000Z" itemprop="datePublished">2026-09-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Agent 精读（三）：模型即 Agent？循环只是搬到了服务端
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第三篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。</p>
+</blockquote>
+<h2 id="先补个尾巴：ReAct-循环"><a href="#先补个尾巴：ReAct-循环" class="headerlink" title="先补个尾巴：ReAct 循环"></a>先补个尾巴：ReAct 循环</h2><p>第一篇留了个钩子：ReAct 循环没展开，这次补上。</p>
+<p>Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考和行动两个词，循环其实有三个环节：模型先思考该做什么，然后调用工具行动，再观察工具返回的结果，接着想下一步。想 → 做 → 看，不断循环，直到任务完成。</p>
+<p>上一轮工具返回的观察，就是下一轮思考的输入。这个循环要做的事，是让模型的每一步决策都踩在真实结果上，而不是踩在参数记忆里。</p>
+<h2 id="新范式：模型即-Agent"><a href="#新范式：模型即-Agent" class="headerlink" title="新范式：模型即 Agent"></a>新范式：模型即 Agent</h2><p>书里抛出的新范式叫「模型即 Agent」（Model as Agent）：先进模型通过后训练（特别是强化学习），把工具调用能力内化为原生能力——何时调用工具、调哪个、传什么参数，模型自己决定，不需要人工编排。</p>
+<p>听起来像框架要完。书里马上补了一句：恰恰相反，模型越强大，围绕模型构建的 Harness 越关键。空口无凭，上两个实验。</p>
+<h2 id="Kimi-K3：决策进了参数，执行没有"><a href="#Kimi-K3：决策进了参数，执行没有" class="headerlink" title="Kimi K3：决策进了参数，执行没有"></a>Kimi K3：决策进了参数，执行没有</h2><p>实验 1-2 用的是 Kimi K3：约 2.8 万亿参数的混合专家（MoE）模型——像一个专家团队，面对不同的问题自动派合适的专家上阵，能力和效率兼得。</p>
+<p>但要分清因果：让 K3 对工具调用熟练的不是参数多，是强化学习把决策策略写进了参数——何时调用、调用哪个、传什么参数，都由模型自主决定。书里给了一个直观的数字：它能连续执行 200～300 次工具调用而保持思考的一致性，多数模型在几十次后就开始退化。</p>
+<p>然后是我读这部分抓到的最重要的一句话：</p>
+<p><strong>编排循环并没有消失，而是从客户端移到了服务端，决策权则交给了模型。</strong></p>
+<p>K3 依然不能真正执行工具——<code>web_search</code>、<code>code_runner</code> 的真实实现在模型之外的基础设施里，由一个叫 Formula 的服务端脚本引擎运行。决策权交了出去，执行没有。</p>
+<h2 id="GPT-5-6：两个变化，都还在接口层"><a href="#GPT-5-6：两个变化，都还在接口层" class="headerlink" title="GPT-5.6：两个变化，都还在接口层"></a>GPT-5.6：两个变化，都还在接口层</h2><p>实验 1-3 用的是 GPT-5.6，两个变化：</p>
+<ol>
+<li><strong>自由格式工具调用</strong>（Freeform Tool Calling）：不再把参数打包成严格的 JSON，模型可以直接给工具发原始文本——一段 Python、一条 SQL。但书里特意补了一句：这是 API 参数格式的演进，而非模型架构的革新，客户端的工具调用循环逻辑一个字没变。</li>
+<li><strong>Deep Research 能力</strong>：Responses API 内置了联网搜索和代码解释器，在服务端形成「搜索 → 阅读 → 分析 → 再搜索」的闭环；而且模型在动手之前会先和用户交互，问几个澄清问题得到用户的真实意图——问的是「你偏好哪个数据源、要看哪些技术指标」，不是闷头去搜。</li>
+</ol>
+<p>两个变化都指向同一个方向：把编排从客户端往服务端收。但注意第一条的定性——连「不再拘泥 JSON」都只是接口层的演进，谈不上模型学会了什么新东西。</p>
+<h2 id="我的判断：搬了个家，没长出手"><a href="#我的判断：搬了个家，没长出手" class="headerlink" title="我的判断：搬了个家，没长出手"></a>我的判断：搬了个家，没长出手</h2><p>两个实验看完，我的判断是：<strong>「模型即 Agent」更多只是转移到了服务端，并没有真正让模型具备真实运行工具的能力。</strong></p>
+<div class="mermaid">graph TB
+    subgraph S1["传统形态：循环跑在客户端"]
+        A["模型<br/>决定下一步"] --> B["客户端 Harness<br/>执行工具"]
+        B --> C["观察<br/>结果回传"]
+        C --> A
+    end
+    subgraph S2["模型即 Agent：循环跑在服务端"]
+        D["模型<br/>决定下一步"] --> E["服务端 Harness<br/>执行工具<br/>(Kimi Formula / OpenAI 内置工具)"]
+        E --> F["观察<br/>结果回传"]
+        F --> D
+    end</div>
+
+<p>循环的结构一模一样，搬了位置而已。理由可以拆成两层：</p>
+<p>第一层，执行的本质是对真实环境产生状态变化，而模型只会生成 token——<strong>生成不等于执行</strong>。写 SQL 是 token，把一条 UPDATE 真的跑进生产数据库是另一回事。书里的论证很硬：强化学习写进参数的是决策，工具及其执行在模型之外的基础设施里完成。</p>
+<p>第二层是我自己的延伸：工具是实时的，而模型是现有数据集之下的产物。搜索结果、股价、天气每天都在变，训练数据永远是历史快照——工具的返回值没法提前内化进参数，只能在推理时现场取。这也顺手解释了书里实验 1-1 的现象：上下文里缺了工具执行结果时，模型会就地编造，因为它只剩参数记忆可用了。</p>
+<p>当然要留余地。书里对「模型吃掉 Harness」的立场是「方向认同、节奏务实」：决策这一层确实已经被内化了——这正是「模型即 Agent」的实质；执行这一层短期内看不到被吃掉的可能，因为它从来就不在参数里。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>第 1 章还剩最后一块：编排模式（工作流 vs 自主），下篇补上</li>
+<li>第一篇欠的 <code>context</code> 实验还挂着，和下篇一起跑</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter1.md">《深入理解 AI Agent：设计原理与工程实践》第 1 章「AI Agent 入门」</a>，李博杰著，GitHub 开源</li>
+<li>本篇覆盖第一章「ReAct 循环」与「模型即 Agent」（实验 1-2、1-3）；官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidYhZ1YhRYpEWk7OBuDH_WI" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/09/16/agent-book-ch2-context/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Agent 精读（二）：模型的学习，与上下文的构成</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/Harness/" style="font-size: 10px;">Harness</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">上下文工程</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">九月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/16/agent-book-ch1-model-as-agent/">Agent 精读（三）：模型即 Agent？循环只是搬到了服务端</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/16/agent-book-ch2-context/">Agent 精读（二）：模型的学习，与上下文的构成</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/15/agent-book-ch1-harness/">Agent 精读（一）：Agent 的能力边界，由 Harness 决定</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/14/about-me/">关于我</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 东玄蟒<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/learning/" class="mobile-nav-link">学习路径</a>
+  
+    <a href="/agent-book/" class="mobile-nav-link">Agent 精读</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
