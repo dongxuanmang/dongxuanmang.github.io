@@ -32,7 +32,7 @@ graph LR
 
 | 章 | 主题 | 官方难度 | 我的理解与输出 |
 | :--: | --- | :--: | :--: |
-| 1 | AI Agent 入门：三要素、ReAct 循环、Harness 工程 | 🟢 | ✅ [我的理解：Agent 的能力边界，由 Harness 决定](/2026/09/15/agent-book-ch1-harness/) |
+| 1 | AI Agent 入门：三要素、ReAct 循环、Harness 工程 | 🟢 | ✅ [能力边界由 Harness 决定](/2026/09/15/agent-book-ch1-harness/) · [模型即 Agent？循环只是搬到了服务端](/2026/09/16/agent-book-ch1-model-as-agent/) |
 | 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | 🔄 [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) |
 | 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 📋 未开始 |
 | 4 | 工具：MCP 协议、五类工具、主动工具发现 | 🔵 | 📋 未开始 |
