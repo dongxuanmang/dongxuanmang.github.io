@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 660" font-family="-apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif">
+  <defs>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f9e6e"/></marker>
+    <marker id="arr-gold" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b8860b"/></marker>
+    <marker id="arr-gray" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a93a0"/></marker>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d25360"/></marker>
+    <marker id="arr-dark" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4a5568"/></marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="660" fill="#ffffff"/>
+
+  <!-- 标题 -->
+  <text x="450" y="34" text-anchor="middle" font-size="24" font-weight="700" fill="#2b2b2b">能做事，更要可靠地做事：Harness 五要素循环</text>
+  <text x="450" y="60" text-anchor="middle" font-size="15.5" fill="#8a8578">Demo 与可靠产品之间的差距在 Harness —— 约束预防错误，验证发现偏差，纠正形成闭环</text>
+
+  <!-- Harness 边界框 -->
+  <rect x="250" y="92" width="620" height="530" rx="18" fill="#fffdf5" stroke="#b8860b" stroke-width="1.6" stroke-dasharray="7 5"/>
+  <rect x="352" y="80" width="416" height="26" rx="13" fill="#ffffff" stroke="#b8860b" stroke-width="1.2"/>
+  <text x="560" y="97" text-anchor="middle" font-size="15.5" font-weight="600" fill="#8f6607">Harness：Agent 边界内、模型之外</text>
+
+  <!-- Environment（框外） -->
+  <rect x="28" y="272" width="184" height="128" rx="14" fill="#eef1f4" stroke="#9aa7b3" stroke-width="1.4"/>
+  <text x="120" y="308" text-anchor="middle" font-size="16" font-weight="700" fill="#3d4753">Environment</text>
+  <text x="120" y="332" text-anchor="middle" font-size="14" fill="#5c6672">用户 · 数据库 · 网页</text>
+  <text x="120" y="352" text-anchor="middle" font-size="14" fill="#5c6672">物理世界 · 沙盒内进程</text>
+
+  <!-- 观察：Environment -> Context -->
+  <path d="M 100 272 L 100 149 L 392 149" fill="none" stroke="#2f9e6e" stroke-width="2" marker-end="url(#arr-green)"/>
+  <text x="190" y="139" text-anchor="middle" font-size="14.5" fill="#2f9e6e">观察（observation）</text>
+
+  <!-- 动作：Constrain -> Environment -->
+  <path d="M 400 345 L 218 345" fill="none" stroke="#8a93a0" stroke-width="2" marker-end="url(#arr-gray)"/>
+  <text x="306" y="334" text-anchor="middle" font-size="14.5" fill="#5c6672">动作（actions）</text>
+
+  <!-- 主链节点 -->
+  <!-- 1 Context -->
+  <rect x="400" y="120" width="320" height="58" rx="12" fill="#d1e7dd" stroke="#2f9e6e" stroke-width="1.5"/>
+  <text x="560" y="143" text-anchor="middle" font-size="17" font-weight="700" fill="#1d5c3f">Context · 上下文组装</text>
+  <text x="560" y="164" text-anchor="middle" font-size="13.5" fill="#3a7357">系统提示词 · 工具定义 · 轨迹</text>
+
+  <!-- 2 Model -->
+  <rect x="400" y="218" width="320" height="58" rx="12" fill="#2b2f36" stroke="#2b2f36"/>
+  <text x="560" y="241" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">Model · 模型决策</text>
+  <text x="560" y="262" text-anchor="middle" font-size="13.5" fill="#b9bec7">何时调用 · 调哪个 · 传什么参数</text>
+
+  <!-- 3 Constrain -->
+  <rect x="400" y="316" width="320" height="58" rx="12" fill="#ffe0c2" stroke="#d97706" stroke-width="1.5"/>
+  <text x="560" y="339" text-anchor="middle" font-size="17" font-weight="700" fill="#8a4b06">Constrain · 约束</text>
+  <text x="560" y="360" text-anchor="middle" font-size="13.5" fill="#a96a2a">故障安全默认：能力默认关闭、显式开放</text>
+
+  <!-- 4 Verify -->
+  <rect x="400" y="414" width="320" height="58" rx="12" fill="#fff3cd" stroke="#b8860b" stroke-width="1.5"/>
+  <text x="560" y="437" text-anchor="middle" font-size="17" font-weight="700" fill="#7a5800">Verify · 验证</text>
+  <text x="560" y="458" text-anchor="middle" font-size="13.5" fill="#96762f">只看结构化数据，不看模型自由文本</text>
+
+  <!-- 5 Correct -->
+  <rect x="400" y="540" width="320" height="58" rx="12" fill="#f8d7da" stroke="#d25360" stroke-width="1.5"/>
+  <text x="560" y="563" text-anchor="middle" font-size="17" font-weight="700" fill="#8f2f3a">Correct · 纠正</text>
+  <text x="560" y="584" text-anchor="middle" font-size="13.5" fill="#b05560">静默重试 → 回滚 → 熔断 → 交还人工</text>
+
+  <!-- 主链箭头 -->
+  <path d="M 560 178 L 560 210" fill="none" stroke="#4a5568" stroke-width="2" marker-end="url(#arr-dark)"/>
+  <path d="M 560 276 L 560 308" fill="none" stroke="#4a5568" stroke-width="2" marker-end="url(#arr-dark)"/>
+  <path d="M 560 374 L 560 406" fill="none" stroke="#4a5568" stroke-width="2" marker-end="url(#arr-dark)"/>
+  <path d="M 560 472 L 560 532" fill="none" stroke="#d25360" stroke-width="2" marker-end="url(#arr-red)"/>
+  <text x="590" y="500" text-anchor="start" font-size="14.5" fill="#d25360">✗ 发现偏差</text>
+
+  <!-- 通过回环：Verify -> Context（右侧） -->
+  <path d="M 720 443 L 838 443 L 838 149 L 728 149" fill="none" stroke="#b8860b" stroke-width="2" marker-end="url(#arr-gold)"/>
+  <text x="826" y="300" text-anchor="middle" font-size="14.5" fill="#b8860b" transform="rotate(90 826 300)">✓ 通过 · 轨迹追加，进入下一轮</text>
+
+  <!-- 纠正回环：Correct -> Environment -->
+  <path d="M 400 569 L 120 569 L 120 408" fill="none" stroke="#d25360" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arr-red)"/>
+  <text x="255" y="558" text-anchor="middle" font-size="14.5" fill="#d25360">重试 / 回退后再次生效</text>
+
+  <!-- 底部结论 -->
+  <rect x="28" y="622" width="844" height="0" fill="none"/>
+  <text x="450" y="642" text-anchor="middle" font-size="16" font-weight="600" fill="#7a5800">上下文与工具让 Agent「能做事」；约束、验证、纠正共同让 Agent「不做错事」</text>
+</svg>
