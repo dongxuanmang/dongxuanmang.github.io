@@ -1,5 +1,5 @@
 ---
-title: Agent 精读（四）：从 Demo 到生产，隔着五层工程
+title: Agent 精读（四）：从 Demo 到生产，隔着 Harness
 date: 2026-09-16 23:50:00
 categories:
   - Agent 精读
