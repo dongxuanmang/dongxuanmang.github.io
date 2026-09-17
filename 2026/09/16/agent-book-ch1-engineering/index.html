@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://dongxuanmang.github.io/images/agent-book/ch1-paradigm-layers.svg">
 <meta property="og:image" content="https://dongxuanmang.github.io/images/agent-book/ch1-workflow-vs-agent.svg">
 <meta property="article:published_time" content="2026-09-16T15:50:00.000Z">
-<meta property="article:modified_time" content="2026-09-16T15:00:42.786Z">
+<meta property="article:modified_time" content="2026-09-17T03:39:25.050Z">
 <meta property="article:author" content="东玄蟒">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="Harness">
@@ -146,7 +146,15 @@
 <p><strong>自主 Agent</strong>——执行路径由环境反馈实时决定，就是第三篇说的 ReAct 循环。灵活，能应对例外；代价是延迟与成本更高，而且必须设退出条件（任务完成 &#x2F; 最大轮数 &#x2F; 不可恢复错误），否则死循环。</p>
 <p><img src="/images/agent-book/ch1-workflow-vs-agent.svg" alt="工作流 vs 自主 Agent"></p>
 <p>选择顺序很朴素：先单次调用，再工作流，最后才自主 Agent。实践里常常混合——关键合规流程用工作流保可靠，灵活决策用自主补变通；甚至可以让 Agent 先把工作流写出来，再由工作流执行。</p>
-<h2 id="第-1-章读完了"><a href="#第-1-章读完了" class="headerlink" title="第 1 章读完了"></a>第 1 章读完了</h2><p>三篇笔记正好合成一层意思：能力边界由 Harness 决定（第一篇），模型即 Agent 只是搬家（第三篇），可靠性靠五要素闭环、工程重心五波上移（这篇）。</p>
+<h2 id="贯穿全书的五个设计模式"><a href="#贯穿全书的五个设计模式" class="headerlink" title="贯穿全书的五个设计模式"></a>贯穿全书的五个设计模式</h2><p>第 1 章的末尾一次性命名了五个设计模式，说后面的章节会反复用到。我把它们记在这里，当全书的暗线看：</p>
+<ol>
+<li><strong>提议-审核</strong>：产出与评判由两个上下文不同的角色分别承担——审核方看到的是产物本身（渲染结果、测试输出、结构化参数），不是产出方的推理过程。它成立的前提是自审不可靠：同一个上下文里的模型，难以发现自己的盲区，也难以判断自己是否已被注入。</li>
+<li><strong>渐进式披露</strong>：不把全部信息一次性放进上下文，先给一份可检索的目录，再按需要去元数据里查找对应的完整指引。第二章的 Agent Skills 是最典型的形态：元数据常驻，正文按需加载。</li>
+<li><strong>只新增不修改</strong>：状态只追加、不回头改。最直接的好处是缓存命中率（第二章 KV Cache 的前缀稳定性就是它的性能形态），同时换来可重放、可审计。</li>
+<li><strong>最小 diff + 可回滚</strong>：每次修改尽量小、带来源、可单独回滚——出了问题能定位到具体哪一次改动。Matt Pocock 讲代码设计时也有同一个观点：需求要切得足够小，逐个去做，最好有 checkpoint，单一环节出错只改一个节点。</li>
+<li><strong>边界集 + 保留集</strong>：任何一次修改都要同时在「应当改变的样本」和「不应当影响的样本」上验证——只测前者会把过拟合当进步，只测后者会把无效修改当安全。</li>
+</ol>
+<h2 id="第-1-章读完了"><a href="#第-1-章读完了" class="headerlink" title="第 1 章读完了"></a>第 1 章读完了</h2><p>三篇笔记正好合成一层意思：能力边界由 Harness 决定（第一篇），模型即 Agent 只是搬家（第三篇），可靠性靠五要素闭环、工程重心五波上移、五个设计模式贯穿全书（这篇）。</p>
 <p>一句话收束第 1 章：<strong>模型负责聪明，Harness 负责可靠——聪明在快速商品化，可靠是工程活，也是竞争力。</strong></p>
 <h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
 <li>开读第 2 章正篇：KV Cache、提示注入攻防、Agent Skills、上下文压缩——第二篇挂的 <code>context-compression</code> 实验一起跑</li>
@@ -154,13 +162,13 @@
 </ul>
 <h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter1.md">《深入理解 AI Agent：设计原理与工程实践》第 1 章「AI Agent 入门」</a>，李博杰著，GitHub 开源</li>
-<li>本篇覆盖第一章「Harness 工程：模型之外的竞争力」与「编排模式：工作流与自主」；官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a></li>
+<li>本篇覆盖第一章「Harness 工程：模型之外的竞争力」「编排模式：工作流与自主」「贯穿全书的设计模式」；官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a></li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuidom4nEpoEelp980vvGxUNO" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuidnvkZr5FO4OJ9TmB_KDTQL" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
