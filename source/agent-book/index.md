@@ -113,7 +113,7 @@ graph LR
     CH2 --> Q3["③ 缓存省在哪？✅"]
     CH2 --> Q4["④ 思考草稿怎么传？✅"]
     CH2 --> Q5["⑤ 缓存的边界在哪？✅"]
-    CH2 --> Q6["⑥ 往上下文里放什么？⬜"]
+    CH2 --> Q6["⑥ 之后的三个发展方向 ⬜"]
 
     Q1 --> A1["四种角色：system / user<br/>/ assistant / tool"]
     Q1 --> A2["无状态：每次送全量历史"]
@@ -138,10 +138,9 @@ graph LR
     Q5 --> E2["可组合：RoPE 重定位拼接<br/>n² → 线性（研究阶段）"]
     Q5 --> E3["vLLM：PagedAttention 分页<br/>+ 连续批处理（延伸阅读）"]
 
-    Q6 --> F1["提示工程 + 注入攻防 ⬜"]
-    Q6 --> F2["Skills：渐进式披露 ⬜"]
-    Q6 --> F3["状态栏：尾部注入状态 ⬜"]
-    Q6 --> F4["上下文压缩 ⬜"]
+    Q6 --> F1["线索一：提示词怎么写、怎么防劫持 ⬜<br/>提示工程 / 工具定义 / 注入攻防 / Skills 渐进披露"]
+    Q6 --> F2["线索二：Agent 状态栏 ⬜<br/>尾部持续注入运行时元信息"]
+    Q6 --> F3["线索三：上下文压缩 ⬜<br/>做减法，与 KV Cache 共存"]
 
     style CH2 fill:#fff3cd,stroke:#b8860b
     style A3 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
