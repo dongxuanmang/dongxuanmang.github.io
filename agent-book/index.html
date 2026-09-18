@@ -14,7 +14,7 @@
 <meta property="og:description" content="这是我的精读专题：逐章读李博杰的开源书《深入理解 AI Agent：设计原理与工程实践》，每一章写下我自己的理解和输出——不是摘抄，是用我的话重新讲一遍，加上我的追问和实践。全书围绕一个公式展开：  graph LR     LLM[&quot;🧠 LLM大脑&quot;] --- CTX[&quot;👁️ 上下文眼睛&quot;]     CTX --- TOOLS[&quot;🤲 工具手脚&quot;]     TOOLS --- LLM">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-15T14:30:00.000Z">
-<meta property="article:modified_time" content="2026-09-18T07:29:39.562Z">
+<meta property="article:modified_time" content="2026-09-18T07:32:42.608Z">
 <meta property="article:author" content="东玄蟒">
 <meta name="twitter:card" content="summary">
   
@@ -209,70 +209,97 @@
 <h2 id="章节思维导图"><a href="#章节思维导图" class="headerlink" title="章节思维导图"></a>章节思维导图</h2><blockquote>
 <p>每章一张，随精读进度一点点补。✅ &#x3D; 已读并有输出，⬜ &#x3D; 还没读到。</p>
 </blockquote>
-<h3 id="第-1-章-·-AI-Agent-入门（✅-完结）"><a href="#第-1-章-·-AI-Agent-入门（✅-完结）" class="headerlink" title="第 1 章 · AI Agent 入门（✅ 完结）"></a>第 1 章 · AI Agent 入门（✅ 完结）</h3><div class="mermaid">graph LR
-    CH1["第 1 章<br/>AI Agent 入门"] --- A["三要素"]
-    CH1 --- B["ReAct 循环"]
-    CH1 --- C["学习机制"]
-    CH1 --- D["模型即 Agent"]
-    CH1 --- E["Harness 工程"]
-    CH1 --- F["工程演进五波"]
-    CH1 --- G["编排模式"]
-    CH1 --- H["五个设计模式"]
-    CH1 --- I["护栏与安全"]
-    A --- A1["LLM 大脑"]
-    A --- A2["上下文 眼睛"]
-    A --- A3["工具 手脚"]
-    B --- B1["思考→行动→观察"]
-    C --- C1["上下文适应"]
-    C --- C2["外部产物"]
-    C --- C3["参数更新"]
-    D --- D1["RL 内化决策"]
-    D --- D2["循环搬到服务端"]
-    E --- E1["Context 上下文"]
-    E --- E2["Tools 工具"]
-    E --- E3["Constrain 约束"]
-    E --- E4["Verify 验证"]
-    E --- E5["Correct 纠正"]
-    F --- F1["提示→上下文→Harness→Loop→Graph"]
-    G --- G1["工作流"]
-    G --- G2["自主 Agent"]
-    G --- G3["混合"]
-    H --- H1["提议-审核"]
-    H --- H2["渐进式披露"]
-    H --- H3["只增不改"]
-    H --- H4["边界集+保留集"]
-    H --- H5["最小diff+可回滚"]
-    I --- I1["上下文层"]
-    I --- I2["执行层"]
-    I --- I3["数据层"]
-    style CH1 fill:#d1e7dd,stroke:#198754</div>
+<h3 id="第-1-章-·-AI-Agent-入门（✅-完结）"><a href="#第-1-章-·-AI-Agent-入门（✅-完结）" class="headerlink" title="第 1 章 · AI Agent 入门（✅ 完结）"></a>第 1 章 · AI Agent 入门（✅ 完结）</h3><blockquote>
+<p>骨架是四个驱动问题；金色节点是全书题眼；边上的关系就是论证的推进方向。</p>
+</blockquote>
+<div class="mermaid">graph LR
+    CH1["第 1 章<br/>AI Agent 入门"] --> Q1["① Agent 是什么？"]
+    CH1 --> Q2["② 模型变强后<br/>框架还剩什么？"]
+    CH1 --> Q3["③ 可靠性从哪来？"]
+    CH1 --> Q4["④ 工程重心怎么迁移？"]
 
-<h3 id="第-2-章-·-上下文工程（🔄-进行中）"><a href="#第-2-章-·-上下文工程（🔄-进行中）" class="headerlink" title="第 2 章 · 上下文工程（🔄 进行中）"></a>第 2 章 · 上下文工程（🔄 进行中）</h3><div class="mermaid">graph LR
-    CH2["第 2 章<br/>上下文工程"] --- A["API 消息结构 ✅"]
-    CH2 --- B["ReAct 终止 ✅"]
-    CH2 --- C["KV Cache ✅"]
-    CH2 --- D["Chat Template ✅"]
-    CH2 --- E["思考链保留 ✅"]
-    CH2 --- F["注意力可视化 ✅"]
-    CH2 --- G["提示工程 ⬜"]
-    CH2 --- H["提示注入攻防 ⬜"]
-    CH2 --- I["Agent Skills ⬜"]
-    CH2 --- J["状态栏 ⬜"]
-    CH2 --- K["上下文压缩 ⬜"]
-    A --- A1["四种角色"]
-    A --- A2["无状态调用"]
-    C --- C1["前缀不变性"]
-    C --- C2["Prompt Cache"]
-    C --- C3["三铁律"]
-    E --- E1["R1 剥离 → V4 回传"]
-    F --- F1["两个三角形"]
-    G --- G1["系统提示词"]
-    G --- G2["工具定义设计"]
-    I --- I1["渐进式披露"]
-    J --- J1["尾部元信息"]
-    K --- K1["分层压缩"]
-    K --- K2["隔离优于压缩"]
-    style CH2 fill:#fff3cd,stroke:#b8860b</div>
+    Q1 --> A1["Agent = LLM + 上下文 + 工具"]
+    A1 --> A11["LLM = 大脑<br/>行动前先内部推演"]
+    A1 --> A12["上下文 = 眼睛<br/>五个部分"]
+    A1 --> A13["工具 = 手脚<br/>通用组合 + 专用约束"]
+    A12 --> A14["消融实验：组件不等价<br/>缺工具结果 → 就地编造"]
+    Q1 --> B1["ReAct：想 → 做 → 看"]
+    B1 --> B11["上下文 = 静态前缀 + 轨迹"]
+
+    Q2 --> C1["模型即 Agent"]
+    C1 --> C11["RL 内化的是决策"]
+    C1 --> C12["执行留在模型外（Formula）"]
+    C11 --> C13["循环没消失<br/>只是搬到服务端"]
+    C12 --> C13
+    C13 --> K1["模型越强<br/>Harness 越关键"]
+    Q2 --> C2["苦涩的教训"]
+    C2 --> C21["方向认同，节奏务实"]
+    C21 --> K1
+
+    Q3 --> D1["Harness 五要素"]
+    D1 --> D11["能做事：Context + Tools"]
+    D1 --> D12["不做错事：约束/验证/纠正"]
+    D12 --> K2["Demo 与可靠产品的差距<br/>在 Harness，不在模型"]
+    Q3 --> E1["护栏三层：上下文 → 执行 → 数据<br/>按被绕过难度排序"]
+    Q3 --> F1["五个设计模式"]
+    F1 --> F11["提议-审核：因为自审不可靠"]
+    F1 --> F12["只增不改：可缓存可审计"]
+
+    Q4 --> G1["五波演进，层层包含"]
+    G1 --> G11["提示 ⊂ 上下文 ⊂ Harness<br/>⊂ Loop ⊂ Graph"]
+    G11 --> G12["模型差异在缩小"]
+    G12 --> K3["竞争优势转移<br/>到模型之外"]
+    Q4 --> H1["编排：单次调用 → 工作流 → 自主"]
+    H1 --> H11["自主必须设退出条件"]
+
+    style CH1 fill:#d1e7dd,stroke:#198754
+    style K1 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style K2 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style K3 fill:#fff3cd,stroke:#b8860b,stroke-width:2px</div>
+
+<h3 id="第-2-章-·-上下文工程（🔄-进行中）"><a href="#第-2-章-·-上下文工程（🔄-进行中）" class="headerlink" title="第 2 章 · 上下文工程（🔄 进行中）"></a>第 2 章 · 上下文工程（🔄 进行中）</h3><blockquote>
+<p>已读的分支长出洞见层；⬜ 分支留给后面的精读补全。</p>
+</blockquote>
+<div class="mermaid">graph LR
+    CH2["第 2 章<br/>上下文工程 🔄"] --> Q1["① 上下文长什么样？✅"]
+    CH2 --> Q2["② 循环何时停？✅"]
+    CH2 --> Q3["③ 缓存省在哪？✅"]
+    CH2 --> Q4["④ 思考草稿怎么传？✅"]
+    CH2 --> Q5["⑤ 缓存的边界在哪？✅"]
+    CH2 --> Q6["⑥ 往上下文里放什么？⬜"]
+
+    Q1 --> A1["四种角色：system / user<br/>/ assistant / tool"]
+    Q1 --> A2["无状态：每次送全量历史"]
+    A2 --> A3["框架的核心工作<br/>= 管理 messages 列表"]
+
+    Q2 --> B1["回复不带 tool_calls<br/>→ 退出循环"]
+
+    Q3 --> C1["不缓存：累计 n²"]
+    Q3 --> C2["KV Cache：单次推理内<br/>线性增长"]
+    C2 --> C21["Prompt Cache：跨请求<br/>约 1/10 价格"]
+    C2 --> C22["三铁律：前缀不动 / 只增不改 / 守格式"]
+    C22 --> C23["改一个空格<br/>变动点后缓存全废"]
+    C22 --> C24["自行拼接 → 偏离训练格式<br/>思考草稿被清空"]
+
+    Q4 --> D1["Chat Template：JSON → token 流"]
+    Q4 --> D2["R1 剥离历史思考<br/>每轮从零重推"]
+    Q4 --> D3["V4 反转：带 tools<br/>必须原样回传"]
+    D2 --> D4["思考 = 草稿纸<br/>收走就丢长程计划"]
+    D3 --> D4
+
+    Q5 --> E1["可编辑：改字段 ≈1% 算力<br/>前提是有思维链"]
+    Q5 --> E2["可组合：RoPE 重定位拼接<br/>n² → 线性（研究阶段）"]
+    Q5 --> E3["vLLM：PagedAttention 分页<br/>+ 连续批处理（延伸阅读）"]
+
+    Q6 --> F1["提示工程 + 注入攻防 ⬜"]
+    Q6 --> F2["Skills：渐进式披露 ⬜"]
+    Q6 --> F3["状态栏：尾部注入状态 ⬜"]
+    Q6 --> F4["上下文压缩 ⬜"]
+
+    style CH2 fill:#fff3cd,stroke:#b8860b
+    style A3 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style C22 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style D4 fill:#fff3cd,stroke:#b8860b,stroke-width:2px</div>
 
 <h2 id="为什么值得精读"><a href="#为什么值得精读" class="headerlink" title="为什么值得精读"></a>为什么值得精读</h2><ol>
 <li><strong>对路</strong>：我要做的就是生产级 agent，这本书的核心论点（差距在 Harness 不在模型）就是工程视角，和我的后端底子同构</li>
@@ -283,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/agent-book/index.html" data-id="cuidqaGzxF_mAOiK2F67r2Zw_" data-title="《深入理解 AI Agent》精读" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/agent-book/index.html" data-id="cuidlBv9fgfnC4f6tIOomkCYk" data-title="《深入理解 AI Agent》精读" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
