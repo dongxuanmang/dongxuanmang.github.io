@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 660" font-family="-apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif">
+<rect width="900" height="660" fill="#ffffff"/>
+<text x="450" y="34" text-anchor="middle" font-size="24" font-weight="700" fill="#2b2b2b">注意力热力图：两个三角形</text>
+<text x="450" y="60" text-anchor="middle" font-size="14" fill="#8a8578">行 = 正在生成的 token（Query），列 = 它回头看的前文（Key）；不能偷看右边 → 永远是下三角</text>
+<rect x="210" y="124" width="136" height="18" rx="4" fill="#b0a58c" opacity="0.35"/>
+<text x="278.0" y="138" text-anchor="middle" font-size="12.5" font-weight="600" fill="#5c5650">静态前缀</text>
+<rect x="346" y="124" width="136" height="18" rx="4" fill="#b8860b" opacity="0.35"/>
+<text x="414.0" y="138" text-anchor="middle" font-size="12.5" font-weight="600" fill="#5c5650">思考（草稿纸）</text>
+<rect x="482" y="124" width="136" height="18" rx="4" fill="#2f9e6e" opacity="0.35"/>
+<text x="550.0" y="138" text-anchor="middle" font-size="12.5" font-weight="600" fill="#5c5650">输出回答</text>
+<rect x="148" y="150" width="16" height="136" rx="4" fill="#b0a58c" opacity="0.35"/>
+<rect x="148" y="286" width="16" height="136" rx="4" fill="#b8860b" opacity="0.35"/>
+<rect x="148" y="422" width="16" height="136" rx="4" fill="#2f9e6e" opacity="0.35"/>
+<text x="182" y="171.0" text-anchor="end" font-size="11.5" fill="#8a8578">sys</text>
+<text x="182" y="205.0" text-anchor="end" font-size="11.5" fill="#8a8578">工具</text>
+<text x="182" y="239.0" text-anchor="end" font-size="11.5" fill="#8a8578">工具</text>
+<text x="182" y="273.0" text-anchor="end" font-size="11.5" fill="#8a8578">工具</text>
+<text x="182" y="307.0" text-anchor="end" font-size="11.5" fill="#8a8578">思①</text>
+<text x="182" y="341.0" text-anchor="end" font-size="11.5" fill="#8a8578">思②</text>
+<text x="182" y="375.0" text-anchor="end" font-size="11.5" fill="#8a8578">思③</text>
+<text x="182" y="409.0" text-anchor="end" font-size="11.5" fill="#8a8578">思④</text>
+<text x="182" y="443.0" text-anchor="end" font-size="11.5" fill="#8a8578">答①</text>
+<text x="182" y="477.0" text-anchor="end" font-size="11.5" fill="#8a8578">答②</text>
+<text x="182" y="511.0" text-anchor="end" font-size="11.5" fill="#8a8578">答③</text>
+<text x="182" y="545.0" text-anchor="end" font-size="11.5" fill="#8a8578">答④</text>
+<rect x="210" y="150" width="33" height="33" fill="#8a6d1f"/>
+<rect x="210" y="184" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="184" width="33" height="33" fill="#ddd5bd"/>
+<rect x="210" y="218" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="218" width="33" height="33" fill="#ddd5bd"/>
+<rect x="278" y="218" width="33" height="33" fill="#ddd5bd"/>
+<rect x="210" y="252" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="252" width="33" height="33" fill="#ddd5bd"/>
+<rect x="278" y="252" width="33" height="33" fill="#ddd5bd"/>
+<rect x="312" y="252" width="33" height="33" fill="#ddd5bd"/>
+<rect x="210" y="286" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="286" width="33" height="33" fill="#c8992e"/>
+<rect x="278" y="286" width="33" height="33" fill="#c8992e"/>
+<rect x="312" y="286" width="33" height="33" fill="#c8992e"/>
+<rect x="346" y="286" width="33" height="33" fill="#c8992e"/>
+<rect x="210" y="320" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="320" width="33" height="33" fill="#c8992e"/>
+<rect x="278" y="320" width="33" height="33" fill="#c8992e"/>
+<rect x="312" y="320" width="33" height="33" fill="#c8992e"/>
+<rect x="346" y="320" width="33" height="33" fill="#c8992e"/>
+<rect x="380" y="320" width="33" height="33" fill="#c8992e"/>
+<rect x="210" y="354" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="354" width="33" height="33" fill="#c8992e"/>
+<rect x="278" y="354" width="33" height="33" fill="#c8992e"/>
+<rect x="312" y="354" width="33" height="33" fill="#c8992e"/>
+<rect x="346" y="354" width="33" height="33" fill="#c8992e"/>
+<rect x="380" y="354" width="33" height="33" fill="#c8992e"/>
+<rect x="414" y="354" width="33" height="33" fill="#c8992e"/>
+<rect x="210" y="388" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="388" width="33" height="33" fill="#c8992e"/>
+<rect x="278" y="388" width="33" height="33" fill="#c8992e"/>
+<rect x="312" y="388" width="33" height="33" fill="#c8992e"/>
+<rect x="346" y="388" width="33" height="33" fill="#c8992e"/>
+<rect x="380" y="388" width="33" height="33" fill="#c8992e"/>
+<rect x="414" y="388" width="33" height="33" fill="#c8992e"/>
+<rect x="448" y="388" width="33" height="33" fill="#c8992e"/>
+<rect x="210" y="422" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="422" width="33" height="33" fill="#ddd5bd"/>
+<rect x="278" y="422" width="33" height="33" fill="#ddd5bd"/>
+<rect x="312" y="422" width="33" height="33" fill="#ddd5bd"/>
+<rect x="346" y="422" width="33" height="33" fill="#c8992e"/>
+<rect x="380" y="422" width="33" height="33" fill="#c8992e"/>
+<rect x="414" y="422" width="33" height="33" fill="#c8992e"/>
+<rect x="448" y="422" width="33" height="33" fill="#c8992e"/>
+<rect x="482" y="422" width="33" height="33" fill="#ddd5bd"/>
+<rect x="210" y="456" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="456" width="33" height="33" fill="#ddd5bd"/>
+<rect x="278" y="456" width="33" height="33" fill="#ddd5bd"/>
+<rect x="312" y="456" width="33" height="33" fill="#ddd5bd"/>
+<rect x="346" y="456" width="33" height="33" fill="#c8992e"/>
+<rect x="380" y="456" width="33" height="33" fill="#c8992e"/>
+<rect x="414" y="456" width="33" height="33" fill="#c8992e"/>
+<rect x="448" y="456" width="33" height="33" fill="#c8992e"/>
+<rect x="482" y="456" width="33" height="33" fill="#ddd5bd"/>
+<rect x="516" y="456" width="33" height="33" fill="#ddd5bd"/>
+<rect x="210" y="490" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="490" width="33" height="33" fill="#ddd5bd"/>
+<rect x="278" y="490" width="33" height="33" fill="#ddd5bd"/>
+<rect x="312" y="490" width="33" height="33" fill="#ddd5bd"/>
+<rect x="346" y="490" width="33" height="33" fill="#c8992e"/>
+<rect x="380" y="490" width="33" height="33" fill="#c8992e"/>
+<rect x="414" y="490" width="33" height="33" fill="#c8992e"/>
+<rect x="448" y="490" width="33" height="33" fill="#c8992e"/>
+<rect x="482" y="490" width="33" height="33" fill="#ddd5bd"/>
+<rect x="516" y="490" width="33" height="33" fill="#ddd5bd"/>
+<rect x="550" y="490" width="33" height="33" fill="#ddd5bd"/>
+<rect x="210" y="524" width="33" height="33" fill="#8a6d1f"/>
+<rect x="244" y="524" width="33" height="33" fill="#ddd5bd"/>
+<rect x="278" y="524" width="33" height="33" fill="#ddd5bd"/>
+<rect x="312" y="524" width="33" height="33" fill="#ddd5bd"/>
+<rect x="346" y="524" width="33" height="33" fill="#c8992e"/>
+<rect x="380" y="524" width="33" height="33" fill="#c8992e"/>
+<rect x="414" y="524" width="33" height="33" fill="#c8992e"/>
+<rect x="448" y="524" width="33" height="33" fill="#c8992e"/>
+<rect x="482" y="524" width="33" height="33" fill="#ddd5bd"/>
+<rect x="516" y="524" width="33" height="33" fill="#ddd5bd"/>
+<rect x="550" y="524" width="33" height="33" fill="#ddd5bd"/>
+<rect x="584" y="524" width="33" height="33" fill="#ddd5bd"/>
+<line x1="210" y1="150" x2="618" y2="150" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="150" x2="210" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="184" x2="618" y2="184" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="244" y1="150" x2="244" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="218" x2="618" y2="218" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="278" y1="150" x2="278" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="252" x2="618" y2="252" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="312" y1="150" x2="312" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="286" x2="618" y2="286" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="346" y1="150" x2="346" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="320" x2="618" y2="320" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="380" y1="150" x2="380" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="354" x2="618" y2="354" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="414" y1="150" x2="414" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="388" x2="618" y2="388" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="448" y1="150" x2="448" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="422" x2="618" y2="422" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="482" y1="150" x2="482" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="456" x2="618" y2="456" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="516" y1="150" x2="516" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="490" x2="618" y2="490" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="550" y1="150" x2="550" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="524" x2="618" y2="524" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="584" y1="150" x2="584" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="210" y1="558" x2="618" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<line x1="618" y1="150" x2="618" y2="558" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+<rect x="346" y="286" width="136" height="136" fill="none" stroke="#7a5800" stroke-width="2" stroke-dasharray="5 4" rx="6"/>
+<text x="338" y="280" text-anchor="end" font-size="13" font-weight="700" fill="#7a5800">① 思考的三角形</text>
+<rect x="346" y="422" width="136" height="136" fill="none" stroke="#2f9e6e" stroke-width="2" stroke-dasharray="5 4" rx="6"/>
+<text x="490" y="442" text-anchor="start" font-size="13" font-weight="700" fill="#2f9e6e">② 输出的三角形</text>
+<rect x="680" y="180" width="16" height="16" rx="3" fill="#c8992e"/>
+<text x="706" y="193" font-size="14.5" font-weight="700" fill="#2b2b2b">① 思考的三角形</text>
+<text x="680" y="216" font-size="12.5" fill="#5c5650">生成新的思考时，回看之前</text>
+<text x="680" y="235" font-size="12.5" fill="#5c5650">的思考内容和工具定义（题目条件）</text>
+<text x="680" y="254" font-size="12.5" fill="#5c5650">——写了多少步，回看范围就有多大</text>
+<rect x="680" y="300" width="16" height="16" rx="3" fill="#c8992e"/>
+<text x="704" y="313" font-size="14.5" font-weight="700" fill="#2b2b2b">② 输出的三角形</text>
+<text x="680" y="336" font-size="12.5" fill="#5c5650">输出回答时，注意力转向思考区：</text>
+<text x="680" y="355" font-size="12.5" fill="#5c5650">把思考过程当提示词，对着草稿</text>
+<text x="680" y="374" font-size="12.5" fill="#5c5650">誊写正式答案（引用工具结果）</text>
+<rect x="680" y="410" width="16" height="16" rx="3" fill="#8a6d1f"/>
+<text x="704" y="423" font-size="14.5" font-weight="700" fill="#2b2b2b">第 1 个 token · 注意力储存池</text>
+<text x="680" y="446" font-size="12.5" fill="#5c5650">softmax 强制注意力总和为 100%，</text>
+<text x="680" y="465" font-size="12.5" fill="#5c5650">多余的权重集中倾倒到开头固定位置</text>
+<rect x="680" y="500" width="16" height="16" rx="3" fill="#ddd5bd"/>
+<text x="704" y="513" font-size="14.5" font-weight="700" fill="#2b2b2b">浅色 = 弱相关</text>
+<text x="680" y="523" font-size="12.5" fill="#5c5650">输出段落内部、前缀 token 之间</text>
+<text x="680" y="542" font-size="12.5" fill="#5c5650">的互相关，权重低</text>
+<rect x="50" y="580" width="800" height="52" rx="12" fill="#fffdf5" stroke="#b8860b" stroke-width="1.2"/>
+<text x="450" y="602" text-anchor="middle" font-size="14.5" font-weight="700" fill="#7a5800">输出是「看着思考」生成的 —— 草稿被拿走，三角形②就没有了落脚点</text>
+<text x="450" y="622" text-anchor="middle" font-size="12.5" fill="#96762f">这正是 Agent 场景必须原样回传思维链（DeepSeek V4、Claude thinking block）的原因</text>
+</svg>
