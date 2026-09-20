@@ -14,7 +14,7 @@
 <meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是李博杰的开源书第二章的提示工程与提示注入部分。  先记住一个检验标准原文给系统提示词设计了一个实用的检验标准：如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。 这一篇的所有技巧，都是这句话的展开——因为模型在训练中学习了人类的语言和思维模式，针对人">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-20T13:30:00.000Z">
-<meta property="article:modified_time" content="2026-09-20T07:57:32.682Z">
+<meta property="article:modified_time" content="2026-09-20T08:08:17.290Z">
 <meta property="article:author" content="东玄蟒">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="提示工程">
@@ -120,7 +120,8 @@
 </blockquote>
 <h2 id="先记住一个检验标准"><a href="#先记住一个检验标准" class="headerlink" title="先记住一个检验标准"></a>先记住一个检验标准</h2><p>原文给系统提示词设计了一个实用的检验标准：<strong>如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。</strong></p>
 <p>这一篇的所有技巧，都是这句话的展开——因为模型在训练中学习了人类的语言和思维模式，针对人类降低认知负担的方法，对模型同样有效。</p>
-<h2 id="强调、示例与缓存"><a href="#强调、示例与缓存" class="headerlink" title="强调、示例与缓存"></a>强调、示例与缓存</h2><p><strong>大写强调有效，但会稀释。</strong> 大写字母（”NEVER do X”）比 “Please avoid doing X” 更能引起模型的注意——Claude Code 的工具定义里就有 “NEVER invoke grep or rg as a Bash command”。但过度使用会导致效果被稀释，大写要留给真正关键的约束。</p>
+<h2 id="用带实习员工的方式写提示词"><a href="#用带实习员工的方式写提示词" class="headerlink" title="用带实习员工的方式写提示词"></a>用带实习员工的方式写提示词</h2><p>书里有个小观察：大写强调（”NEVER do X”）比 “Please avoid doing X” 更能引起模型的注意，过度使用还会稀释效果——Claude Code 的工具定义里就有 “NEVER invoke grep or rg as a Bash command”。</p>
+<p>但这类命令式标记我不喜欢。我更认可的姿态是像教导实习员工（甚至小白）一样去提示模型：它是聪明但完全不了解你业务的新人——讲清楚业务背景，给正例也给反例，给标准流程，而不是堆一堆 NEVER 和 MUST 指望它自己悟。这也和全书的比喻一致：系统提示词是员工手册，流程是 SOP，好培训从来不是「你很聪明，自己看着办」。</p>
 <p><strong>示例是规则表达不了时的替代品。</strong> 当期望的输出难以用规则精确描述——文案风格、报告格式、语气分寸——给两三个高质量示例，胜过等量篇幅的抽象规则。数量不是越多越好：两三个覆盖边界情况的，胜过十个大同小异的（后者还会稀释模型对规则本身的注意力）。正例之外最好配反例，并写清适用范围——这是 Skill 写作里的明确建议。</p>
 <p><strong>示例的位置有缓存约束。</strong> 示例放在系统提示词里就成了静态前缀的一部分，处于上下文靠前的区域——一旦确定就要字节级稳定。按请求动态检索「最相关」的示例，等于每次改写前缀，缓存持续失效。生产系统的做法是为每类任务准备固定示例集，而不是逐请求挑选。</p>
 <h2 id="结构化：XML-Markdown-双层"><a href="#结构化：XML-Markdown-双层" class="headerlink" title="结构化：XML + Markdown 双层"></a>结构化：XML + Markdown 双层</h2><p>模型对结构化输入显著敏感（训练数据里就有大量结构化内容）。书里的方案是两种格式配合：</p>
@@ -161,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidBBYrgrtmS_Xc_X1vXqEWI" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidQJBMvsMfxPBTCesNDosyP" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
