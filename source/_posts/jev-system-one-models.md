@@ -1,5 +1,5 @@
 ---
-title: 不生成一个字的模型：Jev 与 System One Models 全景拆解
+title: 大模型的理解力，用户的解空间：Jev 如何填满一个空白象限
 date: 2026-09-20 22:30:00
 categories:
   - 前沿模型
