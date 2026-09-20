@@ -158,6 +158,171 @@
 <h3 id="Confidence-是概率分布的统计量，不是另一个模型输出"><a href="#Confidence-是概率分布的统计量，不是另一个模型输出" class="headerlink" title="Confidence 是概率分布的统计量，不是另一个模型输出"></a>Confidence 是概率分布的统计量，不是另一个模型输出</h3><p>Choice&#x2F;Score 的 <code>confidence</code> 由 <code>probabilities</code> 直接计算（文档交互示例里对三选项用的是 <code>(N·峰值概率−1)/(N−1)</code> 这种归一化峰值），分布越平坦 confidence 越低。官方明确说”你并未被锁定在我们的定义上”——完整的 <code>probabilities</code> 都给你了，你要更合适的度量可以自己算。这也是它和”问 LLM 要置信度”的本质区别：后者是让模型再生成一段关于自己的文字，前者是分布本身的数学性质。</p>
 <h3 id="零类型错误是构造性保证，不是”训练得好”"><a href="#零类型错误是构造性保证，不是”训练得好”" class="headerlink" title="零类型错误是构造性保证，不是”训练得好”"></a>零类型错误是构造性保证，不是”训练得好”</h3><p>幻觉是生成器在开放词表上采样的固有属性。Jev 根本没有开放词表——它在<strong>你预先定义的选项集合上输出一个分布</strong>（softmax over options），输出不可能落在集合之外，就像骰子不可能掷出 7。所以官方敢写”这在数学上不可能被证伪”。注意边界：<strong>“不会选错类型”不等于”不会选错选项”</strong>——所以才有 confidence，才有置信度门控：高置信自动执行、中置信复核确认、低置信转人工或换路。</p>
 <h3 id="三种软件架构的位置"><a href="#三种软件架构的位置" class="headerlink" title="三种软件架构的位置"></a>三种软件架构的位置</h3><p>官方把它放在第三种架构里：传统软件是简单原理组成的复杂决策树；LLM agent 是模型接管控制流、每圈都可能脱轨；<strong>AI-powered software 是代码持有工作流，模型只出现在需要”可编程常识”的窄缝里</strong>。Guard 框架的读者应该对这个定位很熟悉——这正是”模型即工具调用点、循环归属代码”的极端化。</p>
+<h2 id="理解力-×-解空间：一张图看懂四种技术"><a href="#理解力-×-解空间：一张图看懂四种技术" class="headerlink" title="理解力 × 解空间：一张图看懂四种技术"></a>理解力 × 解空间：一张图看懂四种技术</h2><p>前面四节讲的是 Jev 的零件。这一节讲我自己把零件串起来的那根线——想通它，前面所有”为什么”会同时塌缩成同一个答案。</p>
+<p>四个我们熟悉的技术，其实只有两根轴：<strong>理解力</strong>（能不能吃进没见过的自然语言）和<strong>解空间的归属</strong>（答案集合是谁定的）。</p>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>理解力</th>
+<th>解空间归属</th>
+<th>输出形态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>if-else</td>
+<td>无——语言进不去它的世界</td>
+<td>程序员写死</td>
+<td>分支跳转</td>
+</tr>
+<tr>
+<td>垃圾邮件过滤器（传统分类器）</td>
+<td>有，但有限</td>
+<td><strong>被训练数据焊死</strong>——选项跟着权重一起烧进模型</td>
+<td>两个固定标签的概率</td>
+</tr>
+<tr>
+<td>Jev</td>
+<td>大模型级（encoder 的阅读力）</td>
+<td><strong>每次请求的用户</strong>——选项是 HTTP 请求发出去那瞬间才出现的</td>
+<td>用户定义的选项集合上的概率分布</td>
+</tr>
+<tr>
+<td>LLM</td>
+<td>最强</td>
+<td>模型自己放飞——通过逐 token 组合可以拼出任何内容</td>
+<td>自由文本序列</td>
+</tr>
+</tbody></table>
+<p>用一句话给 Jev 定位：<strong>大模型的理解力 + 用户自由决定的解空间</strong>。Jev 干的事，是把 state（材料）和每个选项都投影到同一个语义空间里量距离，距离近的选项分数高——“在用户的解空间中做投影”。</p>
+<p>这句话一旦立住，前面所有结论自动成立：</p>
+<ul>
+<li><strong>为什么快 100 倍？</strong> 解空间是 3 个选项，输出就只有 3 个数——<strong>没有序列要生成</strong>，串行链长度从 312 步变 1 步</li>
+<li><strong>为什么输出免费？</strong> 3 个数不是 token 流，没有可计费的生成量</li>
+<li><strong>为什么零类型错误？</strong> 答案物理上被圈死在你的选项里，想错格式都没有那条通道</li>
+<li><strong>为什么 confidence 可算？</strong> 分布就摊在这 3 个数上，峰值多尖一眼看出，不用”问”模型有没有把握</li>
+<li><strong>为什么传统分类器换个选项就胡说八道？</strong> 它的解空间被训练时的数据焊死了，新选项投影不进它唯一认得的那几个孔——所以每个新业务都要重训；Jev 的选项跟着请求走，训练学的是”对任何给过来的映射当场算出来”这个通用能力，不是任何具体的映射</li>
+</ul>
+<p>四层楼画成一张图，Jev 站的那个角落——强理解力 + 用户解空间——在它之前是个空白象限：if-else 和分类器是旧时代在理解力纵轴上的挣扎，LLM 是这个象限的错过（理解力够了，解空间扔了）。Jev 不是更聪明的模型，是<strong>第一个站进这个空象限的模型</strong>。</p>
+<div class="mermaid">quadrantChart
+    title 理解力 × 解空间归属：四种技术的位置
+    x-axis "解空间：用户所有" --> "解空间：模型放飞"
+    y-axis "理解力：无" --> "理解力：强"
+    "if-else": [0.05, 0.05]
+    "垃圾邮件过滤器": [0.15, 0.4]
+    "Jev": [0.1, 0.95]
+    "LLM": [0.9, 0.95]</div>
+
+<h2 id="快的账本：省的是生成，不是理解"><a href="#快的账本：省的是生成，不是理解" class="headerlink" title="快的账本：省的是生成，不是理解"></a>快的账本：省的是生成，不是理解</h2><p>“一次前向”这四个字容易让人误会 Jev 连理解都省了。实际账本（HF 复刻项目 M4 Max 实测）值得摊开看：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>串行步数</th>
+<th>耗时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自回归 LLM 输出 312 token 的 JSON</td>
+<td>312 次前向</td>
+<td>1900ms</td>
+</tr>
+<tr>
+<td>Jev 风格：编码 state + 28 个字段打分</td>
+<td><strong>1 次前向</strong>（prefill 52ms + 打分 18ms）</td>
+<td>70ms</td>
+</tr>
+</tbody></table>
+<p>两边读的是同一份材料，材料长，编码照样重——<strong>prefill 那 52ms 谁都躲不掉</strong>。省掉的只有”把答案写成文字”那一段。所以 Jev 的延迟结构是：<strong>总耗时 ≈ 编码 state 的时间（随材料长度线性涨）+ 打分时间（选项再多也几乎不涨）</strong>。它的延迟天花板 &#x3D; 你的输入长度，而输入长度是你可以控制的——这就是它敢做每帧一次的实时 agent 的原因。</p>
+<p>串行到底是谁造成的？写作文不能跳着写，不是纸不够长，是第 51 个字的语义挂在前面 50 个字上——P(t₅₁|t₁…t₅₀) 的<strong>定义</strong>里就含着前文。<strong>串行是”生成”这个动作的定义自带的，不是计算量问题</strong>；LLM 慢在”写答案”不在”读题”，Jev 不是读得快，是压根不写。</p>
+<p>而 LLaDA 那条扩散式路线和 Jev 的分界，同样落在这两根轴上：LLaDA 是把”生成”并行化——mask 填空，位置之间无因果依赖，整句同时出，但它仍然在造内容；Jev 是把”生成”消除——不造内容，只对既有假设分配信念。一个是 inference 加速，一个是任务改写。即便 Jev 底层真是 masked 扩散预训练（fork 旁证），扩散也只是它的<strong>训练遗骸</strong>，不是它的<strong>运行时</strong>——选项打分一次前向即终止，没有”逐步去噪”的对象。</p>
+<div class="mermaid">graph LR
+    subgraph LLaDA["LLaDA：把生成并行化"]
+        A1["[MASK][MASK][MASK][MASK]"] -->|"一次并行填空"| A2["今 天 天 气 真 好"]
+        A2 -->|"迭代几轮去噪"| A3["收敛的完整句子"]
+    end
+    subgraph Jev["Jev：把生成消除"]
+        S["材料：我买了双鞋想退"] --> P["投影到语义空间"]
+        O1["选项：退款"] -.->|"量距离"| P
+        O2["选项：换货"] -.->|"量距离"| P
+        O3["选项：咨询"] -.->|"量距离"| P
+        P --> D["概率分布<br/>退款 0.72 / 换货 0.21 / 咨询 0.07"]
+    end</div>
+
+<h2 id="n²-的账本：不串行，但昂贵"><a href="#n²-的账本：不串行，但昂贵" class="headerlink" title="n² 的账本：不串行，但昂贵"></a>n² 的账本：不串行，但昂贵</h2><p>理解这层的钥匙是分清”算的顺序”和”等的顺序”。n 个 token 的 attention 矩阵有 n² 个”两两关系”，但<strong>token_5 的分数不需要等待 token_9 的结果</strong>——scores[5][9] 和 scores[9][5]、scores[1][300] 和 scores[8000][12] 彼此都不依赖。Q@K^T 这一亿个格子被 GPU 切成小块撒到几千个核上<strong>同时</strong>乘加。”从头到尾”说的是矩阵的形状，不是计算的时间顺序。</p>
+<p>真正的串行只有两处，且 Jev 一处都不占便宜：</p>
+<table>
+<thead>
+<tr>
+<th>成本</th>
+<th>量级</th>
+<th>属性</th>
+<th>Jev vs LLM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单次前向计算量</td>
+<td>n²（attention 矩阵）</td>
+<td><strong>并行</strong>——GPU 同一瞬间铺开</td>
+<td>相同，两边都付</td>
+</tr>
+<tr>
+<td>层间串行</td>
+<td>层数（约 32）</td>
+<td>串行但短</td>
+<td>相同，两边都付</td>
+</tr>
+<tr>
+<td>token 间串行</td>
+<td>输出长度（可到 312+）</td>
+<td><strong>串行且长</strong></td>
+<td><strong>LLM 独有，Jev 归零</strong></td>
+</tr>
+</tbody></table>
+<p>三种成本画在一条时间线上最直观——Jev 和 LLM 共享前两段，差别全在第三段：</p>
+<div class="mermaid">gantt
+    title 一次调用的三种成本（横轴：串行时间）
+    dateFormat X
+    axisFormat %s
+    section LLM（输出 312 token）
+    prefill 编码 n² 并行 : 0, 52
+    32 层串行       : 0, 52
+    生成 312 步串行链 : 52, 1900
+    section Jev（28 个问题）
+    prefill 编码 n² 并行 : 0, 52
+    32 层串行       : 0, 52
+    选项打分（一次前向）  : 52, 70</div>
+
+<p>所以 n² 的问题从来不是”慢”（串行），而是三个具体瓶颈：</p>
+<ol>
+<li><strong>显存墙</strong>——n&#x3D;100k 时一层 attention 矩阵物化要 40GB，H100 才 80GB。FlashAttention 不是把 n² 计算变少，是不把整个矩阵物化到显存，边算边用，显存从 O(n²) 压回 O(n)</li>
+<li><strong>吞吐墙</strong>——工业并发下，每个请求都付自己的 n²，GPU 的 FLOPs 被摊薄，单请求延迟不涨但排队涨</li>
+<li><strong>成本墙</strong>——n² 是每 token 前向的乘加量，直接乘电费乘卡价</li>
+</ol>
+<p>串行链决定”单个答案多久出来”，n² 决定”这个生意做不做得起”。</p>
+<p>这三种成本混在一起谈就会糊涂，拆开看就清楚了：</p>
+<div class="mermaid">graph TB
+    N["n² attention 矩阵<br/>（单次前向内部）"] -->|"格子之间互不依赖<br/>GPU 同一瞬间铺开"| P1["属性：并行"]
+    L["层与层之间<br/>（约 32 层）"] -->|"第 1 层输出是第 2 层输入"| S1["属性：串行但短<br/>两边都付，谁也躲不掉"]
+    T["token 与 token 之间<br/>（输出 312 个）"] -->|"P(t51|t1..t50) 定义自带前文"| S2["属性：串行且长<br/>LLM 独有，Jev 归零"]
+    P1 --> Q["串行步数决定单个答案多久出来<br/>n² 决定这门生意做不做得起"]
+    S1 --> Q
+    S2 --> Q</div>
+
+<p>这里还有一层对 Jev 特别要命的账：<strong>KV Cache 在它的地盘上近乎失业</strong>。LLM 世界的 system prompt 字节级稳定、缓存命中；Jev 世界的 state 每次请求都全新（每张工单、每帧 DOM 快照都不一样），缓存基本必 miss——prefill 的 n² 是它<strong>每次调用都实打实要付的过路费</strong>，没有任何捷径。所以官方文档把”只发相关上下文”列为头号军规，本质是在同时压延迟天花板和 n² 成本地板：<strong>state 越短，这门生意越赚</strong>。而 state 里什么是信号什么是噪声（模板、寒暄、系统日志），只有懂业务的人知道——这也是传统后端经验能直接平移进 Jev 时代的地方。</p>
+<div class="mermaid">graph LR
+    subgraph LLM世界["LLM 的负载：缓存的天堂"]
+        SP["system prompt<br/>固定且长"] -->|"字节级稳定<br/>KV Cache 命中"| C1["缓存热"]
+        U1["每轮对话增量"] --> C1
+    end
+    subgraph Jev世界["Jev 的负载：缓存失业"]
+        T1["工单 A 的 state"] --> X["每次全新<br/>KV Cache 必 miss"]
+        T2["DOM 快照 B"] --> X
+        T3["工单 C 的 state"] --> X
+        X --> F["每次实付 prefill n²<br/>过路费"]
+    end
+    F -.->|"唯一出路：压短 state"| R["军规：只发相关上下文<br/>延迟和成本同时压"]</div>
+
 <h2 id="底层结构：官方没说的，社区在做什么"><a href="#底层结构：官方没说的，社区在做什么" class="headerlink" title="底层结构：官方没说的，社区在做什么"></a>底层结构：官方没说的，社区在做什么</h2><p>官方对架构守口如瓶。TechCrunch 的表述是”tight-lipped，外部观察者怀疑构建在开源权重 LLM 之上”。可查的旁证：typesafe-ai 组织 fork 了 LLaDA（人大 ML-GSAI 的扩散语言模型官方实现）和 vLLM；HN 评论区有高赞指出 vLLM 的一个 PR 支持”Jev 模式”的 DiffusionGemma，单次决策约 0.2s。<strong>扩散式语言模型天然就是并行解码器</strong>——这条社区推断（官方从未确认）目前证据链最完整。</p>
 <p>三个开源项目让这条路线可以摸到：</p>
 <p><strong>jevlike</strong>（vinnylarouge，发布 1 天后出现，1k+ star）——独立实现的入门架构：每个选项编码为 query 向量 → 对上下文 token 做 attention 得到该选项专属的上下文向量 → 共享打分头算出分 → softmax 出分布。作者诚实标注：Wikispeedia 下一步点击预测上 26–29% 准确率（对照组 8%），8 选项场景一次前向比小 decoder 快约 100 倍，但<strong>未达到与 Jev 同等质量，也不是 Jev 的复刻</strong>。</p>
@@ -178,6 +343,10 @@
 <p><strong>新交互层</strong>：100ms 级 + 输出免费，让”每帧问一次模型”变成可承受的交互设计——jev-ultrafast 的浏览器 agent 是第一个完整演示。同样打开的还有实时 UI 决策、搜索式重排。</p>
 <p>对我自己的场景（客服工单审核）：工单分类路由（Choice）、申诉结果打分（Score）、退款请求识别（Noul）全部落在原生语区，且置信度门控天然对应”低置信转人工复审”的客服流程——这正是申请 waitlist 时填的用例。</p>
 <h2 id="面试速查卡"><a href="#面试速查卡" class="headerlink" title="面试速查卡"></a>面试速查卡</h2><p><strong>Q：Jev 和 LLM 的 JSON mode 有什么区别？</strong><br>采样方式与约束位置都不同。JSON mode 仍是自回归逐 token 生成（语法约束采样，一条链走到底，中途偏一个 token 前功尽弃），概率分布只在词表上、不在你的 schema 上；Jev 是一次前向、直接在你的选项集合上输出分布。约束前者是”事后围栏”，后者是”构造本身”。</p>
+<p><strong>Q：底层架构是什么？是 Transformer 吗？</strong><br>官方未披露，但 Transformer 骨架基本确认（TechCrunch 报道口径 “transformer-based”；社区复刻全部基于现成 Transformer 改造）。社区证据指向”开源权重的 encoder + 选项打分头 + 扩散式预训练 + RLCD”——真正的新东西不在骨架，在出口和训练目标。类比：LLM 的输出头投影到全量词表，Jev 的输出头投影到本次请求的选项集合；同一个主干，头开在哪决定了输出空间的形状。</p>
+<p><strong>Q：非自回归是 TypeSafe 发明的吗？</strong><br>不是，这是一条十年的谱系：2017 NAT（ICLR 2018 最佳论文）为延迟首次提出并行解码 → 2018–2019 Mask-Predict 修补质量 → 2021 D3PM 把扩散搬上离散 token → 2024 SEDD 质量追平自回归 → 2025 LLaDA&#x2F;Mercury 规模化 → 2026 Jev 产品化。四年一个台阶，每个台阶主语都不同（FAIR → Cornell → 人大&#x2F;Inception → TypeSafe）。Jev 的原创主张只剩 RLCD 和通用决策 API 这两件事。</p>
+<p><strong>Q：n² 复杂度你怎么看？Jev 能躲开吗？</strong><br>躲不开，但要看清它住在哪个维度：n² 是单次前向内部的并行计算量（GPU 同时铺开算），不增加串行步数；它贵在显存物化、吞吐摊薄、每 token 成本，不在”慢”。Jev 每次请求都是全新 state、KV Cache 必 miss，prefill 的 n² 是每次都要付的过路费——所以它的命门是 state 长度，官方”只发相关上下文”的军规就是在压这个。</p>
+<p><strong>Q：理解（编码）这一步 Jev 比 LLM 快吗？</strong><br>不快，两边读同一份材料的 prefill 成本完全一样。Jev 省的只有”把答案写成文字”那一段（token 间串行链）。所以 Jev 的延迟天花板 &#x3D; 输入材料长度——材料是调用方可控的，输出长度是模型方不可控的，这就是延迟主导权的转移。</p>
 <p><strong>Q：零幻觉怎么做到的？</strong><br>幻觉是开放词表生成的属性，Jev 没有开放词表。但要立刻补一句：它仍可能选错选项，所以核心配套是校准概率与 confidence——“零类型错误”和”零错误”是两件事。</p>
 <p><strong>Q：为什么 RLHF 模型的置信度不可信？</strong><br>偏好优化奖励讨喜与自信的表述，并造成 mode dropping（分布压窄），模型的文字概率声明与真实命中频率脱钩；RLCD 直接把”概率与结果对齐”当训练目标。</p>
 <p><strong>Q：它是 System 1，System 2 的任务怎么办？</strong><br>拆。每个问题问”一秒钟判断”，多因素判断拆成多个 Score 在代码里加权组合（Composite Scoring 模式），控制流始终归代码。</p>
@@ -193,7 +362,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuidoUdqF9oJlJhZ9v4vY43NU" data-title="不生成一个字的模型：Jev 与 System One Models 全景拆解" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuidk9ftX413WG5CNk7LptkKn" data-title="不生成一个字的模型：Jev 与 System One Models 全景拆解" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -280,7 +449,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuiduc2BomFY7MXhcXjuSTxYd" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidvCgmEO5GQkJE_upaEjcj-" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -365,7 +534,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuidgJPHEAN61LJ2extTFzYyf" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuidLmWsJZcGiWfeTl9eVSseQ" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -453,7 +622,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuidXYcNbbDMpD5pcxSlN8Ucf" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuid2afn2-RGpE0pANiPgCdqI" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -543,7 +712,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuid2jF3igiVt160WjR_-V0B-" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuiduBWFUN_RzDZo4TqRacCYb" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -631,7 +800,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidObpcMLvLfOlq8_eEKwEN7" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidPebBd6g9sJkd-5SLPt0xx" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -713,7 +882,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuid_dAwZC9_pgsTUN3PIm3zw" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuiduAWUVaChOJdwlp7ciO6fD" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -783,7 +952,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidcsm1FfXFnoZ8zlgwiEc5B" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidCAd4W_PXvAilI99FD29WX" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -853,7 +1022,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/14/about-me/" data-id="cuidBrOA00zen2cGpSHM3tVjp" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/14/about-me/" data-id="cuid6GeJWpgEN-g-LsUps2P_4" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
