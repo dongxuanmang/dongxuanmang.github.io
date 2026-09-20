@@ -30,7 +30,7 @@ graph LR
 | 章 | 主题 | 官方难度 | 我的理解与输出 |
 | :--: | --- | :--: | :--: |
 | 1 | AI Agent 入门：三要素、ReAct 循环、Harness 工程 | 🟢 | ✅ [能力边界由 Harness 决定](/2026/09/15/agent-book-ch1-harness/) · [模型即 Agent？循环只是搬到了服务端](/2026/09/16/agent-book-ch1-model-as-agent/) · [Harness 工程解决从 Demo 到生产的设计](/2026/09/16/agent-book-ch1-engineering/) |
-| 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | 🔄 [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) · [前面不能动，后面尽管加](/2026/09/17/agent-book-ch2-api-kv-cache/) · [KV Cache 的账，从 n² 到线性](/2026/09/18/agent-book-ch2-chat-template-kvcache/) |
+| 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | 🔄 [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) · [前面不能动，后面尽管加](/2026/09/17/agent-book-ch2-api-kv-cache/) · [KV Cache 的账，从 n² 到线性](/2026/09/18/agent-book-ch2-chat-template-kvcache/) · [对人类友好，就是对模型友好](/2026/09/20/agent-book-ch2-prompt-injection/) |
 | 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 📋 未开始 |
 | 4 | 工具：MCP 协议、五类工具、主动工具发现 | 🔵 | 📋 未开始 |
 | 5 | Coding Agent 与通用 Agent：代码是创造工具的元能力 | 🟣 | 📋 未开始 |
@@ -138,7 +138,12 @@ graph LR
     Q5 --> E2["可组合：RoPE 重定位拼接<br/>n² → 线性（研究阶段）"]
     Q5 --> E3["vLLM：PagedAttention 分页<br/>+ 连续批处理（延伸阅读）"]
 
-    Q6 --> F1["线索一：提示词怎么写、怎么防劫持 ⬜<br/>提示工程 / 工具定义 / 注入攻防 / Skills 渐进披露"]
+    Q6 --> F1["线索一：提示词怎么写、怎么防劫持 ✅<br/>（Skills 渐进披露 ⬜）"]
+    F1 --> F11["结构化：XML 精确语义<br/>+ Markdown 层次"]
+    F1 --> F12["流程驱动优于规则堆砌<br/>打乱结构 → 成功率掉 30%"]
+    F1 --> F13["工具定义也开始渐进披露<br/>schema 按需追加末尾"]
+    F1 --> F14["防注入三招：来源标记<br/>/ 结构化角色 / 输入清洗"]
+    F14 --> F15["只是第一道防线<br/>Skill 本身是新的注入面"]
     Q6 --> F2["线索二：Agent 状态栏 ⬜<br/>尾部持续注入运行时元信息"]
     Q6 --> F3["线索三：上下文压缩 ⬜<br/>做减法，与 KV Cache 共存"]
 
