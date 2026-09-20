@@ -53,6 +53,8 @@ if not assistant_message.tool_calls:
 
 ![messages 列表：前面不能动，后面尽管加](/images/agent-book/ch2-message-list.svg)
 
+这个区分还有一个落点：**fork 子 Agent 时的字节级对齐**。主 Agent 派生子 Agent 或发起旁路查询时，如果子 Agent 继承父 Agent 的上下文，那么提示词、工具定义、模型配置、消息前缀和思考配置都要与父 Agent 逐字节匹配——这样才能命中 API 服务商的 Prompt Cache，省下费用和延迟。原文也注明了边界：如果子 Agent 本来就用不同的上下文或提示词，自然不要求字节级对齐。
+
 ## 三条铁律
 
 书里把这个技术密度最高的章节压缩成三条核心结论，我把它们当上下文设计的铁律：
