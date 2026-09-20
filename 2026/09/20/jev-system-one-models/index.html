@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>不生成一个字的模型：Jev 与 System One Models 全景拆解 | 东玄蟒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="你在生产代码里用 LLM 做过分类或路由吗？一次调用 3 到 329 秒，输出 token 比输入贵 5 倍，JSON 解析失败还得重试，问模型”你有多大把握”它永远回答”非常确定”。这篇文章拆解 2026 年 9 月发布的 TypeSafe AI Jev——一个不生成任何文字的模型——以及它背后的 System One Models 框架。目标：读完能在面试里把这条新路线讲清楚，包括原理、生态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="不生成一个字的模型：Jev 与 System One Models 全景拆解">
+<meta property="og:url" content="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/index.html">
+<meta property="og:site_name" content="东玄蟒">
+<meta property="og:description" content="你在生产代码里用 LLM 做过分类或路由吗？一次调用 3 到 329 秒，输出 token 比输入贵 5 倍，JSON 解析失败还得重试，问模型”你有多大把握”它永远回答”非常确定”。这篇文章拆解 2026 年 9 月发布的 TypeSafe AI Jev——一个不生成任何文字的模型——以及它背后的 System One Models 框架。目标：读完能在面试里把这条新路线讲清楚，包括原理、生态">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-20T14:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-20T12:57:13.086Z">
+<meta property="article:author" content="东玄蟒">
+<meta property="article:tag" content="AI 前沿">
+<meta property="article:tag" content="RLCD">
+<meta property="article:tag" content="决策模型">
+<meta property="article:tag" content="面试储备">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="东玄蟒" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<!-- hexo injector head_end start --><script src="/js/mermaid.min.js"></script><script>(function () {  function renderMermaid() {    if (!document.querySelector(".mermaid") || typeof mermaid === "undefined") return;    mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });  }  if (document.readyState === "loading") {    document.addEventListener("DOMContentLoaded", renderMermaid);  } else {    renderMermaid();  }})();</script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">东玄蟒</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">乱花渐欲迷人眼，浅草才能没马蹄</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/learning/">学习路径</a>
+        
+          <a class="main-nav-link" href="/agent-book/">Agent 精读</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/dongxuanmang"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://dongxuanmang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-jev-system-one-models" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/20/jev-system-one-models/" class="article-date">
+  <time class="dt-published" datetime="2026-09-20T14:30:00.000Z" itemprop="datePublished">2026-09-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      不生成一个字的模型：Jev 与 System One Models 全景拆解
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>你在生产代码里用 LLM 做过分类或路由吗？一次调用 3 到 329 秒，输出 token 比输入贵 5 倍，JSON 解析失败还得重试，问模型”你有多大把握”它永远回答”非常确定”。这篇文章拆解 2026 年 9 月发布的 TypeSafe AI Jev——一个不生成任何文字的模型——以及它背后的 System One Models 框架。目标：读完能在面试里把这条新路线讲清楚，包括原理、生态、质疑和机会。</p>
+</blockquote>
+<h2 id="问题从哪来"><a href="#问题从哪来" class="headerlink" title="问题从哪来"></a>问题从哪来</h2><p>“模型聊天早已超人，自动化在哪？”——这是 TypeSafe 发布博客的第一句话，创始人 Diogo Almeida 的执念。他是 RLHF 的共同发明人之一，InstructGPT 与 ChatGPT 背后的训练方法就出自他手（TechCrunch 报道原话：ChatGPT broke Almeida’s heart）。</p>
+<p>他离开 OpenAI 时的判断是：<strong>问题的根源在于我们优化的是人类语言</strong>。人类语言适合对话，不适合软件消费——软件要的是类型安全、可校验、带不确定性的结构化输出。于是两年隐身之后，TypeSafe 给出第三条后训练路线：</p>
+<ul>
+<li><strong>RLHF</strong>（人类偏好）→ 造就了聊天模型</li>
+<li><strong>RLVR</strong>（可验证奖励）→ 造就了推理模型</li>
+<li><strong>RLCD</strong>（校准决策）→ 造就了决策模型</li>
+</ul>
+<p>官方的一句话定义值得原样记住：Jev 是一个 <strong>frontier-intelligence function call——unstructured state in, typed probabilistic decisions out</strong>。非结构化状态进，带类型的概率性决策出。</p>
+<p>命名也各有出处：System One 来自卡尼曼《思考，快与慢》的”系统 1”——快、直觉、单步判断；Jev 来自经济学家 Jevons，取 Jevons 悖论——蒸汽机效率提升后煤的消耗反而上升。<strong>成本每降一个数量级，用例数量会涨得更多</strong>，命名即愿景。</p>
+<h2 id="API-长什么样"><a href="#API-长什么样" class="headerlink" title="API 长什么样"></a>API 长什么样</h2><p>一个请求由两部分组成：<code>state</code>（被评判的内容，纯文本 &#x2F; JSON 对象 &#x2F; 文本数组）和 <code>questions</code>（问题字典）。三类问题原语，对应三种答案形状：</p>
+<table>
+<thead>
+<tr>
+<th>原语</th>
+<th>回答什么</th>
+<th>返回</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Choice</td>
+<td>N 选一（工单路由到哪个组）</td>
+<td><code>choice</code> + 全选项 <code>probabilities</code> + <code>confidence</code></td>
+</tr>
+<tr>
+<td>Score</td>
+<td>在有序等级上打分（客户愤怒程度）</td>
+<td><code>score</code>（可落在两级之间）+ 分布 + <code>confidence</code></td>
+</tr>
+<tr>
+<td>Noul</td>
+<td>是非判断（消息里是否请求退款）</td>
+<td><code>noul</code>：一个 0 到 1 的概率，没有单独 confidence</td>
+</tr>
+</tbody></table>
+<p>关键工程参数：输入 $42&#x2F;Btok、<strong>输出免费</strong>；70–500ms 延迟；限流 250k tokens&#x2F;s；单请求 64k 上下文；仅文本输入；<strong>主要训练语言是英语，CJK 精度目前更低</strong>——这是官方文档自己承认的。</p>
+<p>三个设计点比参数更值得记：</p>
+<p><strong>一问一判断。</strong> 官方反复强调”问一个懂行的人一秒钟内能做的判断”。”分析这封邮件并决定最佳行动”不是好问题——那是 System 2 的活，该拆成原子问题再用代码组合权重。</p>
+<p><strong>同请求内所有问题并行评估。</strong> 加问题几乎不增加延迟，只多花几个 token。官方 cookbook 的数据：13 个问题合并成一次调用，比 13 次单独调用便宜 11.5 倍、快 9.6 倍，答案不变。这直接催生了 Speculative Fan-Out 模式——把”可能用到”的问题全部提前问，代码再决定用哪个答案。</p>
+<p><strong><code>instructions</code> 里用反引号路径引用 state 字段。</strong> 比如 “Does <code>ticket.messages[0].text</code> request a refund?”——问题显式指向结构化状态的某一部分，避免模型自己猜上下文。</p>
+<h2 id="四个设计原理（面试核心区）"><a href="#四个设计原理（面试核心区）" class="headerlink" title="四个设计原理（面试核心区）"></a>四个设计原理（面试核心区）</h2><h3 id="并行采样：快是结构性的，不是调参调出来的"><a href="#并行采样：快是结构性的，不是调参调出来的" class="headerlink" title="并行采样：快是结构性的，不是调参调出来的"></a>并行采样：快是结构性的，不是调参调出来的</h3><p>自回归模型一次生成一个 token，每个 token 依赖前一个——一条串行链走到底。Jev 的输出空间在请求时就定义死了（N 个选项、M 个等级），模型对整个输出空间做一次前向，全部概率并行产出。这是 40–200 倍速度差的结构性来源：<strong>不是推理框架优化，是把”生成”这件事从任务里删掉了</strong>。</p>
+<h3 id="RLCD：校准本身作为训练目标"><a href="#RLCD：校准本身作为训练目标" class="headerlink" title="RLCD：校准本身作为训练目标"></a>RLCD：校准本身作为训练目标</h3><p>校准的定义：给 0.2 概率的答案，长期统计里真的该有 20% 命中；0.8 就该 80%。文档直指 RLHF 的两个副作用：偏好优化会奖励”听起来自信的幻觉”（sycophancy）；还会引发 <strong>mode dropping</strong>——把分布压窄到单一风格上，模型对其他可能的输出概率衰减，偏好越强，概率分布越不可信。RLCD 把目标换成”概率与结果对齐”，模型失去的是自由文本生成，换来的是概率的诚实。</p>
+<h3 id="Confidence-是概率分布的统计量，不是另一个模型输出"><a href="#Confidence-是概率分布的统计量，不是另一个模型输出" class="headerlink" title="Confidence 是概率分布的统计量，不是另一个模型输出"></a>Confidence 是概率分布的统计量，不是另一个模型输出</h3><p>Choice&#x2F;Score 的 <code>confidence</code> 由 <code>probabilities</code> 直接计算（文档交互示例里对三选项用的是 <code>(N·峰值概率−1)/(N−1)</code> 这种归一化峰值），分布越平坦 confidence 越低。官方明确说”你并未被锁定在我们的定义上”——完整的 <code>probabilities</code> 都给你了，你要更合适的度量可以自己算。这也是它和”问 LLM 要置信度”的本质区别：后者是让模型再生成一段关于自己的文字，前者是分布本身的数学性质。</p>
+<h3 id="零类型错误是构造性保证，不是”训练得好”"><a href="#零类型错误是构造性保证，不是”训练得好”" class="headerlink" title="零类型错误是构造性保证，不是”训练得好”"></a>零类型错误是构造性保证，不是”训练得好”</h3><p>幻觉是生成器在开放词表上采样的固有属性。Jev 根本没有开放词表——它在<strong>你预先定义的选项集合上输出一个分布</strong>（softmax over options），输出不可能落在集合之外，就像骰子不可能掷出 7。所以官方敢写”这在数学上不可能被证伪”。注意边界：<strong>“不会选错类型”不等于”不会选错选项”</strong>——所以才有 confidence，才有置信度门控：高置信自动执行、中置信复核确认、低置信转人工或换路。</p>
+<h3 id="三种软件架构的位置"><a href="#三种软件架构的位置" class="headerlink" title="三种软件架构的位置"></a>三种软件架构的位置</h3><p>官方把它放在第三种架构里：传统软件是简单原理组成的复杂决策树；LLM agent 是模型接管控制流、每圈都可能脱轨；<strong>AI-powered software 是代码持有工作流，模型只出现在需要”可编程常识”的窄缝里</strong>。Guard 框架的读者应该对这个定位很熟悉——这正是”模型即工具调用点、循环归属代码”的极端化。</p>
+<h2 id="底层结构：官方没说的，社区在做什么"><a href="#底层结构：官方没说的，社区在做什么" class="headerlink" title="底层结构：官方没说的，社区在做什么"></a>底层结构：官方没说的，社区在做什么</h2><p>官方对架构守口如瓶。TechCrunch 的表述是”tight-lipped，外部观察者怀疑构建在开源权重 LLM 之上”。可查的旁证：typesafe-ai 组织 fork 了 LLaDA（人大 ML-GSAI 的扩散语言模型官方实现）和 vLLM；HN 评论区有高赞指出 vLLM 的一个 PR 支持”Jev 模式”的 DiffusionGemma，单次决策约 0.2s。<strong>扩散式语言模型天然就是并行解码器</strong>——这条社区推断（官方从未确认）目前证据链最完整。</p>
+<p>三个开源项目让这条路线可以摸到：</p>
+<p><strong>jevlike</strong>（vinnylarouge，发布 1 天后出现，1k+ star）——独立实现的入门架构：每个选项编码为 query 向量 → 对上下文 token 做 attention 得到该选项专属的上下文向量 → 共享打分头算出分 → softmax 出分布。作者诚实标注：Wikispeedia 下一步点击预测上 26–29% 准确率（对照组 8%），8 选项场景一次前向比小 decoder 快约 100 倍，但<strong>未达到与 Jev 同等质量，也不是 Jev 的复刻</strong>。</p>
+<p><strong>Parallel Constrained Decoding</strong>（HF Space）——Apple Silicon + MLX + Qwen2.5-1.5B：对多字段 JSON schema 并行评估，M4 Max 上 5.6–7.0 倍加速、100% schema 有效、逐字段校准置信度。证明”并行受约束解码”用现成小模型就能做出来，差距在训练。</p>
+<p><strong>jev-ultrafast</strong>（browser-use 官方，10.5k star）——最能说明用途上限的例子：浏览器 agent 的动作空间做成”动态索引元素表”（每帧 DOM 快照产出编号控件列表），Jev 选操作和目标元素，小 LLM 只在 <code>TYPE_TEXT</code> 时生成文字。苏黎世→伦敦航班搜索 7.1 秒完成含打字和加载等待；浏览器协议调用从 1092 降到 101 次。<strong>模型的输出永远不变成选择器、坐标或可执行代码</strong>——执行器只认观察到过的 DOM 节点，这是结构化输出带来的安全性质。</p>
+<p>学术谱系上它不是凭空出现的：GLiNER（双向编码器做零样本实体抽取，3.8k star）早已证明”编码器 + 选项打分”可以零样本结构化输出；LLaDA 系列（含 inclusionAI 的 2.0 版）证明扩散式 LM 可以并行生成。HN 上还有人贴出 2025 年 3 月的 arXiv 论文（PPO over 序列嵌入输出转化概率），自认”一年前就做了同构的事”。<strong>Jev 的增量不在点子，而在”通用零样本 + 概率校准 + 工程化 API”三件事同时做到</strong>——这正好是面试里”这想法早就有人做”质疑的标准答案。</p>
+<h2 id="市场验证与质疑清单"><a href="#市场验证与质疑清单" class="headerlink" title="市场验证与质疑清单"></a>市场验证与质疑清单</h2><p>来自 TechCrunch 报道的真实案例：Vercel 用 Jev 替换 OpenAI 的命令安全分类器，快 5–18 倍且更准；Bryo AI 对比 Gemini 做邮件分类，Gemini 略准但贵 10–20 倍，其 CTO 最看重的反而是”唯一返回真实概率的模型”。Pi（Earendil）的 Armin Ronacher 给了两条用例——用 Jev 监控 LLM agent 轨迹防越狱（用 agent 监控 agent 太贵）、做模型路由的实时分诊；同时给了一句最锋利的批评：<strong>“它把幻觉问题部分外包给了用户”</strong>——0.5 概率是硬币，用不用这个答案是调用方的责任。</p>
+<p>发布帖在 HN 拿到 1921 赞 504 评论，质疑集中在四处，面试时值得替面试官问出来：</p>
+<ol>
+<li><strong>没有论文、没有权重、没有 live demo</strong>——“RLCD 和并行采样没有任何技术支撑，全是营销词汇”。</li>
+<li><strong>对比口径</strong>——“70ms vs 329 秒”拿的是推理模型满档输出，拿纯分类小模型比差距没这么大。官方博客自己也承认”这些是我们预期里偏高端的数字”。</li>
+<li><strong>Benchmark 全是自建的 workflow evals</strong>（参考答案是 GPT-6 Astra 与 Fable 5.1 的平均），官方另发一篇《Lies, Damned Lies, and Benchmarks》自陈立场：公共榜单已被 benchmaxx，他们选择公开 caveat 而不是刷榜。立场可以敬，验证只能靠第三方。</li>
+<li><strong>工程约束</strong>——64k 上下文、纯文本、英语主训、invite-only、单一供应商。</li>
+</ol>
+<h2 id="机会在哪"><a href="#机会在哪" class="headerlink" title="机会在哪"></a>机会在哪</h2><p>把用例分三层看：</p>
+<p><strong>替换层</strong>：管道里已有的零样本分类、路由、抽取、打标，直接换成 Jev。收益是钱和速度（一到两个数量级），风险是精度——先跑 <a target="_blank" rel="noopener" href="https://github.com/typesafe-ai/system-one-adapter-python">system-one-adapter-python</a>（官方出的 LLM 后端 drop-in 对比器）做 A&#x2F;B。</p>
+<p><strong>增强层</strong>：给现有 LLM 系统当守门员。confidence-gated routing（置信度三段门控）、agent 轨迹监控、越狱检测、给 LLM 输出做校验打分——<strong>用决策模型看住生成模型</strong>，这是官方叙事里最符合工程直觉的一块。</p>
+<p><strong>新交互层</strong>：100ms 级 + 输出免费，让”每帧问一次模型”变成可承受的交互设计——jev-ultrafast 的浏览器 agent 是第一个完整演示。同样打开的还有实时 UI 决策、搜索式重排。</p>
+<p>对我自己的场景（客服工单审核）：工单分类路由（Choice）、申诉结果打分（Score）、退款请求识别（Noul）全部落在原生语区，且置信度门控天然对应”低置信转人工复审”的客服流程——这正是申请 waitlist 时填的用例。</p>
+<h2 id="面试速查卡"><a href="#面试速查卡" class="headerlink" title="面试速查卡"></a>面试速查卡</h2><p><strong>Q：Jev 和 LLM 的 JSON mode 有什么区别？</strong><br>采样方式与约束位置都不同。JSON mode 仍是自回归逐 token 生成（语法约束采样，一条链走到底，中途偏一个 token 前功尽弃），概率分布只在词表上、不在你的 schema 上；Jev 是一次前向、直接在你的选项集合上输出分布。约束前者是”事后围栏”，后者是”构造本身”。</p>
+<p><strong>Q：零幻觉怎么做到的？</strong><br>幻觉是开放词表生成的属性，Jev 没有开放词表。但要立刻补一句：它仍可能选错选项，所以核心配套是校准概率与 confidence——“零类型错误”和”零错误”是两件事。</p>
+<p><strong>Q：为什么 RLHF 模型的置信度不可信？</strong><br>偏好优化奖励讨喜与自信的表述，并造成 mode dropping（分布压窄），模型的文字概率声明与真实命中频率脱钩；RLCD 直接把”概率与结果对齐”当训练目标。</p>
+<p><strong>Q：它是 System 1，System 2 的任务怎么办？</strong><br>拆。每个问题问”一秒钟判断”，多因素判断拆成多个 Score 在代码里加权组合（Composite Scoring 模式），控制流始终归代码。</p>
+<p><strong>Q：这想法是不是早就有了？</strong><br>单体技术上是的——GLiNER 的零样本抽取、LLaDA 的并行扩散生成、2025 年就有 RL 输出概率的工作。增量在”通用零样本 + 校准 + 产品化”三位一体，以及把定价压到输出免费。护城河更可能在 RLCD 训练数据与分布，而非架构。</p>
+<p><strong>Q：你会拿它做什么，怎么验证？</strong><br>替换层跑 adapter A&#x2F;B 看精度和成本；增强层先做 LLM 输出守门（风险低、收益明确）；同时盯 CJK 精度和供应商集中度两个风险。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ol>
+<li>waitlist 通过后先在 <a target="_blank" rel="noopener" href="https://console.typesafe.ai/playground">Playground</a> 用中文工单样例实测 CJK 精度——这是官方承认的短板，也是自己场景的生死线</li>
+<li>用 <a target="_blank" rel="noopener" href="https://github.com/typesafe-ai/system-one-adapter-python">system-one-adapter-python</a> 对比现有 LLM 分类管道的成本&#x2F;延迟&#x2F;准确率</li>
+<li>想吃透架构的，读 <a target="_blank" rel="noopener" href="https://github.com/vinnylarouge/jevlike">jevlike</a> 的 option-attention head 源码（一个周末的量），再看 <a target="_blank" rel="noopener" href="https://github.com/ml-gsai/LLaDA">LLaDA</a> 理解扩散式并行解码</li>
+</ol>
+<p>参考来源：<a target="_blank" rel="noopener" href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">发布博客</a> · <a target="_blank" rel="noopener" href="https://docs.typesafe.ai/introduction">官方文档</a>（<a target="_blank" rel="noopener" href="https://docs.typesafe.ai/introduction/machine-learning-primer">AI primer</a>、<a target="_blank" rel="noopener" href="https://docs.typesafe.ai/primitives">Primitives</a>、<a target="_blank" rel="noopener" href="https://docs.typesafe.ai/confidence">Confidence</a>、<a target="_blank" rel="noopener" href="https://docs.typesafe.ai/models">Models</a>）· <a target="_blank" rel="noopener" href="https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/">TechCrunch 报道</a> · <a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=49717558">HN 讨论帖</a> · <a target="_blank" rel="noopener" href="https://typesafe.ai/blog/antibenchmaxxing">Antibenchmaxxing</a> · <a target="_blank" rel="noopener" href="https://github.com/browser-use/jev-ultrafast">jev-ultrafast</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuidoUdqF9oJlJhZ9v4vY43NU" data-title="不生成一个字的模型：Jev 与 System One Models 全景拆解" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/09/20/agent-book-ch2-prompt-injection/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Agent 精读（七）：对人类友好，就是对模型友好</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">九月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/20/jev-system-one-models/">不生成一个字的模型：Jev 与 System One Models 全景拆解</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/20/agent-book-ch2-prompt-injection/">Agent 精读（七）：对人类友好，就是对模型友好</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/18/agent-book-ch2-chat-template-kvcache/">Agent 精读（六）：KV Cache 的账，从 n² 到线性</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/17/agent-book-ch2-api-kv-cache/">Agent 精读（五）：前面不能动，后面尽管加</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/16/agent-book-ch1-engineering/">Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 东玄蟒<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/learning/" class="mobile-nav-link">学习路径</a>
+  
+    <a href="/agent-book/" class="mobile-nav-link">Agent 精读</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
