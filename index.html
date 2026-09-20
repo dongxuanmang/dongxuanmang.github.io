@@ -158,7 +158,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidQJBMvsMfxPBTCesNDosyP" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidXCJcASLceTeshRWm9iP7O" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -243,7 +243,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuideROrwoiRgwW_GQZ55kZCz" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuidBsaSYHCLkRdkpcHZ4fqgc" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -312,6 +312,7 @@
 </ul>
 <p>静态前缀放最前面且保持稳定，跨请求命中的主要是 Prompt Cache——但原理都一样：<strong>前面不能动，后面尽管加</strong>。</p>
 <p><img src="/images/agent-book/ch2-message-list.svg" alt="messages 列表：前面不能动，后面尽管加"></p>
+<p>这个区分还有一个落点：<strong>fork 子 Agent 时的字节级对齐</strong>。主 Agent 派生子 Agent 或发起旁路查询时，如果子 Agent 继承父 Agent 的上下文，那么提示词、工具定义、模型配置、消息前缀和思考配置都要与父 Agent 逐字节匹配——这样才能命中 API 服务商的 Prompt Cache，省下费用和延迟。原文也注明了边界：如果子 Agent 本来就用不同的上下文或提示词，自然不要求字节级对齐。</p>
 <h2 id="三条铁律"><a href="#三条铁律" class="headerlink" title="三条铁律"></a>三条铁律</h2><p>书里把这个技术密度最高的章节压缩成三条核心结论，我把它们当上下文设计的铁律：</p>
 <ol>
 <li><strong>静态前缀一旦确定就不要随意修改</strong>——哪怕多一个空格，首个不同 token 之后的缓存全部失效；改动越靠前，代价越大。</li>
@@ -330,7 +331,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuid_9_OLWtjqpThkDcw2_C_j" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuidxRMb2DIW8LLZqWKkrC8LP" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -420,7 +421,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuidtw2pOXnj2ogjMlywoCrDW" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuid6NRPsSUjSmet-wwByVWsd" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -508,7 +509,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidtHHkzYPiZv6_ofv8wuGTI" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuid4lAZ-J08HLx-lw69eYUma" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -590,7 +591,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuideAHCdFQ9o3Sa627sv-O2m" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuid_vfct4amsATq4x_xIx93I" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -660,7 +661,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidvuO0jLDl7uKh2qqpoxWiU" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidry2gj1FYp2dDDf4801fqk" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -730,7 +731,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/14/about-me/" data-id="cuidX9X8mpQ6wEt_AEMgL5fnf" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/14/about-me/" data-id="cuidYMisifHzEDUnP5v1L4qMx" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
