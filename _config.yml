@@ -104,3 +104,8 @@ deploy:
   type: git
   repo: https://github.com/dongxuanmang/dongxuanmang.github.io.git
   branch: gh-pages
+
+# SEO: sitemap
+sitemap:
+  path: sitemap.xml
+  rel: false
