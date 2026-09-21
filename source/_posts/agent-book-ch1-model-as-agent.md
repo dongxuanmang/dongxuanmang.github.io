@@ -10,6 +10,7 @@ tags:
 ---
 
 > 这是[《深入理解 AI Agent》精读专题](/agent-book/)的第三篇。读的是[李博杰的开源书](https://github.com/bojieli/ai-agent-book)第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。
+> 本章思维导图见 [专题页 · 章节思维导图](/agent-book/#章节思维导图)
 
 ## 先补个尾巴：ReAct 循环
 

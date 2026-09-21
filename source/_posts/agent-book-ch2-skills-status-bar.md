@@ -11,6 +11,7 @@ tags:
 ---
 
 > 这是[《深入理解 AI Agent》精读专题](/agent-book/)的第八篇，一次走完第 2 章的两条线索：Skills（能力的按需加载）和 Agent 状态栏（状态的提前提炼）。读的是[李博杰的开源书](https://github.com/bojieli/ai-agent-book)第二章。
+> 本章思维导图见 [专题页 · 章节思维导图](/agent-book/#章节思维导图)
 
 ## Skills：先给目录，再给手册
 

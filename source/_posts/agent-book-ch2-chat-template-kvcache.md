@@ -11,6 +11,7 @@ tags:
 ---
 
 > 这是[《深入理解 AI Agent》精读专题](/agent-book/)的第六篇，继续第 2 章。读的是[李博杰的开源书](https://github.com/bojieli/ai-agent-book)第二章的 Chat Template、思考链保留策略与 KV Cache 深水区——外加一段书外的延伸：vLLM 怎么管显存。
+> 本章思维导图见 [专题页 · 章节思维导图](/agent-book/#章节思维导图)
 
 ## Chat Template：把 JSON 翻译成 token
 

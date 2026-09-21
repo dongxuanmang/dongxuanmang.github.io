@@ -23,29 +23,7 @@ graph LR
 - 难度分级来自官方：🟢 入门 → 🔵 进阶 → 🟣 高级 → 🟡 工程 → 🔴 专家 → 🟠 应用
 - 完成的章在下面清单里变成链接
 
-## 章节清单与我的输出
-
-### 构建篇（第 1–6 章）
-
-| 章 | 主题 | 官方难度 | 我的理解与输出 |
-| :--: | --- | :--: | :--: |
-| 1 | AI Agent 入门：三要素、ReAct 循环、Harness 工程 | 🟢 | ✅ [能力边界由 Harness 决定](/2026/09/15/agent-book-ch1-harness/) · [模型即 Agent？循环只是搬到了服务端](/2026/09/16/agent-book-ch1-model-as-agent/) · [Harness 工程解决从 Demo 到生产的设计](/2026/09/16/agent-book-ch1-engineering/) |
-| 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | 🔄 [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) · [前面不能动，后面尽管加](/2026/09/17/agent-book-ch2-api-kv-cache/) · [KV Cache 的账，从 n² 到线性](/2026/09/18/agent-book-ch2-chat-template-kvcache/) · [对人类友好，就是对模型友好](/2026/09/20/agent-book-ch2-prompt-injection/) · [上下文是台只有一半的检索引擎](/2026/09/21/agent-book-ch2-skills-status-bar/) |
-| 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 📋 未开始 |
-| 4 | 工具：MCP 协议、五类工具、主动工具发现 | 🔵 | 📋 未开始 |
-| 5 | Coding Agent 与通用 Agent：代码是创造工具的元能力 | 🟣 | 📋 未开始 |
-| 6 | 交互：语音、Computer Use、机器人（模态 × 时序） | 🟣 | 📋 未开始 |
-
-### 提升篇（第 7–10 章）
-
-| 章 | 主题 | 官方难度 | 我的理解与输出 |
-| :--: | --- | :--: | :--: |
-| 7 | Agent 的评估：环境、指标、LLM-as-a-Judge | 🟡 | 📋 未开始 |
-| 8 | 模型后训练：SFT/RL、奖励设计、蒸馏 | 🔴 | 📋 未开始 |
-| 9 | 持续进化：从轨迹学习，四种更新载体 | 🟠 | 📋 未开始 |
-| 10 | 多 Agent 协作：A2A、失败模式、Agent 社会 | 🟠 | 📋 未开始 |
-
-> 每读完一章，把「📋 未开始」替换成文章链接。实验代码在[书仓库](https://github.com/bojieli/ai-agent-book)按章安装（Python 3.11–3.13，支持 uv 复现环境）。
+**本页导航**：[🧠 章节思维导图](#章节思维导图) · [📋 章节清单](#章节清单与我的输出) · [💡 为什么值得精读](#为什么值得精读)
 
 ## 章节思维导图
 
@@ -161,6 +139,31 @@ graph LR
     style C22 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style D4 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
 {% endmermaid %}
+
+
+## 章节清单与我的输出
+
+### 构建篇（第 1–6 章）
+
+| 章 | 主题 | 官方难度 | 我的理解与输出 |
+| :--: | --- | :--: | :--: |
+| 1 | AI Agent 入门：三要素、ReAct 循环、Harness 工程 | 🟢 | ✅ [能力边界由 Harness 决定](/2026/09/15/agent-book-ch1-harness/) · [模型即 Agent？循环只是搬到了服务端](/2026/09/16/agent-book-ch1-model-as-agent/) · [Harness 工程解决从 Demo 到生产的设计](/2026/09/16/agent-book-ch1-engineering/) |
+| 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | 🔄 [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) · [前面不能动，后面尽管加](/2026/09/17/agent-book-ch2-api-kv-cache/) · [KV Cache 的账，从 n² 到线性](/2026/09/18/agent-book-ch2-chat-template-kvcache/) · [对人类友好，就是对模型友好](/2026/09/20/agent-book-ch2-prompt-injection/) · [上下文是台只有一半的检索引擎](/2026/09/21/agent-book-ch2-skills-status-bar/) |
+| 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 📋 未开始 |
+| 4 | 工具：MCP 协议、五类工具、主动工具发现 | 🔵 | 📋 未开始 |
+| 5 | Coding Agent 与通用 Agent：代码是创造工具的元能力 | 🟣 | 📋 未开始 |
+| 6 | 交互：语音、Computer Use、机器人（模态 × 时序） | 🟣 | 📋 未开始 |
+
+### 提升篇（第 7–10 章）
+
+| 章 | 主题 | 官方难度 | 我的理解与输出 |
+| :--: | --- | :--: | :--: |
+| 7 | Agent 的评估：环境、指标、LLM-as-a-Judge | 🟡 | 📋 未开始 |
+| 8 | 模型后训练：SFT/RL、奖励设计、蒸馏 | 🔴 | 📋 未开始 |
+| 9 | 持续进化：从轨迹学习，四种更新载体 | 🟠 | 📋 未开始 |
+| 10 | 多 Agent 协作：A2A、失败模式、Agent 社会 | 🟠 | 📋 未开始 |
+
+> 每读完一章，把「📋 未开始」替换成文章链接。实验代码在[书仓库](https://github.com/bojieli/ai-agent-book)按章安装（Python 3.11–3.13，支持 uv 复现环境）。
 
 ## 为什么值得精读
 

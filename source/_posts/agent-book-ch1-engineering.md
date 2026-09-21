@@ -10,6 +10,7 @@ tags:
 ---
 
 > 这是[《深入理解 AI Agent》精读专题](/agent-book/)的第四篇。读的是[李博杰的开源书](https://github.com/bojieli/ai-agent-book)第一章的 Harness 工程与编排模式——第 1 章的最后一部分，读完这章就齐了。
+> 本章思维导图见 [专题页 · 章节思维导图](/agent-book/#章节思维导图)
 
 ## Demo 与生产之间，隔着什么
 

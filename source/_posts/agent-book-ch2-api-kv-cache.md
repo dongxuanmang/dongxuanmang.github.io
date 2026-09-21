@@ -11,6 +11,7 @@ tags:
 ---
 
 > 这是[《深入理解 AI Agent》精读专题](/agent-book/)的第五篇，正式进入第 2 章正篇。读的是[李博杰的开源书](https://github.com/bojieli/ai-agent-book)第二章的 API 消息结构与 KV Cache——上下文工程的地基。
+> 本章思维导图见 [专题页 · 章节思维导图](/agent-book/#章节思维导图)
 
 ## 上下文在 API 里长什么样
 
