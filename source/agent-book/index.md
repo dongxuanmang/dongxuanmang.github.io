@@ -80,13 +80,13 @@ graph LR
     style K3 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
 {% endmermaid %}
 
-### 第 2 章 · 上下文工程（🔄 进行中）
+### 第 2 章 · 上下文工程（✅ 完结）
 
 > 已读的分支长出洞见层；⬜ 分支留给后面的精读补全。
 
 {% mermaid %}
 graph LR
-    CH2["第 2 章<br/>上下文工程 🔄"] --> Q1["① 上下文长什么样？✅"]
+    CH2["第 2 章<br/>上下文工程 ✅"] --> Q1["① 上下文长什么样？✅"]
     CH2 --> Q2["② 循环何时停？✅"]
     CH2 --> Q3["③ 缓存省在哪？✅"]
     CH2 --> Q4["④ 思考草稿怎么传？✅"]
@@ -132,7 +132,12 @@ graph LR
     F2 --> F22["借 user 槽位挂末尾<br/>agent_status 标签包裹"]
     F2 --> F23["替换：缓存局部失效<br/>vs 持久追加：只增不改"]
     F2 --> F24["纪律：代码维护状态<br/>状态栏是有损投影"]
-    Q6 --> F3["线索三：上下文压缩 ⬜<br/>做减法，与 KV Cache 共存"]
+    Q6 --> F3["线索三：上下文压缩 ✅"]
+    F3 --> F31["三个动机：成本 / 思考质量<br/>/ 上下文焦虑=提前收尾"]
+    F3 --> F32["腐化：装得下但找不到<br/>vs 溢出：装不下"]
+    F3 --> F33["两次调用之间压 tool results<br/>接近阈值批量压"]
+    F3 --> F34["四原则：价值不均匀 / 语义完整<br/>/ 任务相关 / 压缩即理解"]
+    F3 --> F35["隔离优于压缩：噪声根本<br/>不进主上下文，前缀不动"]
 
     style CH2 fill:#fff3cd,stroke:#b8860b
     style A3 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
@@ -148,7 +153,7 @@ graph LR
 | 章 | 主题 | 官方难度 | 我的理解与输出 |
 | :--: | --- | :--: | :--: |
 | 1 | AI Agent 入门：三要素、ReAct 循环、Harness 工程 | 🟢 | ✅ [能力边界由 Harness 决定](/2026/09/15/agent-book-ch1-harness/) · [模型即 Agent？循环只是搬到了服务端](/2026/09/16/agent-book-ch1-model-as-agent/) · [Harness 工程解决从 Demo 到生产的设计](/2026/09/16/agent-book-ch1-engineering/) |
-| 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | 🔄 [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) · [前面不能动，后面尽管加](/2026/09/17/agent-book-ch2-api-kv-cache/) · [KV Cache 的账，从 n² 到线性](/2026/09/18/agent-book-ch2-chat-template-kvcache/) · [对人类友好，就是对模型友好](/2026/09/20/agent-book-ch2-prompt-injection/) · [上下文是台只有一半的检索引擎](/2026/09/21/agent-book-ch2-skills-status-bar/) |
+| 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | ✅ [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) · [前面不能动，后面尽管加](/2026/09/17/agent-book-ch2-api-kv-cache/) · [KV Cache 的账，从 n² 到线性](/2026/09/18/agent-book-ch2-chat-template-kvcache/) · [对人类友好，就是对模型友好](/2026/09/20/agent-book-ch2-prompt-injection/) · [上下文是台只有一半的检索引擎](/2026/09/21/agent-book-ch2-skills-status-bar/) · [装得下，但找不到了](/2026/09/22/agent-book-ch2-compression/) |
 | 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 📋 未开始 |
 | 4 | 工具：MCP 协议、五类工具、主动工具发现 | 🔵 | 📋 未开始 |
 | 5 | Coding Agent 与通用 Agent：代码是创造工具的元能力 | 🟣 | 📋 未开始 |
