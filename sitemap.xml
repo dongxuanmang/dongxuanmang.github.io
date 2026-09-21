@@ -175,13 +175,6 @@
   </url>
   
   <url>
-    <loc>https://dongxuanmang.github.io/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://dongxuanmang.github.io/tags/vLLM/</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -197,6 +190,13 @@
   
   <url>
     <loc>https://dongxuanmang.github.io/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
