@@ -6,15 +6,15 @@
   
   <title>Agent 精读（七）：对人类友好，就是对模型友好 | 东玄蟒</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是李博杰的开源书第二章的提示工程与提示注入部分。  先记住一个检验标准原文给系统提示词设计了一个实用的检验标准：如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。 这一篇的所有技巧，都是这句话的展开——因为模型在训练中学习了人类的语言和思维模式，针对人">
+  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是李博杰的开源书第二章的提示工程与提示注入部分。本章思维导图见 专题页 · 章节思维导图  先记住一个检验标准原文给系统提示词设计了一个实用的检验标准：如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。 这一篇的所有技巧，都是这句话的展开——因为模型在">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Agent 精读（七）：对人类友好，就是对模型友好">
 <meta property="og:url" content="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/index.html">
 <meta property="og:site_name" content="东玄蟒">
-<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是李博杰的开源书第二章的提示工程与提示注入部分。  先记住一个检验标准原文给系统提示词设计了一个实用的检验标准：如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。 这一篇的所有技巧，都是这句话的展开——因为模型在训练中学习了人类的语言和思维模式，针对人">
+<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是李博杰的开源书第二章的提示工程与提示注入部分。本章思维导图见 专题页 · 章节思维导图  先记住一个检验标准原文给系统提示词设计了一个实用的检验标准：如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。 这一篇的所有技巧，都是这句话的展开——因为模型在">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-20T13:30:00.000Z">
-<meta property="article:modified_time" content="2026-09-20T08:08:17.290Z">
+<meta property="article:modified_time" content="2026-09-21T08:24:16.804Z">
 <meta property="article:author" content="东玄蟒">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="提示工程">
@@ -116,7 +116,7 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章的提示工程与提示注入部分。</p>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章的提示工程与提示注入部分。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
 </blockquote>
 <h2 id="先记住一个检验标准"><a href="#先记住一个检验标准" class="headerlink" title="先记住一个检验标准"></a>先记住一个检验标准</h2><p>原文给系统提示词设计了一个实用的检验标准：<strong>如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。</strong></p>
 <p>这一篇的所有技巧，都是这句话的展开——因为模型在训练中学习了人类的语言和思维模式，针对人类降低认知负担的方法，对模型同样有效。</p>
@@ -162,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidQ86mhAZc_wXivtSLxBzPc" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidtRKoqp_OttYRAdQsM0IUN" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       

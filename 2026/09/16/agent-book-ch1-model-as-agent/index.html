@@ -6,15 +6,15 @@
   
   <title>Agent 精读（三）：模型即 Agent？循环只是搬到了服务端 | 东玄蟒</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第三篇。读的是李博杰的开源书第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。  先补个尾巴：ReAct 循环第一篇留了个钩子：ReAct 循环没展开，这次补上。 Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考和行动两个词，循环其实有三个环节：模型先">
+  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第三篇。读的是李博杰的开源书第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。本章思维导图见 专题页 · 章节思维导图  先补个尾巴：ReAct 循环第一篇留了个钩子：ReAct 循环没展开，这次补上。 Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端">
 <meta property="og:url" content="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/index.html">
 <meta property="og:site_name" content="东玄蟒">
-<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第三篇。读的是李博杰的开源书第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。  先补个尾巴：ReAct 循环第一篇留了个钩子：ReAct 循环没展开，这次补上。 Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考和行动两个词，循环其实有三个环节：模型先">
+<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第三篇。读的是李博杰的开源书第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。本章思维导图见 专题页 · 章节思维导图  先补个尾巴：ReAct 循环第一篇留了个钩子：ReAct 循环没展开，这次补上。 Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-16T15:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-16T13:34:16.407Z">
+<meta property="article:modified_time" content="2026-09-21T08:24:16.801Z">
 <meta property="article:author" content="东玄蟒">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="模型即 Agent">
@@ -115,7 +115,7 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第三篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。</p>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第三篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
 </blockquote>
 <h2 id="先补个尾巴：ReAct-循环"><a href="#先补个尾巴：ReAct-循环" class="headerlink" title="先补个尾巴：ReAct 循环"></a>先补个尾巴：ReAct 循环</h2><p>第一篇留了个钩子：ReAct 循环没展开，这次补上。</p>
 <p>Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考和行动两个词，循环其实有三个环节：模型先思考该做什么，然后调用工具行动，再观察工具返回的结果，接着想下一步。想 → 做 → 看，不断循环，直到任务完成。</p>
@@ -162,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuido1khsNi16gsKWB7AESdz7" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidgYRxx9E8j5Q97n5cEEyzT" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       

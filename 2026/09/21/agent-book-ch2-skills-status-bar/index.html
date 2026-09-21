@@ -6,15 +6,15 @@
   
   <title>Agent 精读（八）：上下文是台只有一半的检索引擎 | 东玄蟒</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第八篇，一次走完第 2 章的两条线索：Skills（能力的按需加载）和 Agent 状态栏（状态的提前提炼）。读的是李博杰的开源书第二章。  Skills：先给目录，再给手册Agent 覆盖的业务场景越来越多，系统提示词就会不断膨胀——全部塞进去有两个代价：浪费 token（大部分内容与当前任务无关）、注意力被稀释（无关信息淹没关键指令）。 Skill">
+  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第八篇，一次走完第 2 章的两条线索：Skills（能力的按需加载）和 Agent 状态栏（状态的提前提炼）。读的是李博杰的开源书第二章。本章思维导图见 专题页 · 章节思维导图  Skills：先给目录，再给手册Agent 覆盖的业务场景越来越多，系统提示词就会不断膨胀——全部塞进去有两个代价：浪费 token（大部分内容与当前任务无关）、注意力被稀">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Agent 精读（八）：上下文是台只有一半的检索引擎">
 <meta property="og:url" content="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/index.html">
 <meta property="og:site_name" content="东玄蟒">
-<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第八篇，一次走完第 2 章的两条线索：Skills（能力的按需加载）和 Agent 状态栏（状态的提前提炼）。读的是李博杰的开源书第二章。  Skills：先给目录，再给手册Agent 覆盖的业务场景越来越多，系统提示词就会不断膨胀——全部塞进去有两个代价：浪费 token（大部分内容与当前任务无关）、注意力被稀释（无关信息淹没关键指令）。 Skill">
+<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第八篇，一次走完第 2 章的两条线索：Skills（能力的按需加载）和 Agent 状态栏（状态的提前提炼）。读的是李博杰的开源书第二章。本章思维导图见 专题页 · 章节思维导图  Skills：先给目录，再给手册Agent 覆盖的业务场景越来越多，系统提示词就会不断膨胀——全部塞进去有两个代价：浪费 token（大部分内容与当前任务无关）、注意力被稀">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-21T13:30:00.000Z">
-<meta property="article:modified_time" content="2026-09-21T08:13:34.834Z">
+<meta property="article:modified_time" content="2026-09-21T08:24:16.805Z">
 <meta property="article:author" content="东玄蟒">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="Agent Skills">
@@ -116,7 +116,7 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第八篇，一次走完第 2 章的两条线索：Skills（能力的按需加载）和 Agent 状态栏（状态的提前提炼）。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章。</p>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第八篇，一次走完第 2 章的两条线索：Skills（能力的按需加载）和 Agent 状态栏（状态的提前提炼）。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
 </blockquote>
 <h2 id="Skills：先给目录，再给手册"><a href="#Skills：先给目录，再给手册" class="headerlink" title="Skills：先给目录，再给手册"></a>Skills：先给目录，再给手册</h2><p>Agent 覆盖的业务场景越来越多，系统提示词就会不断膨胀——全部塞进去有两个代价：浪费 token（大部分内容与当前任务无关）、注意力被稀释（无关信息淹没关键指令）。</p>
 <p>Skills 的解法是渐进式披露：<strong>不是把所有知识一次性塞给 Agent，而是让它按需加载</strong>——像给新员工一份总目录，需要哪本操作手册再去取。一个 Skill 由三层组成：</p>
@@ -163,7 +163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuid1oT_9GtF9nMjrz8Nh6qCG" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuidoYCWxeDViZmfUPNThEx-S" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
