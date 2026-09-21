@@ -85,6 +85,107 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog-setup-and-indexing" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/21/blog-setup-and-indexing/" class="article-date">
+  <time class="dt-published" datetime="2026-09-21T14:30:00.000Z" itemprop="datePublished">2026-09-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%BB%BA%E7%AB%99%E7%AC%94%E8%AE%B0/">建站笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/21/blog-setup-and-indexing/">博客上线一周，Google 里搜不到我</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>你有没有遇到过：博客兴冲冲上线，过了一周，在搜索引擎里搜自己的内容——什么都搜不到。就像开了家店，装修完了才发现，连块路牌都没有。这篇是我这两天的排查和修复实录，如果你也用 Hexo + GitHub Pages，大概率用得上。</p>
+</blockquote>
+<h2 id="先说架构：这个博客是怎么搭的"><a href="#先说架构：这个博客是怎么搭的" class="headerlink" title="先说架构：这个博客是怎么搭的"></a>先说架构：这个博客是怎么搭的</h2><p>站点的骨架很简单：</p>
+<ul>
+<li><strong>Hexo</strong> 静态站点生成器 + landscape 主题，托管在 GitHub Pages（<code>dongxuanmang.github.io</code>）</li>
+<li><strong>双分支</strong>：<code>main</code> 存源码（Markdown 文章 + 配置 + 主题脚本），<code>gh-pages</code> 存生成产物。<code>hexo deploy</code> 自动把 <code>public/</code> 推到 gh-pages，源码单独提交到 main——内容和产物分离，换电脑也能恢复</li>
+<li>日常发布就两条命令：<code>hexo generate</code>（生成）+ <code>hexo deploy</code>（发布）</li>
+<li>图表用 mermaid 自托管渲染（一个自定义标签脚本），架构图、流程图直接写在 Markdown 里</li>
+</ul>
+<p>这套架构零成本、够用，但有个天然的短板：<strong>它不会主动告诉任何人你的存在</strong>。静态站没有推送机制，搜索引擎不来，你就等于不存在。</p>
+<h2 id="搜不到，是三层问题叠在一起"><a href="#搜不到，是三层问题叠在一起" class="headerlink" title="搜不到，是三层问题叠在一起"></a>搜不到，是三层问题叠在一起</h2><p>排查下来，从浅到深：</p>
+<ol>
+<li><strong>技术层</strong>：<code>sitemap.xml</code> 404、<code>robots.txt</code> 404。搜索引擎发现页面的方式是顺着链接爬，没有 sitemap，它只能靠猜</li>
+<li><strong>通道层</strong>：从没在 Google Search Console &#x2F; Bing Webmaster Tools 提交过——搜索引擎压根不知道这个站存在</li>
+<li><strong>权重层</strong>：新站 + 零外链。没人链接你，爬虫就可能几周都不来；就算来了，新站还有观察期</li>
+</ol>
+<p>中文内容还有个残酷的第四层：<strong>百度对 github.io 的收录极差</strong>（爬虫可达性问题），短期无解，直接放弃百度，把 Google 和 Bing 做好。</p>
+<h2 id="修复一：给爬虫一张地图"><a href="#修复一：给爬虫一张地图" class="headerlink" title="修复一：给爬虫一张地图"></a>修复一：给爬虫一张地图</h2><p>两步，十分钟：</p>
+<ul>
+<li>装 <code>hexo-generator-sitemap</code> 插件，部署后 <code>/sitemap.xml</code> 列出全站每个页面的 URL 和最后更新时间</li>
+<li><code>source/robots.txt</code> 声明站点地图位置，告诉所有爬虫「地图在这」</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">User-agent: *</span><br><span class="line">Allow: /</span><br><span class="line"></span><br><span class="line">Sitemap: https://dongxuanmang.github.io/sitemap.xml</span><br></pre></td></tr></table></figure>
+
+<h2 id="修复二：Google-Search-Console（踩了一个坑）"><a href="#修复二：Google-Search-Console（踩了一个坑）" class="headerlink" title="修复二：Google Search Console（踩了一个坑）"></a>修复二：Google Search Console（踩了一个坑）</h2><p>Search Console 是 Google 的站长后台，主动提交收录的官方通道。流程四步：添加资源（选「网址前缀」）→ HTML 文件验证 → 提交 sitemap → 用「网址检查」对首页点「请求编入索引」。</p>
+<p>中间踩的坑值得单独写：<strong>验证文件放进 Hexo 的 source&#x2F; 后，被 Hexo 当成文章渲染了</strong>——原文件只有一行纯文本，Hexo 给它套上了完整的博客模板（title、meta、样式），而 Google 校验是逐字节比对的，直接失败。</p>
+<p>解法是在 <code>_config.yml</code> 里声明跳过渲染：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">skip_render:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">google*.html</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">robots.txt</span></span><br></pre></td></tr></table></figure>
+
+<p>重新部署一次通过。注意：<strong>验证文件不能删</strong>，删了验证状态会失效。</p>
+<p>验证通过后，sitemap 提交 + 首页「请求编入索引」两步走完，Google 会把网址放进优先抓取队列——比干等爬虫快得多。</p>
+<h2 id="修复三：Bing，意外地顺滑"><a href="#修复三：Bing，意外地顺滑" class="headerlink" title="修复三：Bing，意外地顺滑"></a>修复三：Bing，意外地顺滑</h2><p>原本以为 Bing 要再来一遍注册验证，结果发现它支持<strong>从 Google Search Console 一键导入</strong>：用 Google 账号登录授权 → 自动发现已验证的站点 → 免验证导入 → sitemap 直接带入。导入完它已经发现了我全站 34 个 URL。</p>
+<p>而且 Bing 抓取比 Google 快——导入当天就能看到页面状态是「Discovered」（已发现），点一下 Request indexing 就进了抓取队列。</p>
+<h2 id="修复四：IndexNow，发布即推送"><a href="#修复四：IndexNow，发布即推送" class="headerlink" title="修复四：IndexNow，发布即推送"></a>修复四：IndexNow，发布即推送</h2><p>前面三条都是「等搜索引擎来」，IndexNow 把方向反过来：<strong>内容一更新，主动推送给搜索引擎</strong>。这是 Bing 主导的开放协议（Yandex、Seznam 也认），三步：</p>
+<ol>
+<li>生成一个 32 位十六进制的 API key</li>
+<li>把 key 内容放进站点根目录的 <code>indexnow.txt</code>（证明你拥有这个站点）</li>
+<li>向 <code>api.indexnow.org</code> POST 一个 JSON（站点 + key + URL 列表）</li>
+</ol>
+<p>我把它接进了 Hexo 的部署流程——写了个几十行的脚本，监听 <code>hexo deploy</code> 完成事件，读 sitemap 和上次推送记录做对比，<strong>只推送新增或有更新的页面</strong>，推送完记入缓存。以后日常发布什么都不用多做：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br><span class="line">  → 部署完成</span><br><span class="line">  → 对比 sitemap 与推送缓存，挑出有变化的 URL</span><br><span class="line">  → POST 给 api.indexnow.org（HTTP 202 确认）</span><br></pre></td></tr></table></figure>
+
+<p>第一次跑是全量（34 个 URL 一次性入队），之后每次只推改动——比如这篇文章发布的同时，脚本正在把它推给 Bing。通常几小时到一天就能在 Bing 搜到。</p>
+<p>实现上有个小坑：Hexo 的 <code>deployAfter</code> 是站点实例的事件，要用 <code>hexo.on(&#39;deployAfter&#39;)</code> 监听，而不是 <code>hexo.extend.filter.register</code>——文档里两者容易混。</p>
+<h2 id="修复后的预期"><a href="#修复后的预期" class="headerlink" title="修复后的预期"></a>修复后的预期</h2><ul>
+<li><strong>Bing</strong>：几天内可见收录（导入当天 sitemap 状态已是 Success）</li>
+<li><strong>Google</strong>：一到四周，新站有观察期</li>
+<li>验证收录用 <code>site:dongxuanmang.github.io</code>，别用关键词搜——新站权重低，关键词排名要慢慢养</li>
+<li><strong>最有效的加速器是外链</strong>：把文章同步发到掘金&#x2F;知乎（哪怕只发摘要 + 原文链接），搜索引擎会更快、更频繁地来。比任何技巧都管用</li>
+<li>持续更新本身就是信号——这个精读系列天然是个好节奏</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://search.google.com/search-console">Google Search Console</a>——站点收录与搜索表现的官方控制台</li>
+<li><a target="_blank" rel="noopener" href="https://www.indexnow.org/documentation">IndexNow 协议</a>——Bing 主导的即时推送协议，一次推送多引擎生效</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo-generator-sitemap">hexo-generator-sitemap</a>——Hexo 的 sitemap 生成插件</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/21/blog-setup-and-indexing/" data-id="cuidoRQZBUXoCXHxC6xwGBvnx" data-title="博客上线一周，Google 里搜不到我" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-agent-book-ch2-skills-status-bar" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/09/21/agent-book-ch2-skills-status-bar/" class="article-date">
@@ -158,7 +259,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuidPg36lIonYqMtACo-i6t4t" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuidzPWNLl6XoKo6pmNXnLxiN" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -449,7 +550,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuidRXbaBXs8L-zFpJFW2-cZF" data-title="大模型的理解力，用户的解空间：Jev 如何填满一个空白象限" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuiddcIKlw9U_j5U_OQ37qZSP" data-title="大模型的理解力，用户的解空间：Jev 如何填满一个空白象限" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -536,7 +637,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidgG66_wZ82TJAJBmPYZgTX" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidEiXRvZKXuuokpdo6Y88-O" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -621,7 +722,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuid3ve-7cFRxfyzxsS7OJrdd" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuid1UWPu3170az12tFP3eNBs" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -709,7 +810,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuidw-kpanm0Kiqn2fuF6AQwc" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuidT5L9Wmw7S68wBJhhDMb7X" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -799,7 +900,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuidSJ8Jg7ZudiI_6e9zQ1bos" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuid-NFU9-EBuXznqmDsF1vFp" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -887,7 +988,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuid4wZKO7L1rHWSjUeC-lVkU" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidUIQCKwXKur-KUoAc2qDhZ" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -969,7 +1070,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuidXwYGO3lvG6p6XujmFawCl" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuidX5sxrkzrWQUn-RLsTKNRu" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1039,7 +1140,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidRxQ0eMwG4qXzWnV6Ri4LZ" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidGOJGKtiVD6QTOEc4Rh5oy" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1053,77 +1154,12 @@
 
 
   
-    <article id="post-about-me" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/14/about-me/" class="article-date">
-  <time class="dt-published" datetime="2026-09-14T06:51:49.000Z" itemprop="datePublished">2026-09-14</time>
-</a>
+
+
+  <nav id="page-nav">
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/14/about-me/">关于我</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>你好，我是<strong>东玄蟒</strong>，一名后端工程师。这是我博客的第一篇文章，写点自己是谁、在做些什么、以及为什么开这个博客。</p>
-<blockquote>
-<p>乱花渐欲迷人眼，浅草才能没马蹄。</p>
-</blockquote>
-<h2 id="我的经历"><a href="#我的经历" class="headerlink" title="我的经历"></a>我的经历</h2><p><strong>从大数据引擎起步。</strong> 职业生涯的第一段是大数据方向，做 Hive 引擎相关的工作。长时间泡在分布式计算和 SQL 引擎的细节里，理解了一条查询语句从解析、优化到执行的完整链路，也体会过让大规模数据作业又快又稳需要付出什么。</p>
-<p><strong>大厂后端锤炼。</strong> 之后进入大厂做后端开发，在真实业务的规模和复杂度下打磨工程能力：高并发场景下的服务设计、稳定性保障、线上问题的排查与复盘。大厂教会我最重要的一课是——系统可靠比系统聪明更难，也更值钱。</p>
-<p><strong>转型 AI Agent 开发。</strong> 现在的主线是大模型应用方向：从传统后端转向 AI agent 开发，研究 agent 的任务规划、工具调用、记忆机制与多智能体协作，也在动手用 agent 重构自己的工作流。后端工程的底子让我更关注工程化的问题——agent 如何稳定、可观测、可回滚。</p>
-<p><strong>AI 短视频赛道探索。</strong> 同时在做 AI 短视频赛道的创业尝试：观察真实需求、做小原型、快速验证，尝试把内容生产流水线交给 AI——从选题、脚本到成片的自动化。这条路上的一切思考都会记录在博客里。</p>
-<h2 id="博客内容方向"><a href="#博客内容方向" class="headerlink" title="博客内容方向"></a>博客内容方向</h2><p>这个博客会围绕下面五个方向持续更新（各方向的学习进度见<a href="/learning/">学习路径</a>页面）：</p>
-<ol>
-<li><strong>短视频赛道</strong>：AI 短视频的实践、赛道观察与思考</li>
-<li><strong>AI 基础知识</strong>：用大白话讲清楚 AI 的基础概念和原理，给转型路上的同学铺路</li>
-<li><strong>前沿 skill 分享</strong>：值得上手的新工具、新玩法、新工作流</li>
-<li><strong>AI 优秀开源项目解析</strong>：带着问题去看源码——为什么这样设计、能抄什么作业</li>
-<li><strong>投资相关分享</strong>：认知、方法论与记录</li>
-</ol>
-<h2 id="为什么写博客"><a href="#为什么写博客" class="headerlink" title="为什么写博客"></a>为什么写博客</h2><p>把做过的东西写清楚，才算真的理解它。这个博客是我的「外置大脑」：</p>
-<ol>
-<li><strong>记录</strong>：踩过的坑、想通的原理、排查过的疑难问题，写下来防止遗忘，也帮后来的少走弯路</li>
-<li><strong>打磨</strong>：写作是压测思路的最好方式，含糊的地方在文字面前无处藏身</li>
-<li><strong>连接</strong>：希望这些内容能遇到同样对技术和创业感兴趣的人，欢迎交流</li>
-</ol>
-<h2 id="关于本站"><a href="#关于本站" class="headerlink" title="关于本站"></a>关于本站</h2><p>博客基于 Hexo + GitHub Pages 搭建，源码和文章都在 GitHub 上，全部内容仅代表个人观点。</p>
-<h2 id="联系我"><a href="#联系我" class="headerlink" title="联系我"></a>联系我</h2><p>如果你对上面任何话题有共鸣，或者正在做类似的事情，欢迎加微信交流：</p>
-<p><strong>微信号：abc15917977506</strong>（请备注「博客」或来意，更容易通过）</p>
-<p>感谢你的到访，希望这里的内容对你有价值。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/14/about-me/" data-id="cuidiwDDLjn4mi42yqgrua_F-" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+  </nav>
 
 </section>
         
@@ -1133,7 +1169,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99%E7%AC%94%E8%AE%B0/">建站笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
     </div>
   </div>
 
@@ -1143,7 +1179,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
     </div>
   </div>
 
@@ -1153,7 +1189,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+      <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
     </div>
   </div>
 
@@ -1175,6 +1211,10 @@
       <ul>
         
           <li>
+            <a href="/2026/09/21/blog-setup-and-indexing/">博客上线一周，Google 里搜不到我</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/21/agent-book-ch2-skills-status-bar/">Agent 精读（八）：上下文是台只有一半的检索引擎</a>
           </li>
         
@@ -1188,10 +1228,6 @@
         
           <li>
             <a href="/2026/09/18/agent-book-ch2-chat-template-kvcache/">Agent 精读（六）：KV Cache 的账，从 n² 到线性</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/17/agent-book-ch2-api-kv-cache/">Agent 精读（五）：前面不能动，后面尽管加</a>
           </li>
         
       </ul>
