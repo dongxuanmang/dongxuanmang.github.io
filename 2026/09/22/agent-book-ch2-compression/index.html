@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Agent 精读（九）：装得下，但找不到了 | 东玄蟒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第九篇，第 2 章的收官：上下文压缩——什么时候压、怎么压、以及为什么「隔离优于压缩」。读的是李博杰的开源书第二章的最后部分。  压缩的三个理由，一个比一个深 成本与长度：窗口有限（比如 128K），工具结果动辄数万字符，几轮就撑满，任务被迫中断；token 越多，成本和延迟越高 思考质量：即使窗口够大，堆原始信息也不是最优——十几轮搜索结果散落各处，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 精读（九）：装得下，但找不到了">
+<meta property="og:url" content="https://dongxuanmang.github.io/2026/09/22/agent-book-ch2-compression/index.html">
+<meta property="og:site_name" content="东玄蟒">
+<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第九篇，第 2 章的收官：上下文压缩——什么时候压、怎么压、以及为什么「隔离优于压缩」。读的是李博杰的开源书第二章的最后部分。  压缩的三个理由，一个比一个深 成本与长度：窗口有限（比如 128K），工具结果动辄数万字符，几轮就撑满，任务被迫中断；token 越多，成本和延迟越高 思考质量：即使窗口够大，堆原始信息也不是最优——十几轮搜索结果散落各处，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-22T13:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-21T09:25:47.183Z">
+<meta property="article:author" content="东玄蟒">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="上下文压缩">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="东玄蟒" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<!-- hexo injector head_end start --><script src="/js/mermaid.min.js"></script><script>(function () {  function renderMermaid() {    if (!document.querySelector(".mermaid") || typeof mermaid === "undefined") return;    mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });  }  if (document.readyState === "loading") {    document.addEventListener("DOMContentLoaded", renderMermaid);  } else {    renderMermaid();  }})();</script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">东玄蟒</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">乱花渐欲迷人眼，浅草才能没马蹄</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/learning/">学习路径</a>
+        
+          <a class="main-nav-link" href="/agent-book/">Agent 精读</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/dongxuanmang"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://dongxuanmang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-agent-book-ch2-compression" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/22/agent-book-ch2-compression/" class="article-date">
+  <time class="dt-published" datetime="2026-09-22T13:30:00.000Z" itemprop="datePublished">2026-09-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Agent 精读（九）：装得下，但找不到了
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第九篇，第 2 章的收官：上下文压缩——什么时候压、怎么压、以及为什么「隔离优于压缩」。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章的最后部分。</p>
+</blockquote>
+<h2 id="压缩的三个理由，一个比一个深"><a href="#压缩的三个理由，一个比一个深" class="headerlink" title="压缩的三个理由，一个比一个深"></a>压缩的三个理由，一个比一个深</h2><ol>
+<li><strong>成本与长度</strong>：窗口有限（比如 128K），工具结果动辄数万字符，几轮就撑满，任务被迫中断；token 越多，成本和延迟越高</li>
+<li><strong>思考质量</strong>：即使窗口够大，堆原始信息也不是最优——十几轮搜索结果散落各处，模型每次决策都要在数万 token 里反复检索，注意力被分散，关键信息被遗漏</li>
+<li><strong>上下文焦虑（Context Anxiety）</strong>：最隐蔽的一个——当模型「觉得」窗口快耗尽时，会在任务没完成前<strong>提前收尾</strong>。在窗口远没接近耗尽时就主动压缩，模型反而能把任务做完</li>
+</ol>
+<h2 id="机制：把需要思考的，变成可以检索的"><a href="#机制：把需要思考的，变成可以检索的" class="headerlink" title="机制：把需要思考的，变成可以检索的"></a>机制：把需要思考的，变成可以检索的</h2><p>上一篇状态栏说过「上下文学习更像检索而非推理」。压缩是同一枚硬币的另一面：<strong>状态栏是把算好的结论「加」进上下文，压缩是把臃肿的原始记录「换」成算好的结论</strong>——都在给那台只有一半的检索引擎补上提炼层。区别只是：状态栏由代码确定性维护，压缩通常用一次 LLM 调用把大段原文蒸馏掉。</p>
+<p>书里的例子一眼就懂：上下文里有 100 个笼子的巡查记录（90 只黑猫、10 只白猫），问「黑猫几只」——查找（笼子 37 是什么猫）是注意力的强项；统计归纳要遍历全部记录并维护计数，本质是思考。思维链当然能数对，但每问一次就要从头数一遍。而提前写入「当前统计：黑猫 90 只」，模型立刻检索到。</p>
+<p><strong>这就是压缩的第二个价值：把需要思考才能得到的结论，变成可以直接检索的知识。</strong></p>
+<h2 id="两个病：溢出和腐化"><a href="#两个病：溢出和腐化" class="headerlink" title="两个病：溢出和腐化"></a>两个病：溢出和腐化</h2><ul>
+<li><strong>上下文溢出</strong>：装不下了，任务直接失败——这个好理解</li>
+<li><strong>上下文腐化（Context Rot）</strong>：<strong>装得下，但找不到了</strong>——窗口远没满，Agent 却找不到关键信息，或反复纠结一个早已解决的问题。更隐蔽：表面上还在正常工作，决策质量已经悄然下降</li>
+</ul>
+<p>腐化的原因是注意力权重被更多 token 分薄、无关内容占了大头——像在巨大的图书馆里找一本书，无关的书越多，目标越难找。</p>
+<h2 id="与-KV-Cache-共存：压缩的时机和位置"><a href="#与-KV-Cache-共存：压缩的时机和位置" class="headerlink" title="与 KV Cache 共存：压缩的时机和位置"></a>与 KV Cache 共存：压缩的时机和位置</h2><p>前面反复强调「前缀不能动」，压缩不就是要改上下文吗？关键在<strong>时机和位置</strong>：压缩发生在<strong>两次 API 调用之间</strong>，由框架预处理消息列表——</p>
+<ul>
+<li>System Prompt 和工具定义<strong>永远不动</strong>（静态前缀持续缓存）</li>
+<li>压的对象是<strong>对话历史里的 tool results</strong>；替换点之后的缓存失效，之前的仍有效</li>
+<li>这是笔有意识的权衡：不压缩会溢出任务失败；压缩损失部分缓存换上下文可控。所以<strong>接近阈值时批量压，而不是每轮都压</strong></li>
+</ul>
+<h2 id="四条设计原则"><a href="#四条设计原则" class="headerlink" title="四条设计原则"></a>四条设计原则</h2><ol>
+<li><strong>信息价值非均匀分布</strong>：决策关键点 &gt; 支撑证据 &gt; 噪声（导航栏、页脚广告）——压缩预算要按价值分配</li>
+<li><strong>语义完整性</strong>：「Sutskever 于 2024 年 5 月离开 OpenAI」不能压成「Sutskever 离开」——时间和主体是不可丢的关键信息</li>
+<li><strong>任务相关性</strong>：同一内容在不同任务下应产出不同的压缩——检索类任务保广度，分析类保深度，创作类保灵感触发点</li>
+<li><strong>压缩即理解</strong>：有效的压缩需要深层语义理解，压缩模块本身要接近主模型的能力（「模型调用模型」的递归架构）；好处是压缩结果可审查、可跨会话复用</li>
+</ol>
+<p>实验数字背书：上下文感知压缩（把查询意图纳入压缩决策）让 token 使用量<strong>减少 75% 以上</strong>；而无压缩基线里，几次搜索就耗尽了 128K 窗口（累计 36.7 万字符的原始结果）。</p>
+<p>一个优雅的补充是<strong>带引用的压缩</strong>：内容语义压缩（有损），但每条事实附来源 URL（无损索引）——理论上随时可以回溯原始信息。再配一条工程纪律：<strong>决策关键信息要持久化到文档</strong>——压缩最容易丢的恰恰是早期的架构决策、约束背后的理由和失败的路径；就像公司的重要信息要文档化而不是留在聊天记录里，模型没有文档化习惯，就用 prompt 和 Skill 提醒它。</p>
+<h2 id="生产级：五层分层压缩"><a href="#生产级：五层分层压缩" class="headerlink" title="生产级：五层分层压缩"></a>生产级：五层分层压缩</h2><p>成熟系统不会只用一种策略，而是按信息的「保质期」分层（以 Claude Code 为参照）：</p>
+<ol>
+<li><strong>工具结果预算控制</strong>：大输出落盘，模型只看摘要预览</li>
+<li><strong>噪声直接删</strong>：低价值内容直接移除，不做摘要——对噪声做摘要只是浪费 token</li>
+<li><strong>API 层微压缩</strong>：用 API 的上下文编辑能力让服务端移除指定工具结果——零本地成本，但移除点后的缓存同样失效，适合即将溢出、反正要重建缓存时用</li>
+<li><strong>归档式摘要</strong>：逐轮结构化摘要，像 git log 那样保留每轮记录（而不是 squash 成一条），保住对话脉络</li>
+<li><strong>全量压缩</strong>：LLM 驱动的最后手段，且带<strong>熔断器</strong>——生产数据表明大量会话会困在「反复压缩失败」的循环里持续烧钱</li>
+</ol>
+<h2 id="隔离优于压缩"><a href="#隔离优于压缩" class="headerlink" title="隔离优于压缩"></a>隔离优于压缩</h2><p>压缩是信息进来之后做减法，更釜底抽薪的思路是：<strong>让大体积的中间信息根本不进主上下文</strong>。</p>
+<p>主 Agent 把「在代码库中大范围搜索」这类会产生海量中间内容的任务，委派给独立的子 Agent：子 Agent 在<strong>自己的上下文</strong>里完成探索，只把几百 token 的结论回传。对比一下——主 Agent 亲自搜，数万 token 的原始代码进主上下文，找到目标后全沦为噪声还得靠压缩清理；委派出去，主上下文只增加两条消息（任务描述 + 结论），中间的数万 token 随子 Agent 的上下文一起被丢弃。</p>
+<p>本质是<strong>用隔离代替压缩</strong>：压缩是有损的、需要额外 LLM 调用的事后补救；隔离让噪声从一开始就与主上下文绝缘，主 Agent 的 KV Cache 前缀完全不受影响。代价是子 Agent 看不到主 Agent 的完整上下文，<strong>任务描述必须自包含、目标明确</strong>——又回到全章的主题：上下文的质量决定能力上限，对子 Agent 同样成立。</p>
+<h2 id="第-2-章读完了"><a href="#第-2-章读完了" class="headerlink" title="第 2 章读完了"></a>第 2 章读完了</h2><p>三条线索合成一句话：<strong>上下文的质量决定能力的上限</strong>——提示工程决定写什么，Skills 和状态栏决定怎么按需加载与提炼，压缩决定怎么给膨胀的上下文做减法，隔离决定什么根本不该进来。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>进入第 3 章：用户记忆与知识库——把上下文从单次会话延伸为跨会话的持久知识</li>
+<li>实验债清单：<code>context-compression</code>、<code>agent-status-bar</code>、<code>prompt-engineering</code></li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter2.md">《深入理解 AI Agent：设计原理与工程实践》第 2 章「上下文工程」</a>，李博杰著，GitHub 开源——本篇覆盖「上下文压缩策略」全部小节</li>
+<li><a target="_blank" rel="noopener" href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic: Harness design for long-running application development</a>——「上下文焦虑」观察的出处</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/22/agent-book-ch2-compression/" data-id="cuidIJPEQ4DvljS4iy4q7dJkD" data-title="Agent 精读（九）：装得下，但找不到了" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/09/21/blog-setup-and-indexing/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">博客上线一周，Google 里搜不到我</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99%E7%AC%94%E8%AE%B0/">建站笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">九月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/22/agent-book-ch2-compression/">Agent 精读（九）：装得下，但找不到了</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/21/blog-setup-and-indexing/">博客上线一周，Google 里搜不到我</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/21/agent-book-ch2-skills-status-bar/">Agent 精读（八）：上下文是台只有一半的检索引擎</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/20/jev-system-one-models/">大模型的理解力，用户的解空间：Jev 如何填满一个空白象限</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/20/agent-book-ch2-prompt-injection/">Agent 精读（七）：对人类友好，就是对模型友好</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 东玄蟒<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/learning/" class="mobile-nav-link">学习路径</a>
+  
+    <a href="/agent-book/" class="mobile-nav-link">Agent 精读</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
