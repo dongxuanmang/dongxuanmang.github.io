@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://dongxuanmang.github.io/googleccfaafd2b196939e.html</loc>
+    
+    <lastmod>2026-09-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/</loc>
     
     <lastmod>2026-09-21</lastmod>
@@ -161,13 +170,6 @@
   </url>
   
   <url>
-    <loc>https://dongxuanmang.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://dongxuanmang.github.io/tags/KV-Cache/</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -239,6 +241,13 @@
   
   <url>
     <loc>https://dongxuanmang.github.io/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
