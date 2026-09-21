@@ -131,6 +131,8 @@
 <p>实际场景：系统提示词要求每个商家最多打 3 次电话，Agent 经常数不清打了几次，又打第 4 次，甚至循环拨打。「已经打了几次」这个知识没有被提炼出来，而是分散在轨迹的原始记录里，模型每次决策都要花思考 token 重新统计——效率低、错误率高。而当每次通话结果直接标明「本次是第 3 次呼叫」，错误率大幅下降。</p>
 <p>这背后是两件事：把<strong>分散在各处的隐式状态提炼为可直接使用的显式知识</strong>（Harness 提前算好聚合信息，模型只需检索）；以及<strong>强制性的注意力引导</strong>——长上下文里注意力有限，中段信息衰减（开头和结尾注意力高），把结构化的状态放在上下文末尾，空间上紧邻即将生成的新 token，自然获得最高权重。</p>
 <p>数字很有说服力：提供提前算好的状态栏后，<strong>小模型（Qwen3-0.6B）的准确率能接近前沿大模型</strong>；思考 token 量、延迟、花费<strong>降低约一个数量级</strong>——不带状态栏时思考量随上下文变长持续增长，带上之后基本恒定。</p>
+<h3 id="我的理解与修正"><a href="#我的理解与修正" class="headerlink" title="我的理解与修正"></a>我的理解与修正</h3><p>读完这段，我最初的归因是：归纳弱，本质是 LLM 是生成式模型，靠概率预测 token——概率性的东西当然数不准。细想后这个归因站不住：把采样温度设为 0（greedy decoding），每一步都是确定性的，模型照样数不清 3 次电话。真正的原因在<strong>架构</strong>：注意力是并行的加权读取，一次矩阵运算就能从上万 token 里捞出相关内容，这是 Transformer 天生擅长的；而归纳统计需要循环加精确累加（数到几了、加一、比较），单次前向传播是固定深度的计算，没有可迭代的循环状态——需要循环的精确计算，架构上就做不稳。</p>
+<p>所以模型不是不能归纳，是归纳很贵：思维链就是它现算的方式——实验 2-8 的对照组里，热力图显示思考 token 在草稿纸上一步步数数——成本随上下文增长，且一步数错、后面全错。状态栏的本质，是把「每次现算」替换成「一次检索」：把归纳从概率路径上挪走，交给代码在 Harness 里确定性完成，模型只消费结果。这也解释了书里为什么坚持「状态栏尽量用代码维护」——确定性计算就该交给确定性引擎。</p>
 <h2 id="状态栏怎么落地"><a href="#状态栏怎么落地" class="headerlink" title="状态栏怎么落地"></a>状态栏怎么落地</h2><p><strong>放哪</strong>：作为一条 user 角色的消息挂在上下文<strong>末尾</strong>，内容用 <code>&lt;agent_status&gt;</code> 标签包裹——借助 user 槽位注入框架生成的状态，但特殊标签让模型能理解这不是真实用户在说话。不改 system 消息（那会破坏前缀缓存），追加也不影响任何已缓存内容——还是「动态信息追加末尾」那套。</p>
 <p><strong>状态会变，两种更新策略各有代价</strong>：</p>
 <ul>
@@ -156,7 +158,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuidfPEojSEIXinjhtAcq6nji" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuidNp6kfif7fxxEMAv2zzbCy" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -447,7 +449,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuidOO53LTdVfkFY2-Z64y3YA" data-title="大模型的理解力，用户的解空间：Jev 如何填满一个空白象限" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuid6sNfCoEhKniZGJPWdrLBt" data-title="大模型的理解力，用户的解空间：Jev 如何填满一个空白象限" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -534,7 +536,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidUR9iokmuovG_Th2tiCbBR" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidjbvBczwEf_hnlTRzLYqJw" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -619,7 +621,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuidmbBdtnL_6coMu-FswgA7o" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuidSaNL8y_5nhB9V9y7CvhLs" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -707,7 +709,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuidBdOBXLUc-OHSweR_gJ7Om" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuidwAOQCzcqsWjYjhrshBJ_E" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -797,7 +799,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuide3Xof-EtcoZY2adj2pzZD" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuid2hjpjhJedIDkRzsLu_EUQ" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -885,7 +887,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidIShL4OdVEgZI1JtVGKbIt" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidmenEKOUaYMA8-Y4SIbFpT" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -967,7 +969,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuidxnHugHypAKfqXmGnPruiB" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuidXYSzBHLztoP7AFJ_h2m5P" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1037,7 +1039,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidw5jXdLSI9nsgPlof1W0_8" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuid4ZUKVu14S4YZJyzIwFBxF" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1107,7 +1109,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/14/about-me/" data-id="cuidyPQ_Jij3LrnhW469VVyF3" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/14/about-me/" data-id="cuidEX2TgsGv1btQsInixFLiM" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
