@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://dongxuanmang.github.io/2026/09/22/llm-parameters-budget/</loc>
+    
+    <lastmod>2026-09-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://dongxuanmang.github.io/learning/index.html</loc>
     
     <lastmod>2026-09-22</lastmod>
@@ -146,27 +155,6 @@
 
   
   <url>
-    <loc>https://dongxuanmang.github.io/tags/%E7%AE%80%E4%BB%8B/</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://dongxuanmang.github.io/tags/AI/</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://dongxuanmang.github.io/tags/Agent/</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://dongxuanmang.github.io/tags/AI-Agent/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
@@ -195,6 +183,27 @@
   </url>
   
   <url>
+    <loc>https://dongxuanmang.github.io/tags/%E7%AE%80%E4%BB%8B/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/AI/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/Agent/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://dongxuanmang.github.io/tags/KV-Cache/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
@@ -209,14 +218,14 @@
   </url>
   
   <url>
-    <loc>https://dongxuanmang.github.io/tags/vLLM/</loc>
+    <loc>https://dongxuanmang.github.io/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://dongxuanmang.github.io/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/</loc>
+    <loc>https://dongxuanmang.github.io/tags/vLLM/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -231,20 +240,6 @@
   
   <url>
     <loc>https://dongxuanmang.github.io/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://dongxuanmang.github.io/tags/Agent-Skills/</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://dongxuanmang.github.io/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -279,28 +274,14 @@
   </url>
   
   <url>
-    <loc>https://dongxuanmang.github.io/tags/AI-%E5%89%8D%E6%B2%BF/</loc>
+    <loc>https://dongxuanmang.github.io/tags/Agent-Skills/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://dongxuanmang.github.io/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://dongxuanmang.github.io/tags/RLCD/</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://dongxuanmang.github.io/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/</loc>
+    <loc>https://dongxuanmang.github.io/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -341,17 +322,73 @@
     <priority>0.2</priority>
   </url>
   
-
-  
   <url>
-    <loc>https://dongxuanmang.github.io/categories/%E9%9A%8F%E7%AC%94/</loc>
+    <loc>https://dongxuanmang.github.io/tags/AI-%E5%89%8D%E6%B2%BF/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
+    <loc>https://dongxuanmang.github.io/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/RLCD/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/MoE/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/%E6%98%BE%E5%AD%98/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+  <url>
     <loc>https://dongxuanmang.github.io/categories/Agent-%E7%B2%BE%E8%AF%BB/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://dongxuanmang.github.io/categories/%E9%9A%8F%E7%AC%94/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -365,14 +402,14 @@
   </url>
   
   <url>
-    <loc>https://dongxuanmang.github.io/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/</loc>
+    <loc>https://dongxuanmang.github.io/categories/%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://dongxuanmang.github.io/categories/%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://dongxuanmang.github.io/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
