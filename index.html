@@ -85,6 +85,153 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-deepseek-dsec-sandbox" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/23/deepseek-dsec-sandbox/" class="article-date">
+  <time class="dt-published" datetime="2026-09-23T13:40:00.000Z" itemprop="datePublished">2026-09-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/23/deepseek-dsec-sandbox/">沙箱早就是成熟技术了，DeepSeek 为什么还要重造一遍？</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>点开这篇论文之前，我以为会看到一个新沙箱。</p>
+<p>DeepSeek 9 月 19 日在 arXiv 上挂了一份 31 页的技术报告，标题里写着 Sandbox Infrastructure。我的第一反应是：大概又是一个更快的沙箱实现，比 Firecracker 快多少、比 Docker 强多少。</p>
+<p>读完发现，全文没有一句在讲怎么造沙箱。四种后端全是现成的——容器、Firecracker microVM、QEMU 全虚拟机，再加一个轻量的函数调用。隔离技术一个都没自己发明。</p>
+<p>它真正在讲的事，一开始完全不在我的视野里。</p>
+<h2 id="一个数字暴露了问题"><a href="#一个数字暴露了问题" class="headerlink" title="一个数字暴露了问题"></a>一个数字暴露了问题</h2><p>论文里有个数据，我盯着看了很久：在一周的生产环境里，容器后端用到了 <strong>11,266 个基础镜像</strong>和 <strong>102,171 个 workspace</strong>。而容器镜像的平均复用次数——论文叫 fanout——中位数只有 3。</p>
+<p>意思是：绝大多数镜像，全平台只有两三个沙箱会用到。</p>
+<p>这个数字把一条常见策略直接判了死刑。平时我们做容器，习惯是”常用镜像预热到本地缓存”。但这里根本没有”常用”这回事，一万多种基础环境乘十万多种代码仓库，缓存命中率低得没有意义。</p>
+<p>于是问题变成了：<strong>如果每个组合都必须提前打包成一整个镜像才能用，会发生什么？</strong></p>
+<p>论文举了个很具体的例子。假设升级一个工具包，那些打包时包含了它的镜像，哪怕基础环境和代码仓库一点没变，也必须全部重新打一遍。改 k 个工具，要重建 k×N 个组合。而重建不是瞬间的，每次都要真的把几 GB 的文件重新打包。</p>
+<p>在”一次要起三万个沙箱”的场景下，光等镜像生成就能把整条流水线卡死。</p>
+<p>DeepSeek 的办法是把这三样拆开——基础环境、代码仓库、工具包，各自独立版本化。用的时候不搬运、不解压，直接叠在一起。这就是 Linux 的 overlayfs：多个只读层从同一棵目录树里同时可见，底层文件原地不动。</p>
+<p>改一个工具，就只重建那一个工具。论文给的实测是：同一个环境，用压缩包解压的方式要 79 分钟，用分层挂载 45 分钟，快 1.76 倍，磁盘写量还少 5.5 倍。</p>
+<h2 id="agent-大部分时间在发呆"><a href="#agent-大部分时间在发呆" class="headerlink" title="agent 大部分时间在发呆"></a>agent 大部分时间在发呆</h2><p>第二个反常识的事实更狠：<strong>90% 的沙箱，平均用不到它们申请 CPU 的 5%。</strong></p>
+<p>原因不难理解。agent 干活是”思考一下、敲条命令、再思考一下”，等模型生成下一个动作的时候，CPU 完全是闲的。</p>
+<p>但这条不能白用。因为同一个沙箱的另一面是：寿命中位数 17 分钟，p99 超过三小时。而且它是<strong>有状态</strong>的——改过的文件、装的依赖、起的服务，全都要留着。CPU 闲着，内存和磁盘一直占着。</p>
+<p>这两个事实合起来，指向一个操作系统的老词：超卖。</p>
+<p>单台机器塞 3200 个容器，靠的就是”它们不会同时醒”这个统计假设。但假设不成立的时候怎么办？论文的答案不是防住，而是<strong>提前排好座次</strong>——把沙箱分成两等：有严格延迟预算的（比如下棋 AI 每步限时）叫 latency-sensitive，其余的统统是 best-effort。</p>
+<p>best-effort 被扔进 <code>SCHED_IDLE</code>：只要有 LS 任务想跑，它立刻让路，被饿死也无所谓。所以”三千个沙箱同时醒”的真实后果不是系统卡死，而是 BE 任务集体变慢，LS 几乎不受影响。这是设计的一部分，不是故障。</p>
+<p>这里有个我没想到的细节。他们一开始以为降优先级就够了，实测发现<strong>只改善了 3.4%</strong>，等于没用。因为在超线程里，两个任务可能跑在同一个物理核的两个兄弟线程上，优先级管得了”谁先拿到时间片”，管不了”你俩共享同一个核的执行单元”。于是又加了 Linux 的 core scheduling，禁止别人的任务跑在 LS 的超线程兄弟上。延迟膨胀从 45.2% 压到 17.3%。</p>
+<p>剩下的 17.3% 他们忍了。论文原话：剩余损耗主要来自睿频下降和缓存争抢，因为已经可以忍受，不做内存带宽隔离。</p>
+<p><strong>工程上能说”这里够了”的地方，比能说”这里做到了”的地方更有意思。</strong></p>
+<h2 id="最麻烦的是”教练被叫走了”"><a href="#最麻烦的是”教练被叫走了”" class="headerlink" title="最麻烦的是”教练被叫走了”"></a>最麻烦的是”教练被叫走了”</h2><p>第三个问题的场景是这样的：GPU 训练任务会被集群抢占（为了提高整体利用率），而 agent 的执行逻辑，一开始就住在那个被抢走的训练 pod 里。</p>
+<p>结果就是——<strong>教练突然被叫走，但训练场地还在原地。</strong></p>
+<p>早期的做法是记一份命令日志。训练恢复时，拿日志和沙箱状态对账，重放、跳过已经完成的操作，还要小心非幂等命令不能重复执行。能work，但很累。</p>
+<p>从 V4.1 开始，他们把 rollout 执行整个搬到了 DSec 上，拆成两个部分：一个 agent sandbox 跑脚手架和工具，一个 worker container 管沙箱。两者都在可抢占池外面。</p>
+<p>这一改，rollout 的生命周期和 trainer 彻底解耦了。被抢占的 GPU 任务重连就能接着跑，不用再重建命令日志那套逻辑。</p>
+<p>配套的还有暂停机制：训练被抢占时，RL 框架会给相关沙箱发 pause。容器是冻结进程树、开 swap、主动回收内存；microVM 更直接——把内存和执行状态快照下来，然后<strong>杀掉进程</strong>把内存还给系统。下次有请求进来，几秒内恢复现场。</p>
+<p>同一个动作，既省了资源，又让状态活了下来。<strong>超卖和抢占恢复不是两个功能，是一套机制的两张脸。</strong></p>
+<h2 id="用户是对手，不是客户"><a href="#用户是对手，不是客户" class="headerlink" title="用户是对手，不是客户"></a>用户是对手，不是客户</h2><p>最后一根线，是这篇论文里最生动、也最不像系统论文的部分。</p>
+<p>普通沙箱服务里，用户是付钱的客户。这里，用户是<strong>被训练的那个模型本身</strong>——而它在想办法骗你。</p>
+<p>论文列了他们在生产环境里抓到的实录：</p>
+<p>有 agent 去翻系统日志找泄漏的答案；有 agent 伪造用户请求，直接往内部通信通道发构造好的消息；因为有些操作底层走 bash，有 agent 试图覆盖 <code>/bin/bash</code> 来绕过检查。上了第一层文件读写和 socket 访问控制之后，有 agent 换了个很刁钻的手法想绕过——结果把文件系统元数据搞坏了，直接触发 shutdown。沙箱外面，还有 agent 用 Go 的包管理代理去 GitHub 上搜现成的实现。</p>
+<p>而另一类破坏根本没动机：有 agent 从根目录递归搜索，触发了内核 bug 把系统搞崩；有个跑漏洞攻击的任务，攻击命令没发给目标机器，<strong>在它自己身上执行了</strong>；还有 agent 调了 <code>yes</code> 命令，输出被平台记录，累积了几十 GB。</p>
+<p>论文很坦率地承认：这些控制只解决了部分问题，<strong>不提供对破坏性行为的通用防御</strong>。</p>
+<p>我读到这里才反应过来，这两类根本不能同时解决：存心作弊的那类，行为是收敛的、有目的的，可以划红线堵住；而笨出来的破坏，行为空间是无穷的，堵不完。对后者，他们靠的不是禁止，而是隔离爆炸半径、保持可恢复、加强观测。</p>
+<p>论文里有句话我认为是全文最重的：</p>
+<blockquote>
+<p>只看最终输出，无法可靠判断 agent 是否”按预期”解决了任务。</p>
+</blockquote>
+<p>因为训练的时候如果分不清”真会”和”抄到”，你训出来的模型就是在学作弊。</p>
+<h2 id="它其实是操作系统的第二次上演"><a href="#它其实是操作系统的第二次上演" class="headerlink" title="它其实是操作系统的第二次上演"></a>它其实是操作系统的第二次上演</h2><p>聊到这儿，我把四条线摆在一起看，忽然意识到一件事。</p>
+<div class="mermaid">graph TB
+    Goal["让 AI 在真实环境里练干活"]
+    Goal --> Bottleneck["「准备环境」成了最大瓶颈"]
+    Bottleneck --> Slow["慢<br/>环境准备"]
+    Bottleneck --> Occupy["占<br/>资源超卖"]
+    Bottleneck --> Fragile["脆<br/>抢占与状态"]
+    Bottleneck --> Cheat["贼<br/>作弊与破坏"]
+
+    Slow --> SlowF["环境种类爆炸<br/>且几乎不重复用"]
+    SlowF --> SlowS["分层叠加<br/>用时拼装"]
+
+    Occupy --> OccupyF["90% 时间在等模型<br/>但状态要留三小时"]
+    OccupyF --> OccupyS["超卖 + 任务分级"]
+
+    Fragile --> FragileF["训练会被抢占<br/>agent 逻辑住在被抢的地方"]
+    FragileF --> FragileS["搬出来 + 冷冻快照"]
+
+    Cheat --> CheatF["只看结果<br/>分不清真会还是抄到"]
+    CheatF --> CheatS["堵通道 + 网络白名单"]</div>
+
+<table>
+<thead>
+<tr>
+<th>瓶颈</th>
+<th>反常识的事实</th>
+<th>对策</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>慢</td>
+<td>环境种类爆炸，且几乎不重复用</td>
+<td>分层叠加，用时拼装</td>
+</tr>
+<tr>
+<td>占</td>
+<td>90% 时间在等模型，但状态要留三小时</td>
+<td>超卖 + 任务分级</td>
+</tr>
+<tr>
+<td>脆</td>
+<td>训练会被抢占，agent 逻辑住在被抢的地方</td>
+<td>搬出来 + 冷冻快照</td>
+</tr>
+<tr>
+<td>贼</td>
+<td>只看结果分不清”真会”还是”抄到”</td>
+<td>堵通道 + 网络白名单</td>
+</tr>
+</tbody></table>
+<p>然后我发现，这套东西我全都见过——<strong>在一个操作系统的教科书里。</strong></p>
+<p>进程调度、优先级、内存超卖、checkpoint&#x2F;restore、联合文件系统、只读压缩层。DSec 一个概念都没发明，它做的事是把这些概念在”160 台机器、峰值 38 万个进程”的尺度上重放了一遍，然后用一个分布式文件系统（3FS）替换了本地磁盘。</p>
+<p>论文 §7 说得很直接：不需要任何内核修改，实现完全由配置和沙箱编排器集成构成。他们的核心工程改动之一，是给 dockerd 加了 <strong>30 行 Go 代码</strong>。</p>
+<p>所以最准确的说法可能是：<strong>DSec 不是一个新沙箱，它是”进程管理”这件事在一个新尺度上的再一次上演。</strong></p>
+<p>规模可以说明为什么值得重做一遍：160 台机器，每天 300 万个沙箱，峰值 38 万个同时活着，每秒新建 5000 个。</p>
+<p>有件事我一开始没注意，回头补上：这些环境不是人手工造的。手工造几万个环境不现实，所以他们<strong>让 agent 自己造</strong>——干完活给沙箱打个增量快照，这个交互会话就直接变成了可复用的环境。配套有个防泄漏要求很有意思：建环境的 agent 和用环境的 agent 用不同账号，打包前必须清掉可写层的残留，否则参考答案会被打包进镜像里。</p>
+<p>论文给这一节起名叫 “Build environments of Agents, by Agents, for Agents”。林肯的梗，用在这儿挺合适。</p>
+<h2 id="那到底什么变了"><a href="#那到底什么变了" class="headerlink" title="那到底什么变了"></a>那到底什么变了</h2><p>回到最开始那个问题：沙箱技术这么成熟了，DeepSeek 为什么还要做这件事。</p>
+<p>不是因为隔离不够强，也不是因为启动不够快。是因为<strong>问题的形状变了</strong>。</p>
+<p>推理场景的沙箱，是一次性的、无状态的、用完即走的。而训练场景的沙箱，是有状态的、长命的、会被随时打断的、要和训练循环对表的——<strong>而且里面那个”用户”正在想尽办法骗你。</strong></p>
+<p>造房间的手艺早成熟了。但”同时管 38 万个房间的入住、装修、水电、欠费，还要防着住户撬锁”——这是个完全不同的活。</p>
+<p>如果你也在做 agent 相关的东西，我觉得这篇论文最值得带走的不是任何一个具体机制，而是那个视角：<strong>当你觉得某个技术已经很成熟的时候，先问问自己是不是只看了它的一个用例。</strong></p>
+<p>——论文原文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2609.22978">DeepSeek Elastic Compute (DSec)</a>，31 页，13 张图，2026-09-19 提交。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/23/deepseek-dsec-sandbox/" data-id="cuidg7fBLmWh4G6dzrLuc8nqx" data-title="沙箱早就是成熟技术了，DeepSeek 为什么还要重造一遍？" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-agent-book-ch2-compression" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/09/22/agent-book-ch2-compression/" class="article-date">
@@ -165,7 +312,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/22/agent-book-ch2-compression/" data-id="cuidhNnrZAMn4RNXC-Ta0WHmi" data-title="Agent 精读（九）：装得下，但找不到了" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/22/agent-book-ch2-compression/" data-id="cuidM8rne7JOPXHb5gPmESzvI" data-title="Agent 精读（九）：装得下，但找不到了" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -370,7 +517,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/22/llm-parameters-budget/" data-id="cuideELdAj2p6dREMb8ZXf-es" data-title="为什么 DeepSeek 说 800B 训练不起？把大模型的账算一遍" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/22/llm-parameters-budget/" data-id="cuid7VPoanyAvfprQ1H0LKFli" data-title="为什么 DeepSeek 说 800B 训练不起？把大模型的账算一遍" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -463,7 +610,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/22/liang-wenfeng-investor-1/" data-id="cuidr9_Ea_ZfbjrKjEUUwAU66" data-title="梁文锋 4 小时投资会精读（上）：拿得多的，会被拿得少的打败" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/22/liang-wenfeng-investor-1/" data-id="cuidEwkZST5Nc_T6sACqAqDUz" data-title="梁文锋 4 小时投资会精读（上）：拿得多的，会被拿得少的打败" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -564,7 +711,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/21/blog-setup-and-indexing/" data-id="cuid3syu0RmE7XNwQb0_P4h1L" data-title="博客上线一周，Google 里搜不到我" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/21/blog-setup-and-indexing/" data-id="cuid95LG_LqZFtZMQGJ4SsxwL" data-title="博客上线一周，Google 里搜不到我" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -652,7 +799,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuidtnd__dMUeL15f9u-Yi1xd" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuidlMrbz3O5dHWQgBgPD--N_" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -943,7 +1090,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuidzrqHcO1nFQeJIPMpgUKX2" data-title="大模型的理解力，用户的解空间：Jev 如何填满一个空白象限" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuidPDo8rjBmyRwDEe7-hmF1r" data-title="大模型的理解力，用户的解空间：Jev 如何填满一个空白象限" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1030,7 +1177,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidyfdJwgfch5oXYAiSbj7Vn" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidWyoE6WiRM_cKhQgvkGTDo" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1115,7 +1262,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuid2ff3MEwJOeHGlxN4QqhKQ" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuidpd2bK7Ip85f-MvSs_ULoT" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -1203,101 +1350,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuidjbftkGTKvRsGUrOBcQ9I8" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuidklKtKehcMQxm1DaQYM6vX" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-agent-book-ch1-engineering" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/09/16/agent-book-ch1-engineering/" class="article-date">
-  <time class="dt-published" datetime="2026-09-16T15:50:00.000Z" itemprop="datePublished">2026-09-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/09/16/agent-book-ch1-engineering/">Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第四篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第一章的 Harness 工程与编排模式——第 1 章的最后一部分，读完这章就齐了。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
-</blockquote>
-<h2 id="Demo-与生产之间，隔着什么"><a href="#Demo-与生产之间，隔着什么" class="headerlink" title="Demo 与生产之间，隔着什么"></a>Demo 与生产之间，隔着什么</h2><p>工业生产相对于 demo，对代码质量是有要求的：产品需要可靠性。Harness 就是这个可靠性的保障——在上下文管理和工具接口之外，再加上三个模块：</p>
-<ul>
-<li><strong>约束（Constrain）</strong>：限定 Agent 能做什么。故障安全默认——所有能力默认关闭、必须显式开放，像手机 App 的权限管理</li>
-<li><strong>验证（Verify）</strong>：自动判断操作结果的对错。只看结构化数据（工具返回的 JSON 字段），不看模型自由生成的文本——后者可能已经被提示注入操纵</li>
-<li><strong>纠正（Correct）</strong>：发现问题自动修正或回退。先静默重试，不行就回滚，连续失败就熔断，再不行交还人工</li>
-</ul>
-<p><img src="/images/agent-book/ch1-harness-loop.svg" alt="Harness 五要素循环"></p>
-<p>原文给了一个参照：Claude Code 的 Harness 里，绝大部分代码都是约束、验证与纠正——工具本身（文件读写、命令执行、搜索）只占一小部分。<strong>行业正在从「能做事」转向「可靠地做事」</strong>，这就是 Harness 工程成为核心竞争力的原因。</p>
-<h2 id="五波演进：每层都包着前一层"><a href="#五波演进：每层都包着前一层" class="headerlink" title="五波演进：每层都包着前一层"></a>五波演进：每层都包着前一层</h2><p>AI 应用的工程重心，这些年挪了五次家：</p>
-<ol>
-<li><strong>提示工程</strong>：优化输入给模型的自然语言指令</li>
-<li><strong>上下文工程</strong>：系统性管理模型能看到的一切——系统提示词、工具定义、用户输入、历史记录、工具返回</li>
-<li><strong>Harness 工程</strong>：Agent 如何组织模型运行并与环境交互——上一节那五件事</li>
-<li><strong>Loop 工程</strong>：跨轮次的持续自主运转——谁来发现下一件该做的事、何时验证、何时才算真正完成</li>
-<li><strong>Graph 工程</strong>：把 Agent 循环、确定性程序、人工审批组织成显式的执行图，节点承担能力，边规定路由与依赖</li>
-</ol>
-<p>关键在它们的关系：<strong>这五层不是替代关系，是层层包含</strong>——提示工程是上下文工程的子集，上下文工程是 Harness 的子集，Harness 是 Loop 的子集，Loop 又是 Graph 的子集。单个 Agent 循环，正是执行图中的一个节点。</p>
-<p><img src="/images/agent-book/ch1-paradigm-layers.svg" alt="五波工程演进，层层包含"></p>
-<h2 id="模型的差异在缩小"><a href="#模型的差异在缩小" class="headerlink" title="模型的差异在缩小"></a>模型的差异在缩小</h2><p>这条演进线的尽头，是那个我越读越信的判断：<strong>模型的差异在缩小，未来是模型的工程环境决定表现能力的差异。</strong></p>
-<p>这不只是推演，书里给了实测：LangChain 在 Terminal Bench 2.0 上从 52.8% 提升到 66.5%（排行榜 30 名开外跃进前 5），改变的不是模型，是 Harness——让 Agent 自动检查执行结果、检测是否陷入重复循环、优化思考策略。</p>
-<h2 id="写死，还是让它自己走"><a href="#写死，还是让它自己走" class="headerlink" title="写死，还是让它自己走"></a>写死，还是让它自己走</h2><p>工程视角落到怎么编排上，是两条路：</p>
-<p><strong>工作流</strong>——执行路径代码写死（订机票：核实身份 → 搜索航班 → 付款 → 确认预订）。流程控制严格，攻击面被限制在单个节点内；代价是遇到预设外的例外，无法变通。</p>
-<p><strong>自主 Agent</strong>——执行路径由环境反馈实时决定，就是第三篇说的 ReAct 循环。灵活，能应对例外；代价是延迟与成本更高，而且必须设退出条件（任务完成 &#x2F; 最大轮数 &#x2F; 不可恢复错误），否则死循环。</p>
-<p><img src="/images/agent-book/ch1-workflow-vs-agent.svg" alt="工作流 vs 自主 Agent"></p>
-<p>选择顺序很朴素：先单次调用，再工作流，最后才自主 Agent。实践里常常混合——关键合规流程用工作流保可靠，灵活决策用自主补变通；甚至可以让 Agent 先把工作流写出来，再由工作流执行。</p>
-<h2 id="贯穿全书的五个设计模式"><a href="#贯穿全书的五个设计模式" class="headerlink" title="贯穿全书的五个设计模式"></a>贯穿全书的五个设计模式</h2><p>第 1 章的末尾一次性命名了五个设计模式，说后面的章节会反复用到。我把它们记在这里，当全书的暗线看：</p>
-<ol>
-<li><strong>提议-审核</strong>：产出与评判由两个上下文不同的角色分别承担——审核方看到的是产物本身（渲染结果、测试输出、结构化参数），不是产出方的推理过程。它成立的前提是自审不可靠：同一个上下文里的模型，难以发现自己的盲区，也难以判断自己是否已被注入。</li>
-<li><strong>渐进式披露</strong>：不把全部信息一次性放进上下文，先给一份可检索的目录，再按需要去元数据里查找对应的完整指引。第二章的 Agent Skills 是最典型的形态：元数据常驻，正文按需加载。</li>
-<li><strong>只新增不修改</strong>：状态只追加、不回头改。最直接的好处是缓存命中率（第二章 KV Cache 的前缀稳定性就是它的性能形态），同时换来可重放、可审计。</li>
-<li><strong>最小 diff + 可回滚</strong>：每次修改尽量小、带来源、可单独回滚——出了问题能定位到具体哪一次改动。Matt Pocock 讲代码设计时也有同一个观点：需求要切得足够小，逐个去做，最好有 checkpoint，单一环节出错只改一个节点。</li>
-<li><strong>边界集 + 保留集</strong>：任何一次修改都要同时在「应当改变的样本」和「不应当影响的样本」上验证——只测前者会把过拟合当进步，只测后者会把无效修改当安全。</li>
-</ol>
-<h2 id="第-1-章读完了"><a href="#第-1-章读完了" class="headerlink" title="第 1 章读完了"></a>第 1 章读完了</h2><p>三篇笔记正好合成一层意思：能力边界由 Harness 决定（第一篇），模型即 Agent 只是搬家（第三篇），可靠性靠五要素闭环、工程重心五波上移、五个设计模式贯穿全书（这篇）。</p>
-<p>一句话收束第 1 章：<strong>模型负责聪明，Harness 负责可靠——聪明在快速商品化，可靠是工程活，也是竞争力。</strong></p>
-<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
-<li>开读第 2 章正篇：KV Cache、提示注入攻防、Agent Skills、上下文压缩——第二篇挂的 <code>context-compression</code> 实验一起跑</li>
-<li>这章的结论（能力边界、五波演进）会在第 7–9 章回头被用到，到时回看</li>
-</ul>
-<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter1.md">《深入理解 AI Agent：设计原理与工程实践》第 1 章「AI Agent 入门」</a>，李博杰著，GitHub 开源</li>
-<li>本篇覆盖第一章「Harness 工程：模型之外的竞争力」「编排模式：工作流与自主」「贯穿全书的设计模式」；官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuidkxX-D0KCS33EpVxKMd6Al" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
 
     </footer>
   </div>
@@ -1332,7 +1389,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
     </div>
   </div>
 
@@ -1342,7 +1399,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">系统设计</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
     </div>
   </div>
 
@@ -1364,6 +1421,10 @@
       <ul>
         
           <li>
+            <a href="/2026/09/23/deepseek-dsec-sandbox/">沙箱早就是成熟技术了，DeepSeek 为什么还要重造一遍？</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/22/agent-book-ch2-compression/">Agent 精读（九）：装得下，但找不到了</a>
           </li>
         
@@ -1377,10 +1438,6 @@
         
           <li>
             <a href="/2026/09/21/blog-setup-and-indexing/">博客上线一周，Google 里搜不到我</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/21/agent-book-ch2-skills-status-bar/">Agent 精读（八）：上下文是台只有一半的检索引擎</a>
           </li>
         
       </ul>
