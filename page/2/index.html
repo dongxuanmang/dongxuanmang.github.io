@@ -85,6 +85,178 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-agent-book-ch2-prompt-injection" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/20/agent-book-ch2-prompt-injection/" class="article-date">
+  <time class="dt-published" datetime="2026-09-20T13:30:00.000Z" itemprop="datePublished">2026-09-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/20/agent-book-ch2-prompt-injection/">Agent 精读（七）：对人类友好，就是对模型友好</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章的提示工程与提示注入部分。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="先记住一个检验标准"><a href="#先记住一个检验标准" class="headerlink" title="先记住一个检验标准"></a>先记住一个检验标准</h2><p>原文给系统提示词设计了一个实用的检验标准：<strong>如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。</strong></p>
+<p>这一篇的所有技巧，都是这句话的展开——因为模型在训练中学习了人类的语言和思维模式，针对人类降低认知负担的方法，对模型同样有效。</p>
+<h2 id="用带实习员工的方式写提示词"><a href="#用带实习员工的方式写提示词" class="headerlink" title="用带实习员工的方式写提示词"></a>用带实习员工的方式写提示词</h2><p>书里有个小观察：大写强调（”NEVER do X”）比 “Please avoid doing X” 更能引起模型的注意，过度使用还会稀释效果——Claude Code 的工具定义里就有 “NEVER invoke grep or rg as a Bash command”。</p>
+<p>但这类命令式标记我不喜欢。我更认可的姿态是像教导实习员工（甚至小白）一样去提示模型：它是聪明但完全不了解你业务的新人——讲清楚业务背景，给正例也给反例，给标准流程，而不是堆一堆 NEVER 和 MUST 指望它自己悟。这也和全书的比喻一致：系统提示词是员工手册，流程是 SOP，好培训从来不是「你很聪明，自己看着办」。</p>
+<p><strong>示例是规则表达不了时的替代品。</strong> 当期望的输出难以用规则精确描述——文案风格、报告格式、语气分寸——给两三个高质量示例，胜过等量篇幅的抽象规则。数量不是越多越好：两三个覆盖边界情况的，胜过十个大同小异的（后者还会稀释模型对规则本身的注意力）。正例之外最好配反例，并写清适用范围——这是 Skill 写作里的明确建议。</p>
+<p><strong>示例的位置有缓存约束。</strong> 示例放在系统提示词里就成了静态前缀的一部分，处于上下文靠前的区域——一旦确定就要字节级稳定。按请求动态检索「最相关」的示例，等于每次改写前缀，缓存持续失效。生产系统的做法是为每类任务准备固定示例集，而不是逐请求挑选。</p>
+<h2 id="结构化：XML-Markdown-双层"><a href="#结构化：XML-Markdown-双层" class="headerlink" title="结构化：XML + Markdown 双层"></a>结构化：XML + Markdown 双层</h2><p>模型对结构化输入显著敏感（训练数据里就有大量结构化内容）。书里的方案是两种格式配合：</p>
+<ul>
+<li><strong>XML 负责精确语义</strong>：<code>&lt;working_directory&gt;</code> 这个标签名本身就告诉模型「这是工作目录信息」，纯文本「当前目录：&#x2F;Users&#x2F;project&#x2F;src」则需要模型额外思考冒号前后的关系</li>
+<li><strong>Markdown 负责层次组织</strong>：<code>#</code>、<code>##</code> 标题让人一眼看出结构，人机共读</li>
+</ul>
+<p>这个设计有消融数据背书：保留所有规则的内容、只打乱组织结构，<strong>任务成功率下降超过 30%</strong>——「先验证身份再处理退款」被拆散后，Agent 有时跳过身份验证直接退款；而去掉工具的描述性文本，<strong>工具调用错误率增加 45%</strong>。</p>
+<p>所以这一篇的标题就是原文实验的结论：对人类友好的信息组织方式，对模型同样友好。</p>
+<h2 id="流程驱动优于规则堆砌"><a href="#流程驱动优于规则堆砌" class="headerlink" title="流程驱动优于规则堆砌"></a>流程驱动优于规则堆砌</h2><p>给新员工一份上百条零散规则的手册，没有流程图、没有优先级——多条规则同时适用时怎么选？规则没覆盖时怎么办？最聪明的人也会困惑，模型也一样。</p>
+<p>流程驱动的提示词是标准操作流程（SOP）：模型在任何时刻都清楚自己处于哪个阶段、当前步骤的目标是什么、完成后进哪一步；遇到异常时按当前阶段处理，而不是遍历所有规则找匹配项。</p>
+<p>配套的是业务规则要细化到可执行的程度。书里打电话砍价的 Agent 例子：模糊的「根据任务情况选择合适的计费类型」会让行为极不稳定（退衣服算省钱吗？取消订阅算吗？），必须写死成 <code>NEVER use percentage_based_one_time for refunds</code>。设计哲学是：模型的优势在遵循复杂指令，<strong>不该在业务规则上有自由裁量权</strong>——好培训不是「你很聪明，自己看着办」，而是 SOP + 明确框架。</p>
+<h2 id="工具定义也开始渐进式披露"><a href="#工具定义也开始渐进式披露" class="headerlink" title="工具定义也开始渐进式披露"></a>工具定义也开始渐进式披露</h2><p>上一篇刚说过第一章的设计模式「渐进式披露」，这一节看到它落到了 API 层：静态前缀里只保留工具的<strong>名称和简述</strong>，模型搜索到要调用时，再把完整的 schema 注入到<strong>上下文末尾</strong>。OpenAI 的 <code>tool_search</code>、Anthropic 的 Tool Search、Codex CLI（默认开启）都是这个机制。</p>
+<p>为什么追加到末尾不破坏缓存？这是 KV Cache 前缀性质的直接推论：因果注意力决定了每个 token 的键值对只依赖它之前的 token——在末尾追加不改任何已缓存内容。而且 schema 只在被发现的那一轮注入一次，之后固定在轨迹原位，不是每轮重新搬运。</p>
+<p>有一条硬约束：模型必须在训练中见过「工具定义出现在对话中间」这种模式——所以目前只有较新的模型（GPT-5.4+、Claude 4.5+ 系列）支持，自托管开源模型需要专门训练。</p>
+<h2 id="提示注入：上下文层的三道防御"><a href="#提示注入：上下文层的三道防御" class="headerlink" title="提示注入：上下文层的三道防御"></a>提示注入：上下文层的三道防御</h2><p><strong>威胁的本质</strong>：攻击者通过 Agent 处理的外部内容（网页、邮件、文档）把伪装成系统指令的文本混入上下文，劫持 Agent 行为。Agent 有工具调用能力，比普通聊天机器人危险得多——被注入的指令可能导致文件删除、发送邮件、泄露隐私。注入入口包括网页不可见元素、PDF 元数据、甚至图片的 EXIF 信息。</p>
+<p>上下文层的防御核心是帮模型分清「指令」与「数据」：</p>
+<ol>
+<li><strong>来源标记</strong>：外部内容注入前用明确的标记包裹并标注来源（<code>&lt;external_content source=&quot;webpage&quot;&gt;...&lt;/external_content&gt;</code>），提示模型其中出现的「指令」不应执行</li>
+<li><strong>结构化角色</strong>：严格利用 Chat Template 的角色体系（system&#x2F;user&#x2F;assistant&#x2F;tool）传递信息，让模型依据训练时建立的优先级区分可信指令与外部数据——把工具结果混入 user 消息，等于亲手抹掉模型辨别来源的依据</li>
+<li><strong>输入清洗</strong>：过滤外部内容中的可疑模式（如「忽略之前的指令」）——容易被措辞变体绕过，只能作为辅助手段</li>
+</ol>
+<p>原文泼了两盆冷水，都很清醒：</p>
+<ul>
+<li><strong>上下文层防御只是第一道防线</strong>——只能降低攻击成功率，无法万无一失。执行层的权限控制、沙盒隔离在第四、五章展开</li>
+<li><strong>Skill 本身就是新的注入面</strong>——Skill 的本质是「把外部内容当作指令加载」的制度化形式，第三方 Skill 藏的恶意指令比网页隐藏文本更直接。安装来源不明的 Skill 之前必须审查内容，如同审查将要执行的代码</li>
+</ul>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>线索二：Agent 状态栏（尾部注入运行时元信息）；线索三：上下文压缩</li>
+<li><code>prompt-engineering</code> 实验（Tau-Bench 消融）找时间跑</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter2.md">《深入理解 AI Agent：设计原理与工程实践》第 2 章「上下文工程」</a>，李博杰著，GitHub 开源——本篇覆盖「提示工程：优化系统提示词」「工具定义的设计」「提示注入：上下文安全的核心威胁」</li>
+<li><a target="_blank" rel="noopener" href="https://developers.openai.com/api/docs/guides/tools-tool-search">OpenAI Tool Search 文档</a>与 <a target="_blank" rel="noopener" href="https://code.claude.com/docs/en/mcp">Anthropic MCP tool search</a>——工具渐进式披露的 API 原生实现</li>
+<li><a target="_blank" rel="noopener" href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a>——第一章引用过的工程经验，与本章流程驱动的思路一脉相承</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidbr42ltSP66esus80hsCYa" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-agent-book-ch2-chat-template-kvcache" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/18/agent-book-ch2-chat-template-kvcache/" class="article-date">
+  <time class="dt-published" datetime="2026-09-18T13:30:00.000Z" itemprop="datePublished">2026-09-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/18/agent-book-ch2-chat-template-kvcache/">Agent 精读（六）：KV Cache 的账，从 n² 到线性</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第六篇，继续第 2 章。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章的 Chat Template、思考链保留策略与 KV Cache 深水区——外加一段书外的延伸：vLLM 怎么管显存。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="Chat-Template：把-JSON-翻译成-token"><a href="#Chat-Template：把-JSON-翻译成-token" class="headerlink" title="Chat Template：把 JSON 翻译成 token"></a>Chat Template：把 JSON 翻译成 token</h2><p>上一篇说「遵守 API 规范」，这一篇补上原理。API 层面的结构化 JSON 消息，模型并不能直接吃——中间有一层 <strong>Chat Template（聊天模板）</strong>，把它格式化成模型可以接受的 token 流：用特殊标记（如 <code>&lt;|im_start|&gt;system</code>）划分每条消息的边界和角色。原文的比喻是信封格式：API 消息是信的内容，Chat Template 规定怎么在信封上写寄件人、收件人；不同模型家族用不同的信封（Qwen、Llama、Gemma 各不相同），API 服务端（vLLM、Ollama 等）自动完成转换。</p>
+<p>理解了这层，上一篇的第三条铁律就有了着落：自行拼接消息之所以危险，是因为它绕过了信封——把工具结果当 user 消息发，Chat Template 就会误判「用户换了话题」，顺手清空思考草稿。</p>
+<h2 id="思考链的保留：R1-剥离，V4-反转"><a href="#思考链的保留：R1-剥离，V4-反转" class="headerlink" title="思考链的保留：R1 剥离，V4 反转"></a>思考链的保留：R1 剥离，V4 反转</h2><p>多轮对话里怎么处理历史的思维链？DeepSeek 的策略演进是个好案例：</p>
+<ul>
+<li><strong>R1 时代：剥离全部历史思考</strong>。多轮对话只回传 <code>content</code>，推理过程（<code>reasoning_content</code>）忽略——因为 R1 训练时历史 CoT 从不出现在输入里，塞回去属于分布外输入，反而可能干扰输出。代价是：模型每轮都要从零重新思考，容易重复犯错、丢失长程计划，Agent 场景下错误概率更高。</li>
+<li><strong>V4 时代：彻底反转</strong>。只要请求携带 <code>tools</code> 参数，两个 user 消息之间的每条 assistant 消息都必须原样回传 <code>reasoning_content</code>，否则 API 直接返回 400 错误。Agent 天然携带 tools，这条强制规则躲不开——Kimi K2、GLM-5 也采用同样的协议。</li>
+</ul>
+<p>方向从「省 token」转向「保状态」：中间思考承载着「为什么调这个工具、排除了哪些假设」——草稿纸收走，推理就从零再来。</p>
+<h2 id="KV-Cache-的账：n²-与线性"><a href="#KV-Cache-的账：n²-与线性" class="headerlink" title="KV Cache 的账：n² 与线性"></a>KV Cache 的账：n² 与线性</h2><p>不使用缓存时，每生成一个新 token，都要把整个前缀从头前向计算一遍：前缀长到 N 个 token 时要算 N 组 K、V，<strong>累计计算量与 N² 成正比</strong>。几十轮工具调用的 Agent 任务，代价比想像中大得多。</p>
+<p>KV Cache 的做法是：每个 token 的 K、V 只在第一次进入上下文时计算一次，之后留在缓存里。新 token 只需遍历前缀的缓存 K、V 算注意力——<strong>计算量随上下文长度线性增长</strong>。省掉的是历史 token 的 K&#x2F;V 重算；但注意它不是免费午餐：每个新 token 的注意力仍要遍历全部缓存，长上下文解码依然线性变慢，KV Cache 的显存与带宽正是推理瓶颈。</p>
+<h2 id="缓存的未来：可编辑、可组合（研究前沿）"><a href="#缓存的未来：可编辑、可组合（研究前沿）" class="headerlink" title="缓存的未来：可编辑、可组合（研究前沿）"></a>缓存的未来：可编辑、可组合（研究前沿）</h2><p>书里有一节标着「深水区选读」，讲了一个反直觉的发现：模型在 prefill 阶段其实在「做笔记」——读到「用户所在城市：北京」时，不是原封不动缓存这个字段，而是把「这意味着什么」的结论写进了下游每层的 KV 状态。测量发现，字段自己的那几个 token 的 KV，对最终决策的贡献往往不到 1%。</p>
+<p>这打开了两种原本不可能的操作：</p>
+<ul>
+<li><strong>编辑</strong>：改掉一个字段后，只要有显式思考链，改动能顺着已缓存的思考传播下去——用约 1% 的算力得到与整段重算一致的结果（前提是有 CoT；没有思考路径，孤立改字段会被忽略）。</li>
+<li><strong>组合</strong>：把一段预计算的「技能」缓存，通过旋转位置编码（RoPE）重定位后直接拼接进另一段上下文——从 O(L²) 的重算降到 O(L) 的拼接。</li>
+</ul>
+<p>论文在 vLLM 上实现后：首 token 延迟（p90）最多降低数十倍到数百倍，前缀缓存命中率约 98.5%，输出与逐字重算在决策上完全一致。对 Agent 的意义：换一批工具、更新一个记忆字段、注入一条新状态——也许不必每轮都推倒重来，「上下文可变、但缓存收益还在」。<strong>这仍属研究阶段</strong>，今天生产系统里，上一篇那三条铁律依然是默认原则。</p>
+<h2 id="延伸阅读：vLLM-怎么管显存（书外）"><a href="#延伸阅读：vLLM-怎么管显存（书外）" class="headerlink" title="延伸阅读：vLLM 怎么管显存（书外）"></a>延伸阅读：vLLM 怎么管显存（书外）</h2><p>这一节是书外延伸，来自 vLLM 的论文与博客（参考见文末）。缓存省计算，vLLM 解决的是另一个问题——<strong>KV Cache 放哪</strong>。</p>
+<p>vLLM（virtual LLM，名字就来自它借用的操作系统虚拟内存思想）的核心技术是 <strong>PagedAttention</strong>：像操作系统用分页管理内存一样，把 KV Cache 切成固定大小的 block 按需分配。传统做法要为每个请求预留一整段连续显存，碎片和预留浪费让实际利用率只有 20%–40%；分页之后浪费降到 4% 以下，同等显存能装下更多并发序列，吞吐提升 2–4 倍。</p>
+<p>第二个优势是<strong>连续批处理（continuous batching）</strong>：不等整批请求全部完成才释放——每一步解码后，完成的请求立即退出、新请求立即插入，GPU 始终满载。配合针对 RoPE 的 kernel 融合（把分页导致的非连续显存读取与旋转位置编码的正余弦计算融合在一个 CUDA kernel 里，减少 HBM 与片上 SRAM 之间的搬运），把位置编码这一步从 I&#x2F;O 瓶颈变成顺手的计算。</p>
+<p>Agent 的上下文动辄几十轮、每轮都在增长——vLLM 这类推理引擎的显存管理，就是 KV Cache 的账最终落地的地方。</p>
+<h2 id="上下文组织的三个线索"><a href="#上下文组织的三个线索" class="headerlink" title="上下文组织的三个线索"></a>上下文组织的三个线索</h2><p>缓存讲完，第 2 章剩下的问题是：往上下文里放什么、怎么组织。书里给了三条相对独立的线索，后面几节（也是我接下来要读的）就沿这三条展开：</p>
+<ol>
+<li><strong>提示工程 + 提示注入 + 动态提示词</strong>：系统提示词怎么写、怎么防外部内容劫持上下文；提示词越写越长后，用 Agent Skills 渐进式披露按需加载——这是第一章设计模式「渐进式披露」的落地。</li>
+<li><strong>Agent 状态栏</strong>：在上下文末尾持续注入动态元信息（任务进度、工具调用计数），让模型随时「瞥一眼」就感知运行状态——对应「只增不改」，追加在尾部不破坏缓存。</li>
+<li><strong>上下文压缩</strong>：上下文膨胀后怎么做减法——什么时候压缩、怎么压缩、压缩如何与 KV Cache 共存。</li>
+</ol>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>沿三条线索继续：提示工程与注入攻防 → Agent Skills → 状态栏 → 压缩</li>
+<li><code>kv-cache</code>、<code>context-compression</code> 实验找时间跑</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter2.md">《深入理解 AI Agent：设计原理与工程实践》第 2 章「上下文工程」</a>，李博杰著，GitHub 开源——本篇覆盖「Chat Template」「KV Cache 的原理与约束」「KV Cache 未必是一次性的」与三条线索的总起</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2606.17107">Models Take Notes at Prefill: KV Cache Can Be Editable and Composable</a>, Li, Bojie, arXiv:2606.17107——「可编辑、可组合」一节的研究论文</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2309.06180">vLLM: Efficient Memory Management for Large Language Model Serving with PagedAttention</a>，arXiv:2309.06180——PagedAttention 与连续批处理的原始论文</li>
+<li><a target="_blank" rel="noopener" href="https://vllm.ai/blog/2023-06-20-vllm">vLLM 官方博客：PagedAttention 简介</a>——分页注意力与虚拟内存类比的入门读法</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a>，arXiv:1706.03762——Transformer 与注意力机制的源头；KV、Query、Value 的原初定义</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuidE5KuenfjmDKzyCvGIe_Cc" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-agent-book-ch2-api-kv-cache" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/09/17/agent-book-ch2-api-kv-cache/" class="article-date">
@@ -598,7 +770,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" rel="tag">思考题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" rel="tag">思考题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" rel="tag">用户记忆</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag">知识图谱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
     </div>
   </div>
 
@@ -608,7 +780,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" style="font-size: 10px;">思考题</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">系统设计</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" style="font-size: 10px;">思考题</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" style="font-size: 10px;">用户记忆</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" style="font-size: 10px;">知识图谱</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">系统设计</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
     </div>
   </div>
 
@@ -630,6 +802,14 @@
       <ul>
         
           <li>
+            <a href="/2026/09/24/agent-book-ch3-knowledge-map/">Agent 精读（十一）：第 3 章知识图谱——用户记忆和知识库</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/24/agent-book-ch3-memory-formats/">Agent 精读（十）：记住一个用户，四种存法，和一次跳出文本</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/24/agent-book-ch1-questions/">Agent 精读（十）：第 1 章思考题——选能力、算平方账、看循环搬家</a>
           </li>
         
@@ -639,14 +819,6 @@
         
           <li>
             <a href="/2026/09/22/agent-book-ch2-compression/">Agent 精读（九）：装得下，但找不到了</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/22/llm-parameters-budget/">为什么 DeepSeek 说 800B 训练不起？把大模型的账算一遍</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/22/liang-wenfeng-investor-1/">梁文锋 4 小时投资会精读（上）：拿得多的，会被拿得少的打败</a>
           </li>
         
       </ul>

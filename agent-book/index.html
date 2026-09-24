@@ -14,7 +14,7 @@
 <meta property="og:description" content="这是我的精读专题：逐章读李博杰的开源书《深入理解 AI Agent：设计原理与工程实践》，每一章写下我自己的理解和输出——不是摘抄，是用我的话重新讲一遍，加上我的追问和实践。全书围绕一个公式展开：  graph LR     LLM[&quot;🧠 LLM大脑&quot;] --- CTX[&quot;👁️ 上下文眼睛&quot;]     CTX --- TOOLS[&quot;🤲 工具手脚&quot;]     TOOLS --- LLM">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-15T14:30:00.000Z">
-<meta property="article:modified_time" content="2026-09-24T06:04:09.444Z">
+<meta property="article:modified_time" content="2026-09-24T09:09:47.618Z">
 <meta property="article:author" content="东玄蟒">
 <meta name="twitter:card" content="summary">
   
@@ -238,6 +238,42 @@
     style D4 fill:#fff3cd,stroke:#b8860b,stroke-width:2px</div>
 
 
+<h3 id="第-3-章-·-用户记忆和知识库（🔄-进行中）"><a href="#第-3-章-·-用户记忆和知识库（🔄-进行中）" class="headerlink" title="第 3 章 · 用户记忆和知识库（🔄 进行中）"></a>第 3 章 · 用户记忆和知识库（🔄 进行中）</h3><blockquote>
+<p>已读前半部分「用户记忆系统」；⬜ 分支是还没读的 RAG 半章。本章另有一篇<a href="/2026/09/24/agent-book-ch3-knowledge-map/">持续更新的知识图谱页</a>，随精读推进点亮节点、挂笔记关联。</p>
+</blockquote>
+<div class="mermaid">graph LR
+    CH3["第 3 章<br/>用户记忆和知识库 🔄"] --> Q1["① 记忆系统好不好<br/>怎么量？✅"]
+    CH3 --> Q2["② 记忆存在哪<br/>怎么存、存什么？✅"]
+    CH3 --> Q3["③ 文本格式的天花板<br/>怎么破？✅"]
+    CH3 --> Q4["④ 知识怎么组织<br/>怎么检索？⬜"]
+
+    Q1 --> A1["LoCoMo：被动问答基准<br/>五类 QA + 摘要 + 多模态"]
+    Q1 --> A2["三层次框架：基础回忆<br/>→ 多会话检索 → 主动服务"]
+    A2 --> A3["主动服务 = 无指令预警<br/>被动 QA 装不下它"]
+
+    Q2 --> B1["记忆三问正交"]
+    B1 --> B11["哪里：轨迹=流水账<br/>长期记忆=档案"]
+    B1 --> B12["怎么存：四种格式"]
+    B1 --> B13["存什么：情景/语义/程序"]
+    B12 --> B14["修 bug 链：Simple 关联丢<br/>Enhanced 难更新 → JSON 刚性<br/>→ Advanced 消歧 · 贵"]
+    B12 --> B15["混合：关键少量→Advanced<br/>大量非关键→Simple"]
+
+    Q3 --> C1["心算三类活：聚合 / 冲突检测<br/>/ 约束执行"]
+    C1 --> C2["User as Code：带类型状态<br/>+ 规则函数"]
+    C2 --> C3["预写日志 + 检查点<br/>日志是真相源，状态可重建"]
+    C2 --> C4["判据：带类型数据<br/>+ 可判定规则"]
+    C2 --> C5["计算时机：使用时→写入时<br/>一定算是本质"]
+    C5 --> C6["主动服务的工程地基"]
+
+    Q4 --> D1["⬜ RAG：分块 / 稠密稀疏<br/>/ 混合检索 / 结构化索引"]
+    Q4 --> D2["⬜ 智能体化 RAG / 上下文<br/>感知 / 深度知识提取"]
+
+    style CH3 fill:#fff3cd,stroke:#b8860b
+    style A3 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style C6 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style D1 fill:#f1f3f5,stroke:#adb5bd,stroke-dasharray:5 4
+    style D2 fill:#f1f3f5,stroke:#adb5bd,stroke-dasharray:5 4</div>
+
 <h2 id="章节清单与我的输出"><a href="#章节清单与我的输出" class="headerlink" title="章节清单与我的输出"></a>章节清单与我的输出</h2><h3 id="构建篇（第-1–6-章）"><a href="#构建篇（第-1–6-章）" class="headerlink" title="构建篇（第 1–6 章）"></a>构建篇（第 1–6 章）</h3><table>
 <thead>
 <tr>
@@ -263,7 +299,7 @@
 <td align="center">3</td>
 <td>用户记忆和知识库：记忆策略、RAG、知识图谱</td>
 <td align="center">🔵</td>
-<td align="center">📋 未开始</td>
+<td align="center">🔄 <a href="/2026/09/24/agent-book-ch3-memory-formats/">记住一个用户，四种存法，和一次跳出文本</a> · <a href="/2026/09/24/agent-book-ch3-knowledge-map/">第 3 章知识图谱（持续更新）</a>（RAG 半章待读）</td>
 </tr>
 <tr>
 <td align="center">4</td>
@@ -360,7 +396,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" rel="tag">思考题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" rel="tag">思考题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" rel="tag">用户记忆</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag">知识图谱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
     </div>
   </div>
 
@@ -370,7 +406,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" style="font-size: 10px;">思考题</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">系统设计</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 15px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 15px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" style="font-size: 10px;">思考题</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" style="font-size: 10px;">用户记忆</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" style="font-size: 10px;">知识图谱</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">系统设计</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
     </div>
   </div>
 
@@ -392,6 +428,14 @@
       <ul>
         
           <li>
+            <a href="/2026/09/24/agent-book-ch3-knowledge-map/">Agent 精读（十一）：第 3 章知识图谱——用户记忆和知识库</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/24/agent-book-ch3-memory-formats/">Agent 精读（十）：记住一个用户，四种存法，和一次跳出文本</a>
+          </li>
+        
+          <li>
             <a href="/2026/09/24/agent-book-ch1-questions/">Agent 精读（十）：第 1 章思考题——选能力、算平方账、看循环搬家</a>
           </li>
         
@@ -401,14 +445,6 @@
         
           <li>
             <a href="/2026/09/22/agent-book-ch2-compression/">Agent 精读（九）：装得下，但找不到了</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/22/llm-parameters-budget/">为什么 DeepSeek 说 800B 训练不起？把大模型的账算一遍</a>
-          </li>
-        
-          <li>
-            <a href="/2026/09/22/liang-wenfeng-investor-1/">梁文锋 4 小时投资会精读（上）：拿得多的，会被拿得少的打败</a>
           </li>
         
       </ul>
