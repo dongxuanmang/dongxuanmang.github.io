@@ -146,6 +146,45 @@ graph LR
 {% endmermaid %}
 
 
+### 第 3 章 · 用户记忆和知识库（🔄 进行中）
+
+> 已读前半部分「用户记忆系统」；⬜ 分支是还没读的 RAG 半章。本章另有一篇[持续更新的知识图谱页](/2026/09/24/agent-book-ch3-knowledge-map/)，随精读推进点亮节点、挂笔记关联。
+
+{% mermaid %}
+graph LR
+    CH3["第 3 章<br/>用户记忆和知识库 🔄"] --> Q1["① 记忆系统好不好<br/>怎么量？✅"]
+    CH3 --> Q2["② 记忆存在哪<br/>怎么存、存什么？✅"]
+    CH3 --> Q3["③ 文本格式的天花板<br/>怎么破？✅"]
+    CH3 --> Q4["④ 知识怎么组织<br/>怎么检索？⬜"]
+
+    Q1 --> A1["LoCoMo：被动问答基准<br/>五类 QA + 摘要 + 多模态"]
+    Q1 --> A2["三层次框架：基础回忆<br/>→ 多会话检索 → 主动服务"]
+    A2 --> A3["主动服务 = 无指令预警<br/>被动 QA 装不下它"]
+
+    Q2 --> B1["记忆三问正交"]
+    B1 --> B11["哪里：轨迹=流水账<br/>长期记忆=档案"]
+    B1 --> B12["怎么存：四种格式"]
+    B1 --> B13["存什么：情景/语义/程序"]
+    B12 --> B14["修 bug 链：Simple 关联丢<br/>Enhanced 难更新 → JSON 刚性<br/>→ Advanced 消歧 · 贵"]
+    B12 --> B15["混合：关键少量→Advanced<br/>大量非关键→Simple"]
+
+    Q3 --> C1["心算三类活：聚合 / 冲突检测<br/>/ 约束执行"]
+    C1 --> C2["User as Code：带类型状态<br/>+ 规则函数"]
+    C2 --> C3["预写日志 + 检查点<br/>日志是真相源，状态可重建"]
+    C2 --> C4["判据：带类型数据<br/>+ 可判定规则"]
+    C2 --> C5["计算时机：使用时→写入时<br/>一定算是本质"]
+    C5 --> C6["主动服务的工程地基"]
+
+    Q4 --> D1["⬜ RAG：分块 / 稠密稀疏<br/>/ 混合检索 / 结构化索引"]
+    Q4 --> D2["⬜ 智能体化 RAG / 上下文<br/>感知 / 深度知识提取"]
+
+    style CH3 fill:#fff3cd,stroke:#b8860b
+    style A3 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style C6 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style D1 fill:#f1f3f5,stroke:#adb5bd,stroke-dasharray:5 4
+    style D2 fill:#f1f3f5,stroke:#adb5bd,stroke-dasharray:5 4
+{% endmermaid %}
+
 ## 章节清单与我的输出
 
 ### 构建篇（第 1–6 章）
@@ -154,7 +193,7 @@ graph LR
 | :--: | --- | :--: | :--: |
 | 1 | AI Agent 入门：三要素、ReAct 循环、Harness 工程 | 🟢 | ✅ [能力边界由 Harness 决定](/2026/09/15/agent-book-ch1-harness/) · [模型即 Agent？循环只是搬到了服务端](/2026/09/16/agent-book-ch1-model-as-agent/) · [Harness 工程解决从 Demo 到生产的设计](/2026/09/16/agent-book-ch1-engineering/) · [第 1 章思考题：选能力、算平方账、看循环搬家](/2026/09/24/agent-book-ch1-questions/) |
 | 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | ✅ [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) · [前面不能动，后面尽管加](/2026/09/17/agent-book-ch2-api-kv-cache/) · [KV Cache 的账，从 n² 到线性](/2026/09/18/agent-book-ch2-chat-template-kvcache/) · [对人类友好，就是对模型友好](/2026/09/20/agent-book-ch2-prompt-injection/) · [上下文是台只有一半的检索引擎](/2026/09/21/agent-book-ch2-skills-status-bar/) · [装得下，但找不到了](/2026/09/22/agent-book-ch2-compression/) |
-| 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 📋 未开始 |
+| 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 🔄 [记住一个用户，四种存法，和一次跳出文本](/2026/09/24/agent-book-ch3-memory-formats/) · [第 3 章知识图谱（持续更新）](/2026/09/24/agent-book-ch3-knowledge-map/)（RAG 半章待读） |
 | 4 | 工具：MCP 协议、五类工具、主动工具发现 | 🔵 | 📋 未开始 |
 | 5 | Coding Agent 与通用 Agent：代码是创造工具的元能力 | 🟣 | 📋 未开始 |
 | 6 | 交互：语音、Computer Use、机器人（模态 × 时序） | 🟣 | 📋 未开始 |
