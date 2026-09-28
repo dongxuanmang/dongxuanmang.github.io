@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="-apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif">
+  <defs>
+    <marker id="ah" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto"><polygon points="0 0, 12 4, 0 8" fill="#5c6672"/></marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="620" fill="#ffffff"/>
+
+  <text x="450" y="36" text-anchor="middle" font-size="23" font-weight="700" fill="#2b2b2b">RAG 检索的两条腿：词有倒排，向量有图</text>
+  <text x="450" y="60" text-anchor="middle" font-size="13.5" fill="#8a8578">同一个查询，两套完全不同的加速结构 —— 最后在混合检索里汇合</text>
+
+  <!-- 左列：稀疏 -->
+  <rect x="60" y="82" width="340" height="40" rx="8" fill="#d1e7dd" stroke="#2f9e6e" stroke-width="1.6"/>
+  <text x="230" y="107" text-anchor="middle" font-size="15" font-weight="700" fill="#1d5c3f">稀疏路线 · 倒排索引 · 精确</text>
+  <rect x="60" y="142" width="340" height="52" rx="10" fill="#f6f5f2" stroke="#dcd8ce"/>
+  <text x="230" y="163" text-anchor="middle" font-size="13.5" fill="#2b2b2b">查询「模型蒸馏」→ 分词</text>
+  <text x="230" y="182" text-anchor="middle" font-size="12" fill="#8a8578">["模型", "蒸馏"]</text>
+  <line x1="230" y1="194" x2="230" y2="212" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <rect x="60" y="214" width="340" height="52" rx="10" fill="#f6f5f2" stroke="#dcd8ce"/>
+  <text x="230" y="235" text-anchor="middle" font-size="13.5" fill="#2b2b2b">查倒排索引（按词建的二级索引）</text>
+  <text x="230" y="254" text-anchor="middle" font-size="12" fill="#8a8578">模型→{doc1,3,7} · 蒸馏→{doc1,5}</text>
+  <line x1="230" y1="266" x2="230" y2="284" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <rect x="60" y="286" width="340" height="52" rx="10" fill="#f6f5f2" stroke="#dcd8ce"/>
+  <text x="230" y="307" text-anchor="middle" font-size="13.5" fill="#2b2b2b">候选并集：只有 4 篇被碰过</text>
+  <text x="230" y="326" text-anchor="middle" font-size="12" fill="#8a8578">其余 99.99% 的文档零成本跳过</text>
+  <line x1="230" y1="338" x2="230" y2="356" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <rect x="60" y="358" width="340" height="52" rx="10" fill="#d1e7dd" stroke="#2f9e6e" stroke-width="1.6"/>
+  <text x="230" y="379" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1d5c3f">BM25 打分</text>
+  <text x="230" y="398" text-anchor="middle" font-size="12" fill="#1d5c3f">稀有度 × 饱和词频 ÷ 长度惩罚</text>
+
+  <!-- 右列：稠密 -->
+  <rect x="500" y="82" width="340" height="40" rx="8" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.6"/>
+  <text x="670" y="107" text-anchor="middle" font-size="15" font-weight="700" fill="#1a4d8f">稠密路线 · ANN 索引 · 近似</text>
+  <rect x="500" y="142" width="340" height="52" rx="10" fill="#f6f5f2" stroke="#dcd8ce"/>
+  <text x="670" y="163" text-anchor="middle" font-size="13.5" fill="#2b2b2b">查询 → 嵌入成向量</text>
+  <text x="670" y="182" text-anchor="middle" font-size="12" fill="#8a8578">没有共享的"词"，只有距离</text>
+  <line x1="670" y1="194" x2="670" y2="212" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <rect x="500" y="214" width="340" height="52" rx="10" fill="#f6f5f2" stroke="#dcd8ce"/>
+  <text x="670" y="235" text-anchor="middle" font-size="13.5" fill="#2b2b2b">查 ANN 索引：ANNOY 树 / HNSW 图</text>
+  <text x="670" y="254" text-anchor="middle" font-size="12" fill="#8a8578">HNSW：顶层大步跳，逐层下沉</text>
+  <line x1="670" y1="266" x2="670" y2="284" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <rect x="500" y="286" width="340" height="52" rx="10" fill="#f6f5f2" stroke="#dcd8ce"/>
+  <text x="670" y="307" text-anchor="middle" font-size="13.5" fill="#2b2b2b">贪心导航取候选</text>
+  <text x="670" y="326" text-anchor="middle" font-size="12" fill="#8a8578">近似代价：可能漏掉真近邻</text>
+  <line x1="670" y1="338" x2="670" y2="356" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <rect x="500" y="358" width="340" height="52" rx="10" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.6"/>
+  <text x="670" y="379" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1a4d8f">余弦相似度</text>
+  <text x="670" y="398" text-anchor="middle" font-size="12" fill="#1a4d8f">看方向是否一致，不看长度</text>
+
+  <!-- 汇合 -->
+  <path d="M 230 410 L 230 440 L 440 440" fill="none" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <path d="M 670 410 L 670 440 L 465 440" fill="none" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <rect x="150" y="446" width="600" height="50" rx="10" fill="#fff3cd" stroke="#b8860b" stroke-width="1.6"/>
+  <text x="450" y="467" text-anchor="middle" font-size="13.5" font-weight="600" fill="#7a5800">RRF 融合：两路得分不可比，扔掉得分只看排名</text>
+  <text x="450" y="486" text-anchor="middle" font-size="12" fill="#7a5800">综合分 = Σ 1/(60 + rank)</text>
+  <line x1="450" y1="496" x2="450" y2="514" stroke="#5c6672" stroke-width="1.6" marker-end="url(#ah)"/>
+  <rect x="150" y="516" width="600" height="50" rx="10" fill="#fff3cd" stroke="#b8860b" stroke-width="1.6"/>
+  <text x="450" y="537" text-anchor="middle" font-size="13.5" font-weight="600" fill="#7a5800">跨编码器重排 top 50：查询和文档拼成一段，逐词比对</text>
+  <text x="450" y="556" text-anchor="middle" font-size="12" fill="#7a5800">猎头筛简历（双编码器）vs 面试官见本人（跨编码器）</text>
+
+  <text x="450" y="596" text-anchor="middle" font-size="13" fill="#8a8578">top_k 注入上下文 —— 倒排精确、ANN 近似，稀疏不懂语义、稠密会漏关键词，两条腿互补</text>
+</svg>

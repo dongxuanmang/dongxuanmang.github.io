@@ -9,7 +9,7 @@ tags:
   - 读书笔记
 ---
 
-> 这是[《深入理解 AI Agent》精读专题](/agent-book/)的第十一篇，也是这个专题的一个新尝试：**每一章维护一篇知识图谱页**，把该章核心知识点画成一张图，并和这一章的精读笔记互相链接。它不是一次性的文章，而是**活的页面**——每读完一部分、每发一篇笔记，图谱就长一块、关联就多一条。当前状态：第 3 章前半部分（用户记忆系统）✅ 已读并成文；后半部分（RAG）⬜ 未读。
+> 这是[《深入理解 AI Agent》精读专题](/agent-book/)的第十一篇，也是这个专题的一个新尝试：**每一章维护一篇知识图谱页**，把该章核心知识点画成一张图，并和这一章的精读笔记互相链接。它不是一次性的文章，而是**活的页面**——每读完一部分、每发一篇笔记，图谱就长一块、关联就多一条。当前状态：第 3 章前半部分（用户记忆系统）✅ 已读并成文；RAG 基础（分块、稠密/稀疏检索、混合检索）✅ 已读并成文；结构化索引往后的部分 ⬜ 未读。
 
 ![第 3 章知识脉络](/images/agent-book/ch3-memory-scale.svg)
 
@@ -21,7 +21,7 @@ tags:
 graph TB
     CH3["第 3 章<br/>用户记忆和知识库"] --> MEM["用户记忆（个体尺度）✅"]
     CH3 --> KB["知识库（群体尺度）⬜"]
-    CH3 --> BASE["共享底层：检索技术 ⬜"]
+    CH3 --> BASE["共享底层：检索技术 ✅"]
 
     MEM --> E1["评估两把尺"]
     E1 --> E11["LoCoMo：被动问答基准<br/>五类 QA + 摘要 + 多模态"]
@@ -53,19 +53,26 @@ graph TB
     CODE --> C6["计算时机：使用时 → 写入时<br/>算得准是副产品，一定算是本质"]
     C6 --> GOLD["主动服务的工程地基"]
 
-    KB --> KB1["待读：分块 / 稠密稀疏嵌入<br/>/ 混合检索 / RAPTOR · GraphRAG"]
-    KB --> KB2["待读：文件系统范式 / 智能体化 RAG<br/>/ 上下文感知检索 / 深度知识提取"]
+    KB --> KB1["RAG 基础 ✅：分块三类 / 稠密稀疏<br/>/ 倒排索引 · BM25 / 混合检索"]
+    KB --> KB2["待读：结构化索引 RAPTOR · GraphRAG<br/>/ 文件系统范式 / 智能体化 RAG<br/>/ 上下文感知检索 / 深度知识提取"]
+
+    KB1 --> R1["两条腿：词有倒排（精确）<br/>向量有图（近似）"]
+    KB1 --> R2["倒排索引 = 按词建二级索引<br/>BM25 = 稀有度 + 饱和 + 长度归一"]
+    KB1 --> R3["ANN：ANNOY 树静态 / HNSW 图动态<br/>跳表思想：顶层大步跳"]
+    KB1 --> R4["混合：RRF 扔分只看排名<br/>→ 跨编码器重排 top50"]
 
     style CH3 fill:#d1e7dd,stroke:#198754
     style MEM fill:#d1e7dd,stroke:#198754
-    style KB fill:#e9ecef,stroke:#8a8578
-    style BASE fill:#e9ecef,stroke:#8a8578
+    style KB fill:#d1e7dd,stroke:#198754
+    style BASE fill:#d1e7dd,stroke:#198754
     style GOLD fill:#fff3cd,stroke:#b8860b
     style E13 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style F31 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style C41 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style GOLD fill:#fff3cd,stroke:#b8860b,stroke-width:2px
-    style KB1 fill:#f1f3f5,stroke:#adb5bd,stroke-dasharray:5 4
+    style R1 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style R2 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style KB1 fill:#d1e7dd,stroke:#198754
     style KB2 fill:#f1f3f5,stroke:#adb5bd,stroke-dasharray:5 4
 {% endmermaid %}
 
@@ -81,10 +88,16 @@ graph TB
 - **可执行代码**（心算困境、预写日志+检查点、计算时机）→ 同上「第五种存法：把记忆写成代码」一节
 - **记忆框架案例 / 压缩整理 / 隐私脱敏** ⬜ 已过目未成文，留待和 RAG 一起收进下篇
 
-### 知识库（RAG）⬜
+### 知识库（RAG）🔄 基础已读
 
-分块、稠密/稀疏嵌入、混合检索、结构化索引（RAPTOR/GraphRAG）、文件系统范式、知识更新、智能体化 RAG、上下文感知检索、深度知识提取、多模态记忆——全部待读，读完点亮本区块。
+- **RAG 三段流程 + 分块三类** → [词有倒排，向量有图——RAG 检索的两条腿](/2026/09/28/agent-book-ch3-rag-retrieval/) 「先分块」一节
+- **稠密路线**（嵌入演进、余弦、ANNOY/HNSW、跳表思想、近似代价）→ 同上「稠密路线」一节
+- **稀疏路线**（倒排索引=按词建二级索引、BM25 两修正、稀疏精确稠密近似）→ 同上「稀疏路线」一节
+- **混合检索**（互补盲区、RRF、双编码器 vs 跨编码器）→ 同上「混合检索」一节
+- **三个检索指标**（recall@k / MRR / nDCG）⬜ 未读透，待补
+- **待读**：结构化索引（RAPTOR/GraphRAG）、文件系统范式、知识更新、智能体化 RAG、上下文感知检索、深度知识提取、多模态记忆
 
 ## 更新日志
 
+- 2026-09-28：点亮「RAG 基础」区块（两条腿、倒排索引与 BM25、ANN、混合检索），关联笔记第十二篇
 - 2026-09-24：页面创建。点亮「用户记忆系统」区块，关联笔记第十篇；RAG 区块留白
