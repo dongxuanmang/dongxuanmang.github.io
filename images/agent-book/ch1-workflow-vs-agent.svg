@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="-apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif">
+  <defs>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4a83d4"/></marker>
+    <marker id="arr-gold3" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b8860b"/></marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="520" fill="#ffffff"/>
+
+  <text x="450" y="34" text-anchor="middle" font-size="24" font-weight="700" fill="#2b2b2b">编排模式：工作流 vs 自主 Agent</text>
+  <text x="450" y="60" text-anchor="middle" font-size="15.5" fill="#8a8578">先单次调用，再工作流，最后才自主 Agent——自主性用延迟与成本换任务性能，谨慎权衡</text>
+
+  <line x1="450" y1="85" x2="450" y2="445" stroke="#dcd8ce" stroke-width="1.2" stroke-dasharray="5 5"/>
+
+  <!-- 左：工作流 -->
+  <text x="225" y="108" text-anchor="middle" font-size="19" font-weight="700" fill="#1a4d8f">工作流 · Workflow</text>
+  <text x="225" y="130" text-anchor="middle" font-size="14" fill="#5a7ca6">执行路径预先定义，代码写死</text>
+
+  <rect x="140" y="152" width="170" height="42" rx="10" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.4"/>
+  <text x="225" y="179" text-anchor="middle" font-size="15.5" font-weight="600" fill="#1a4d8f">核实用户身份</text>
+  <path d="M 225 194 L 225 206" stroke="#4a83d4" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <rect x="140" y="212" width="170" height="42" rx="10" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.4"/>
+  <text x="225" y="239" text-anchor="middle" font-size="15.5" font-weight="600" fill="#1a4d8f">搜索可用航班</text>
+  <path d="M 225 254 L 225 266" stroke="#4a83d4" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <rect x="140" y="272" width="170" height="42" rx="10" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.4"/>
+  <text x="225" y="299" text-anchor="middle" font-size="15.5" font-weight="600" fill="#1a4d8f">完成付款</text>
+  <path d="M 225 314 L 225 326" stroke="#4a83d4" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <rect x="140" y="332" width="170" height="42" rx="10" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.4"/>
+  <text x="225" y="359" text-anchor="middle" font-size="15.5" font-weight="600" fill="#1a4d8f">确认预订</text>
+
+  <text x="225" y="412" text-anchor="middle" font-size="14.5" fill="#2f9e6e">✓ 流程控制严格，攻击面限制在单节点</text>
+  <text x="225" y="435" text-anchor="middle" font-size="14.5" fill="#d25360">✗ 遇到预设外的例外，无法变通</text>
+
+  <!-- 右：自主 Agent -->
+  <text x="675" y="108" text-anchor="middle" font-size="19" font-weight="700" fill="#b8860b">自主 Agent · Autonomous</text>
+  <text x="675" y="130" text-anchor="middle" font-size="14" fill="#96762f">执行路径由环境反馈实时决定</text>
+
+  <path d="M 700 192 Q 792 238 764 292" fill="none" stroke="#b8860b" stroke-width="2" marker-end="url(#arr-gold3)"/>
+  <path d="M 690 320 L 664 320" fill="none" stroke="#b8860b" stroke-width="2" marker-end="url(#arr-gold3)"/>
+  <path d="M 586 292 Q 558 238 628 196" fill="none" stroke="#b8860b" stroke-width="2" marker-end="url(#arr-gold3)"/>
+
+  <rect x="615" y="152" width="120" height="40" rx="10" fill="#fff3cd" stroke="#b8860b" stroke-width="1.4"/>
+  <text x="675" y="177" text-anchor="middle" font-size="15.5" font-weight="600" fill="#7a5800">思考 Reason</text>
+  <rect x="692" y="300" width="120" height="40" rx="10" fill="#fff3cd" stroke="#b8860b" stroke-width="1.4"/>
+  <text x="752" y="325" text-anchor="middle" font-size="15.5" font-weight="600" fill="#7a5800">行动 Act</text>
+  <rect x="538" y="300" width="120" height="40" rx="10" fill="#fff3cd" stroke="#b8860b" stroke-width="1.4"/>
+  <text x="598" y="325" text-anchor="middle" font-size="15.5" font-weight="600" fill="#7a5800">观察 Observe</text>
+  <text x="675" y="250" text-anchor="middle" font-size="14.5" font-weight="700" fill="#b8860b">ReAct 循环</text>
+
+  <rect x="520" y="358" width="310" height="28" rx="8" fill="#f6f5f2" stroke="#dcd8ce" stroke-width="1"/>
+  <text x="675" y="377" text-anchor="middle" font-size="13.5" fill="#5c6672">退出条件：任务完成 / 最大轮数 / 不可恢复错误</text>
+
+  <text x="675" y="415" text-anchor="middle" font-size="14.5" fill="#2f9e6e">✓ 灵活，能应对预设外的例外</text>
+  <text x="675" y="438" text-anchor="middle" font-size="14.5" fill="#d25360">✗ 延迟与成本更高，需要护栏与监控</text>
+
+  <!-- 底部：混合 -->
+  <rect x="25" y="455" width="850" height="50" rx="12" fill="#f6f5f2" stroke="#dcd8ce" stroke-width="1"/>
+  <text x="450" y="477" text-anchor="middle" font-size="15" fill="#5c6672">实践中常混合：关键合规流程用工作流保可靠，灵活决策用自主 Agent 补变通</text>
+  <text x="450" y="496" text-anchor="middle" font-size="14" fill="#8a8578">也可以让 Agent 先把工作流写出来，再由工作流执行——灵活性与确定性各取所长</text>
+</svg>

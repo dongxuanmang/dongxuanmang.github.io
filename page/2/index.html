@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>东玄蟒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="东玄蟒的个人博客：AI Agent 开发转型笔记、AI 短视频赛道探索与投资思考">
+<meta property="og:type" content="website">
+<meta property="og:title" content="东玄蟒">
+<meta property="og:url" content="https://dongxuanmang.github.io/page/2/index.html">
+<meta property="og:site_name" content="东玄蟒">
+<meta property="og:description" content="东玄蟒的个人博客：AI Agent 开发转型笔记、AI 短视频赛道探索与投资思考">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="东玄蟒">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="东玄蟒" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<!-- hexo injector head_end start --><script src="/js/mermaid.min.js"></script><script>(function () {  function renderMermaid() {    if (!document.querySelector(".mermaid") || typeof mermaid === "undefined") return;    mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });  }  if (document.readyState === "loading") {    document.addEventListener("DOMContentLoaded", renderMermaid);  } else {    renderMermaid();  }})();</script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">东玄蟒</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">乱花渐欲迷人眼，浅草才能没马蹄</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/learning/">学习路径</a>
+        
+          <a class="main-nav-link" href="/agent-book/">Agent 精读</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/dongxuanmang"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://dongxuanmang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-agent-book-ch2-skills-status-bar" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/21/agent-book-ch2-skills-status-bar/" class="article-date">
+  <time class="dt-published" datetime="2026-09-21T13:30:00.000Z" itemprop="datePublished">2026-09-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/21/agent-book-ch2-skills-status-bar/">Agent 精读（八）：上下文是台只有一半的检索引擎</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第八篇，一次走完第 2 章的两条线索：Skills（能力的按需加载）和 Agent 状态栏（状态的提前提炼）。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="Skills：先给目录，再给手册"><a href="#Skills：先给目录，再给手册" class="headerlink" title="Skills：先给目录，再给手册"></a>Skills：先给目录，再给手册</h2><p>Agent 覆盖的业务场景越来越多，系统提示词就会不断膨胀——全部塞进去有两个代价：浪费 token（大部分内容与当前任务无关）、注意力被稀释（无关信息淹没关键指令）。</p>
+<p>Skills 的解法是渐进式披露：<strong>不是把所有知识一次性塞给 Agent，而是让它按需加载</strong>——像给新员工一份总目录，需要哪本操作手册再去取。一个 Skill 由三层组成：</p>
+<ul>
+<li><strong>元数据</strong>：<code>SKILL.md</code> 开头的 YAML frontmatter（name + description），目录在完整正文加载前就可见，让模型先判断要不要这项能力</li>
+<li><strong>核心流程</strong>：任务需要时才加载完整的 SKILL.md（用户斜杠命令显式触发，或模型读过目录后自己判断、调用 Skill 工具加载）</li>
+<li><strong>引用子文件</strong>：更细的子文档按需深入（如 PPTX Skill 的 html2pptx.md）</li>
+</ul>
+<p>description 的写法是最值得学的一笔：<strong>它应当像路由条件，而不是功能介绍</strong>——「何时使用、何时不使用」的边界，配上典型的正例和反例。「何时该用我」比「我能做什么」重要得多；写得太宽泛（”help with backend”），任何后端相关的工作都会触发，路由就失准了。</p>
+<p>Skill 还可以捆绑可执行的脚本和模板（PPT Skill 带 PPT 模板和解析脚本）。往大了看，每个 Skill 是自包含的知识模块，可独立开发、测试、版本控制——Agent 的能力扩展从集中式地编辑系统提示词，变成了分布式的 Skill 生态，像 pip &#x2F; npm 的包管理。一个值得记的原则：<strong>选择 Agent 交互模式时，应与模型厂商的训练方法保持一致</strong>——厂商推行的用法是它们专门训练过的模式。</p>
+<h2 id="状态栏：上下文是台只有一半的检索引擎"><a href="#状态栏：上下文是台只有一半的检索引擎" class="headerlink" title="状态栏：上下文是台只有一半的检索引擎"></a>状态栏：上下文是台只有一半的检索引擎</h2><p>状态栏的理论依据，是注意力机制的一个本质特性：<strong>上下文学习更像检索而非推理</strong>——模型擅长从已有内容里查找信息，但不擅长主动归纳总结。原文的比喻：上下文窗口是一台只有一半的检索引擎——</p>
+<ul>
+<li>检索的那一半很强：注意力能从成千上万个 token 里捞出相关的原始记录，相当于把 RAG 内置进了每次前向传播</li>
+<li>但它没有「提炼层」：上下文里的东西从不会被自动数一遍、总结成一条结论。任何「关于这些内容的结论」——一共多少次、有没有超标、进展到哪——模型每次都得从原始记录里现算，代价随上下文堆积量上涨</li>
+</ul>
+<p>实际场景：系统提示词要求每个商家最多打 3 次电话，Agent 经常数不清打了几次，又打第 4 次，甚至循环拨打。「已经打了几次」这个知识没有被提炼出来，而是分散在轨迹的原始记录里，模型每次决策都要花思考 token 重新统计——效率低、错误率高。而当每次通话结果直接标明「本次是第 3 次呼叫」，错误率大幅下降。</p>
+<p>这背后是两件事：把<strong>分散在各处的隐式状态提炼为可直接使用的显式知识</strong>（Harness 提前算好聚合信息，模型只需检索）；以及<strong>强制性的注意力引导</strong>——长上下文里注意力有限，中段信息衰减（开头和结尾注意力高），把结构化的状态放在上下文末尾，空间上紧邻即将生成的新 token，自然获得最高权重。</p>
+<p>数字很有说服力：提供提前算好的状态栏后，<strong>小模型（Qwen3-0.6B）的准确率能接近前沿大模型</strong>；思考 token 量、延迟、花费<strong>降低约一个数量级</strong>——不带状态栏时思考量随上下文变长持续增长，带上之后基本恒定。</p>
+<h2 id="状态栏怎么落地"><a href="#状态栏怎么落地" class="headerlink" title="状态栏怎么落地"></a>状态栏怎么落地</h2><p><strong>放哪</strong>：作为一条 user 角色的消息挂在上下文<strong>末尾</strong>，内容用 <code>&lt;agent_status&gt;</code> 标签包裹——借助 user 槽位注入框架生成的状态，但特殊标签让模型能理解这不是真实用户在说话。不改 system 消息（那会破坏前缀缓存），追加也不影响任何已缓存内容——还是「动态信息追加末尾」那套。</p>
+<p><strong>状态会变，两种更新策略各有代价</strong>：</p>
+<ul>
+<li><strong>每轮替换</strong>：每次调用前移除旧状态、追加最新状态。上下文里永远只有一份最新状态；代价是移除会让其后的缓存失效——好在失效范围只覆盖上次注入后的短后缀（通常一轮），整个前缀仍可复用。适合<strong>状态较大、更新频繁</strong>的场景</li>
+<li><strong>持久追加</strong>：状态注入后永久留在轨迹里，每轮只在末尾追加新的。缓存完全友好（只增不改）；代价是陈旧状态累积占 token，且要求模型只识别最新一条、忽略过时状态。Claude Code 的 <code>&lt;system-reminder&gt;</code> 就是这个方式</li>
+</ul>
+<p>状态栏常放三类信息：<strong>任务规划</strong>（TODO 列表放轨迹末尾，防止忘记原始诉求）、<strong>事件的侧信道信息</strong>（精确时间、地理位置、时间间隔）、<strong>环境状态的观察摘要</strong>（系统时间、工作目录、「该工具已被重复调用 N 次」的异常提醒）。实验里的五种技术（时间戳、工具调用计数器、TODO 管理、详细错误信息、系统状态感知）组合使用还有涌现效应——时间戳 + 计数器让 Agent 理解操作频率，TODO + 系统状态让策略随环境调整。</p>
+<p><strong>状态栏维护的三个注意点</strong>：</p>
+<ol>
+<li><strong>尽量用确定性的代码维护状态</strong>——实验发现模型几乎无条件相信状态栏（写 3 次它就当真 3 次，不会重算），而 LLM 做统计本来就容易出错。实在要用 LLM，也要逐条抽取、代码汇总，绝不让它批量统计。这也意味着状态栏投毒风险要认真对待</li>
+<li><strong>尽量避免删除原始数据</strong>——状态栏是对原始轨迹的<strong>有损投影</strong>，只提前算了「你预想会被问到」的维度。计数类任务可以只留状态栏；但只要有一个问题落在未计算的维度上，准确率断崖式下降</li>
+<li><strong>归位</strong>：书里明确说，Agent 状态栏本身就是<strong>上下文压缩（Context Compression）技术之一</strong>——用极低的 token 成本提前提炼信息，正是压缩思想的第一种形态。第 2 章最后一块（也是下一步要读的），就是更完整的压缩策略</li>
+</ol>
+<h2 id="我的理解与修正"><a href="#我的理解与修正" class="headerlink" title="我的理解与修正"></a>我的理解与修正</h2><p>读完状态栏这段，我最初的归因是：归纳弱，本质是 LLM 是生成式模型，靠概率预测 token——概率性的东西当然数不准。细想后这个归因站不住：把采样温度设为 0（greedy decoding），每一步都是确定性的，模型照样数不清 3 次电话。真正的原因在<strong>架构</strong>：注意力是并行的加权读取，一次矩阵运算就能从上万 token 里捞出相关内容，这是 Transformer 天生擅长的；而归纳统计需要循环加精确累加（数到几了、加一、比较），单次前向传播是固定深度的计算，没有可迭代的循环状态——需要循环的精确计算，架构上就做不稳。</p>
+<p>所以模型不是不能归纳，是归纳很贵：思维链就是它现算的方式——实验 2-8 的对照组里，热力图显示思考 token 在草稿纸上一步步数数——成本随上下文增长，且一步数错、后面全错。状态栏的本质，是把「每次现算」替换成「一次检索」：把归纳从概率路径上挪走，交给代码在 Harness 里确定性完成，模型只消费结果。这也解释了书里为什么坚持「状态栏尽量用代码维护」——确定性计算就该交给确定性引擎。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>第 2 章最后一块：线索三，上下文压缩（什么时候压、怎么压、怎么与 KV Cache 共存）</li>
+<li>实验：<code>agent-status-bar</code>（五种状态栏技术）</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter2.md">《深入理解 AI Agent：设计原理与工程实践》第 2 章「上下文工程」</a>，李博杰著，GitHub 开源——本篇覆盖「动态提示词与 Agent Skills」「Agent 状态栏」</li>
+<li><a target="_blank" rel="noopener" href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic: Equipping Agents for the Real World with Agent Skills</a>——Skills 机制的源头设计</li>
+<li><a target="_blank" rel="noopener" href="https://baoyu.io/blog/2026-02-14/remove-ai-writing-flavor">宝玉：《别再用提示词去 AI 味了，方向就是错的》</a>——书里 Skill 写作四部分结构的出处</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/21/agent-book-ch2-skills-status-bar/" data-id="cuiduP5PBoDHsiCYBkrhxp3Up" data-title="Agent 精读（八）：上下文是台只有一半的检索引擎" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-jev-system-one-models" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/20/jev-system-one-models/" class="article-date">
+  <time class="dt-published" datetime="2026-09-20T14:30:00.000Z" itemprop="datePublished">2026-09-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/20/jev-system-one-models/">大模型的理解力，用户的解空间：Jev 如何填满一个空白象限</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>你在生产代码里用 LLM 做过分类或路由吗？一次调用 3 到 329 秒，输出 token 比输入贵 5 倍，JSON 解析失败还得重试，问模型”你有多大把握”它永远回答”非常确定”。这篇文章拆解 2026 年 9 月发布的 TypeSafe AI Jev——一个不生成任何文字的模型——以及它背后的 System One Models 框架。目标：读完能在面试里把这条新路线讲清楚，包括原理、生态、质疑和机会。</p>
+</blockquote>
+<h2 id="问题从哪来"><a href="#问题从哪来" class="headerlink" title="问题从哪来"></a>问题从哪来</h2><p>“模型聊天早已超人，自动化在哪？”——这是 TypeSafe 发布博客的第一句话，创始人 Diogo Almeida 的执念。他是 RLHF 的共同发明人之一，InstructGPT 与 ChatGPT 背后的训练方法就出自他手（TechCrunch 报道原话：ChatGPT broke Almeida’s heart）。</p>
+<p>他离开 OpenAI 时的判断是：<strong>问题的根源在于我们优化的是人类语言</strong>。人类语言适合对话，不适合软件消费——软件要的是类型安全、可校验、带不确定性的结构化输出。于是两年隐身之后，TypeSafe 给出第三条后训练路线：</p>
+<ul>
+<li><strong>RLHF</strong>（人类偏好）→ 造就了聊天模型</li>
+<li><strong>RLVR</strong>（可验证奖励）→ 造就了推理模型</li>
+<li><strong>RLCD</strong>（校准决策）→ 造就了决策模型</li>
+</ul>
+<p>官方的一句话定义值得原样记住：Jev 是一个 <strong>frontier-intelligence function call——unstructured state in, typed probabilistic decisions out</strong>。非结构化状态进，带类型的概率性决策出。</p>
+<p>命名也各有出处：System One 来自卡尼曼《思考，快与慢》的”系统 1”——快、直觉、单步判断；Jev 来自经济学家 Jevons，取 Jevons 悖论——蒸汽机效率提升后煤的消耗反而上升。<strong>成本每降一个数量级，用例数量会涨得更多</strong>，命名即愿景。</p>
+<h2 id="API-长什么样"><a href="#API-长什么样" class="headerlink" title="API 长什么样"></a>API 长什么样</h2><p>一个请求由两部分组成：<code>state</code>（被评判的内容，纯文本 &#x2F; JSON 对象 &#x2F; 文本数组）和 <code>questions</code>（问题字典）。三类问题原语，对应三种答案形状：</p>
+<table>
+<thead>
+<tr>
+<th>原语</th>
+<th>回答什么</th>
+<th>返回</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Choice</td>
+<td>N 选一（工单路由到哪个组）</td>
+<td><code>choice</code> + 全选项 <code>probabilities</code> + <code>confidence</code></td>
+</tr>
+<tr>
+<td>Score</td>
+<td>在有序等级上打分（客户愤怒程度）</td>
+<td><code>score</code>（可落在两级之间）+ 分布 + <code>confidence</code></td>
+</tr>
+<tr>
+<td>Noul</td>
+<td>是非判断（消息里是否请求退款）</td>
+<td><code>noul</code>：一个 0 到 1 的概率，没有单独 confidence</td>
+</tr>
+</tbody></table>
+<p>关键工程参数：输入 $42&#x2F;Btok、<strong>输出免费</strong>；70–500ms 延迟；限流 250k tokens&#x2F;s；单请求 64k 上下文；仅文本输入；<strong>主要训练语言是英语，CJK 精度目前更低</strong>——这是官方文档自己承认的。</p>
+<p>三个设计点比参数更值得记：</p>
+<p><strong>一问一判断。</strong> 官方反复强调”问一个懂行的人一秒钟内能做的判断”。”分析这封邮件并决定最佳行动”不是好问题——那是 System 2 的活，该拆成原子问题再用代码组合权重。</p>
+<p><strong>同请求内所有问题并行评估。</strong> 加问题几乎不增加延迟，只多花几个 token。官方 cookbook 的数据：13 个问题合并成一次调用，比 13 次单独调用便宜 11.5 倍、快 9.6 倍，答案不变。这直接催生了 Speculative Fan-Out 模式——把”可能用到”的问题全部提前问，代码再决定用哪个答案。</p>
+<p><strong><code>instructions</code> 里用反引号路径引用 state 字段。</strong> 比如 “Does <code>ticket.messages[0].text</code> request a refund?”——问题显式指向结构化状态的某一部分，避免模型自己猜上下文。</p>
+<h2 id="四个设计原理（面试核心区）"><a href="#四个设计原理（面试核心区）" class="headerlink" title="四个设计原理（面试核心区）"></a>四个设计原理（面试核心区）</h2><h3 id="并行采样：快是结构性的，不是调参调出来的"><a href="#并行采样：快是结构性的，不是调参调出来的" class="headerlink" title="并行采样：快是结构性的，不是调参调出来的"></a>并行采样：快是结构性的，不是调参调出来的</h3><p>自回归模型一次生成一个 token，每个 token 依赖前一个——一条串行链走到底。Jev 的输出空间在请求时就定义死了（N 个选项、M 个等级），模型对整个输出空间做一次前向，全部概率并行产出。这是 40–200 倍速度差的结构性来源：<strong>不是推理框架优化，是把”生成”这件事从任务里删掉了</strong>。</p>
+<h3 id="RLCD：校准本身作为训练目标"><a href="#RLCD：校准本身作为训练目标" class="headerlink" title="RLCD：校准本身作为训练目标"></a>RLCD：校准本身作为训练目标</h3><p>校准的定义：给 0.2 概率的答案，长期统计里真的该有 20% 命中；0.8 就该 80%。文档直指 RLHF 的两个副作用：偏好优化会奖励”听起来自信的幻觉”（sycophancy）；还会引发 <strong>mode dropping</strong>——把分布压窄到单一风格上，模型对其他可能的输出概率衰减，偏好越强，概率分布越不可信。RLCD 把目标换成”概率与结果对齐”，模型失去的是自由文本生成，换来的是概率的诚实。</p>
+<h3 id="Confidence-是概率分布的统计量，不是另一个模型输出"><a href="#Confidence-是概率分布的统计量，不是另一个模型输出" class="headerlink" title="Confidence 是概率分布的统计量，不是另一个模型输出"></a>Confidence 是概率分布的统计量，不是另一个模型输出</h3><p>Choice&#x2F;Score 的 <code>confidence</code> 由 <code>probabilities</code> 直接计算（文档交互示例里对三选项用的是 <code>(N·峰值概率−1)/(N−1)</code> 这种归一化峰值），分布越平坦 confidence 越低。官方明确说”你并未被锁定在我们的定义上”——完整的 <code>probabilities</code> 都给你了，你要更合适的度量可以自己算。这也是它和”问 LLM 要置信度”的本质区别：后者是让模型再生成一段关于自己的文字，前者是分布本身的数学性质。</p>
+<h3 id="零类型错误是构造性保证，不是”训练得好”"><a href="#零类型错误是构造性保证，不是”训练得好”" class="headerlink" title="零类型错误是构造性保证，不是”训练得好”"></a>零类型错误是构造性保证，不是”训练得好”</h3><p>幻觉是生成器在开放词表上采样的固有属性。Jev 根本没有开放词表——它在<strong>你预先定义的选项集合上输出一个分布</strong>（softmax over options），输出不可能落在集合之外，就像骰子不可能掷出 7。所以官方敢写”这在数学上不可能被证伪”。注意边界：<strong>“不会选错类型”不等于”不会选错选项”</strong>——所以才有 confidence，才有置信度门控：高置信自动执行、中置信复核确认、低置信转人工或换路。</p>
+<h3 id="三种软件架构的位置"><a href="#三种软件架构的位置" class="headerlink" title="三种软件架构的位置"></a>三种软件架构的位置</h3><p>官方把它放在第三种架构里：传统软件是简单原理组成的复杂决策树；LLM agent 是模型接管控制流、每圈都可能脱轨；<strong>AI-powered software 是代码持有工作流，模型只出现在需要”可编程常识”的窄缝里</strong>。Guard 框架的读者应该对这个定位很熟悉——这正是”模型即工具调用点、循环归属代码”的极端化。</p>
+<h2 id="理解力-×-解空间：一张图看懂四种技术"><a href="#理解力-×-解空间：一张图看懂四种技术" class="headerlink" title="理解力 × 解空间：一张图看懂四种技术"></a>理解力 × 解空间：一张图看懂四种技术</h2><p>前面四节讲的是 Jev 的零件。这一节讲我自己把零件串起来的那根线——想通它，前面所有”为什么”会同时塌缩成同一个答案。</p>
+<p>四个我们熟悉的技术，其实只有两根轴：<strong>理解力</strong>（能不能吃进没见过的自然语言）和<strong>解空间的归属</strong>（答案集合是谁定的）。</p>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>理解力</th>
+<th>解空间归属</th>
+<th>输出形态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>if-else</td>
+<td>无——语言进不去它的世界</td>
+<td>程序员写死</td>
+<td>分支跳转</td>
+</tr>
+<tr>
+<td>垃圾邮件过滤器（传统分类器）</td>
+<td>有，但有限</td>
+<td><strong>被训练数据焊死</strong>——选项跟着权重一起烧进模型</td>
+<td>两个固定标签的概率</td>
+</tr>
+<tr>
+<td>Jev</td>
+<td>大模型级（encoder 的阅读力）</td>
+<td><strong>每次请求的用户</strong>——选项是 HTTP 请求发出去那瞬间才出现的</td>
+<td>用户定义的选项集合上的概率分布</td>
+</tr>
+<tr>
+<td>LLM</td>
+<td>最强</td>
+<td>模型自己放飞——通过逐 token 组合可以拼出任何内容</td>
+<td>自由文本序列</td>
+</tr>
+</tbody></table>
+<p>用一句话给 Jev 定位：<strong>大模型的理解力 + 用户自由决定的解空间</strong>。Jev 干的事，是把 state（材料）和每个选项都投影到同一个语义空间里量距离，距离近的选项分数高——“在用户的解空间中做投影”。</p>
+<p>这句话一旦立住，前面所有结论自动成立：</p>
+<ul>
+<li><strong>为什么快 100 倍？</strong> 解空间是 3 个选项，输出就只有 3 个数——<strong>没有序列要生成</strong>，串行链长度从 312 步变 1 步</li>
+<li><strong>为什么输出免费？</strong> 3 个数不是 token 流，没有可计费的生成量</li>
+<li><strong>为什么零类型错误？</strong> 答案物理上被圈死在你的选项里，想错格式都没有那条通道</li>
+<li><strong>为什么 confidence 可算？</strong> 分布就摊在这 3 个数上，峰值多尖一眼看出，不用”问”模型有没有把握</li>
+<li><strong>为什么传统分类器换个选项就胡说八道？</strong> 它的解空间被训练时的数据焊死了，新选项投影不进它唯一认得的那几个孔——所以每个新业务都要重训；Jev 的选项跟着请求走，训练学的是”对任何给过来的映射当场算出来”这个通用能力，不是任何具体的映射</li>
+</ul>
+<p>四层楼画成一张图，Jev 站的那个角落——强理解力 + 用户解空间——在它之前是个空白象限：if-else 和分类器是旧时代在理解力纵轴上的挣扎，LLM 是这个象限的错过（理解力够了，解空间扔了）。Jev 不是更聪明的模型，是<strong>第一个站进这个空象限的模型</strong>。</p>
+<div class="mermaid">quadrantChart
+    title 理解力 × 解空间归属：四种技术的位置
+    x-axis "解空间：用户所有" --> "解空间：模型放飞"
+    y-axis "理解力：无" --> "理解力：强"
+    "if-else": [0.05, 0.05]
+    "垃圾邮件过滤器": [0.15, 0.4]
+    "Jev": [0.1, 0.95]
+    "LLM": [0.9, 0.95]</div>
+
+<h2 id="快的账本：省的是生成，不是理解"><a href="#快的账本：省的是生成，不是理解" class="headerlink" title="快的账本：省的是生成，不是理解"></a>快的账本：省的是生成，不是理解</h2><p>“一次前向”这四个字容易让人误会 Jev 连理解都省了。实际账本（HF 复刻项目 M4 Max 实测）值得摊开看：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>串行步数</th>
+<th>耗时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自回归 LLM 输出 312 token 的 JSON</td>
+<td>312 次前向</td>
+<td>1900ms</td>
+</tr>
+<tr>
+<td>Jev 风格：编码 state + 28 个字段打分</td>
+<td><strong>1 次前向</strong>（prefill 52ms + 打分 18ms）</td>
+<td>70ms</td>
+</tr>
+</tbody></table>
+<p>两边读的是同一份材料，材料长，编码照样重——<strong>prefill 那 52ms 谁都躲不掉</strong>。省掉的只有”把答案写成文字”那一段。所以 Jev 的延迟结构是：<strong>总耗时 ≈ 编码 state 的时间（随材料长度线性涨）+ 打分时间（选项再多也几乎不涨）</strong>。它的延迟天花板 &#x3D; 你的输入长度，而输入长度是你可以控制的——这就是它敢做每帧一次的实时 agent 的原因。</p>
+<p>串行到底是谁造成的？写作文不能跳着写，不是纸不够长，是第 51 个字的语义挂在前面 50 个字上——P(t₅₁|t₁…t₅₀) 的<strong>定义</strong>里就含着前文。<strong>串行是”生成”这个动作的定义自带的，不是计算量问题</strong>；LLM 慢在”写答案”不在”读题”，Jev 不是读得快，是压根不写。</p>
+<p>而 LLaDA 那条扩散式路线和 Jev 的分界，同样落在这两根轴上：LLaDA 是把”生成”并行化——mask 填空，位置之间无因果依赖，整句同时出，但它仍然在造内容；Jev 是把”生成”消除——不造内容，只对既有假设分配信念。一个是 inference 加速，一个是任务改写。即便 Jev 底层真是 masked 扩散预训练（fork 旁证），扩散也只是它的<strong>训练遗骸</strong>，不是它的<strong>运行时</strong>——选项打分一次前向即终止，没有”逐步去噪”的对象。</p>
+<div class="mermaid">graph LR
+    subgraph LLaDA["LLaDA：把生成并行化"]
+        A1["[MASK][MASK][MASK][MASK]"] -->|"一次并行填空"| A2["今 天 天 气 真 好"]
+        A2 -->|"迭代几轮去噪"| A3["收敛的完整句子"]
+    end
+    subgraph Jev["Jev：把生成消除"]
+        S["材料：我买了双鞋想退"] --> P["投影到语义空间"]
+        O1["选项：退款"] -.->|"量距离"| P
+        O2["选项：换货"] -.->|"量距离"| P
+        O3["选项：咨询"] -.->|"量距离"| P
+        P --> D["概率分布<br/>退款 0.72 / 换货 0.21 / 咨询 0.07"]
+    end</div>
+
+<h2 id="n²-的账本：不串行，但昂贵"><a href="#n²-的账本：不串行，但昂贵" class="headerlink" title="n² 的账本：不串行，但昂贵"></a>n² 的账本：不串行，但昂贵</h2><p>理解这层的钥匙是分清”算的顺序”和”等的顺序”。n 个 token 的 attention 矩阵有 n² 个”两两关系”，但<strong>token_5 的分数不需要等待 token_9 的结果</strong>——scores[5][9] 和 scores[9][5]、scores[1][300] 和 scores[8000][12] 彼此都不依赖。Q@K^T 这一亿个格子被 GPU 切成小块撒到几千个核上<strong>同时</strong>乘加。”从头到尾”说的是矩阵的形状，不是计算的时间顺序。</p>
+<p>真正的串行只有两处，且 Jev 一处都不占便宜：</p>
+<table>
+<thead>
+<tr>
+<th>成本</th>
+<th>量级</th>
+<th>属性</th>
+<th>Jev vs LLM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单次前向计算量</td>
+<td>n²（attention 矩阵）</td>
+<td><strong>并行</strong>——GPU 同一瞬间铺开</td>
+<td>相同，两边都付</td>
+</tr>
+<tr>
+<td>层间串行</td>
+<td>层数（约 32）</td>
+<td>串行但短</td>
+<td>相同，两边都付</td>
+</tr>
+<tr>
+<td>token 间串行</td>
+<td>输出长度（可到 312+）</td>
+<td><strong>串行且长</strong></td>
+<td><strong>LLM 独有，Jev 归零</strong></td>
+</tr>
+</tbody></table>
+<p>三种成本画在一条时间线上最直观——Jev 和 LLM 共享前两段，差别全在第三段：</p>
+<div class="mermaid">gantt
+    title 一次调用的三种成本（横轴：串行时间）
+    dateFormat X
+    axisFormat %s
+    section LLM（输出 312 token）
+    prefill 编码 n² 并行 : 0, 52
+    32 层串行       : 0, 52
+    生成 312 步串行链 : 52, 1900
+    section Jev（28 个问题）
+    prefill 编码 n² 并行 : 0, 52
+    32 层串行       : 0, 52
+    选项打分（一次前向）  : 52, 70</div>
+
+<p>所以 n² 的问题从来不是”慢”（串行），而是三个具体瓶颈：</p>
+<ol>
+<li><strong>显存墙</strong>——n&#x3D;100k 时一层 attention 矩阵物化要 40GB，H100 才 80GB。FlashAttention 不是把 n² 计算变少，是不把整个矩阵物化到显存，边算边用，显存从 O(n²) 压回 O(n)</li>
+<li><strong>吞吐墙</strong>——工业并发下，每个请求都付自己的 n²，GPU 的 FLOPs 被摊薄，单请求延迟不涨但排队涨</li>
+<li><strong>成本墙</strong>——n² 是每 token 前向的乘加量，直接乘电费乘卡价</li>
+</ol>
+<p>串行链决定”单个答案多久出来”，n² 决定”这个生意做不做得起”。</p>
+<p>这三种成本混在一起谈就会糊涂，拆开看就清楚了：</p>
+<div class="mermaid">graph TB
+    N["n² attention 矩阵<br/>（单次前向内部）"] -->|"格子之间互不依赖<br/>GPU 同一瞬间铺开"| P1["属性：并行"]
+    L["层与层之间<br/>（约 32 层）"] -->|"第 1 层输出是第 2 层输入"| S1["属性：串行但短<br/>两边都付，谁也躲不掉"]
+    T["token 与 token 之间<br/>（输出 312 个）"] -->|"P(t51|t1..t50) 定义自带前文"| S2["属性：串行且长<br/>LLM 独有，Jev 归零"]
+    P1 --> Q["串行步数决定单个答案多久出来<br/>n² 决定这门生意做不做得起"]
+    S1 --> Q
+    S2 --> Q</div>
+
+<p>这里还有一层对 Jev 特别要命的账：<strong>KV Cache 在它的地盘上近乎失业</strong>。LLM 世界的 system prompt 字节级稳定、缓存命中；Jev 世界的 state 每次请求都全新（每张工单、每帧 DOM 快照都不一样），缓存基本必 miss——prefill 的 n² 是它<strong>每次调用都实打实要付的过路费</strong>，没有任何捷径。所以官方文档把”只发相关上下文”列为头号军规，本质是在同时压延迟天花板和 n² 成本地板：<strong>state 越短，这门生意越赚</strong>。而 state 里什么是信号什么是噪声（模板、寒暄、系统日志），只有懂业务的人知道——这也是传统后端经验能直接平移进 Jev 时代的地方。</p>
+<div class="mermaid">graph LR
+    subgraph LLM世界["LLM 的负载：缓存的天堂"]
+        SP["system prompt<br/>固定且长"] -->|"字节级稳定<br/>KV Cache 命中"| C1["缓存热"]
+        U1["每轮对话增量"] --> C1
+    end
+    subgraph Jev世界["Jev 的负载：缓存失业"]
+        T1["工单 A 的 state"] --> X["每次全新<br/>KV Cache 必 miss"]
+        T2["DOM 快照 B"] --> X
+        T3["工单 C 的 state"] --> X
+        X --> F["每次实付 prefill n²<br/>过路费"]
+    end
+    F -.->|"唯一出路：压短 state"| R["军规：只发相关上下文<br/>延迟和成本同时压"]</div>
+
+<h2 id="底层结构：官方没说的，社区在做什么"><a href="#底层结构：官方没说的，社区在做什么" class="headerlink" title="底层结构：官方没说的，社区在做什么"></a>底层结构：官方没说的，社区在做什么</h2><p>官方对架构守口如瓶。TechCrunch 的表述是”tight-lipped，外部观察者怀疑构建在开源权重 LLM 之上”。可查的旁证：typesafe-ai 组织 fork 了 LLaDA（人大 ML-GSAI 的扩散语言模型官方实现）和 vLLM；HN 评论区有高赞指出 vLLM 的一个 PR 支持”Jev 模式”的 DiffusionGemma，单次决策约 0.2s。<strong>扩散式语言模型天然就是并行解码器</strong>——这条社区推断（官方从未确认）目前证据链最完整。</p>
+<p>三个开源项目让这条路线可以摸到：</p>
+<p><strong>jevlike</strong>（vinnylarouge，发布 1 天后出现，1k+ star）——独立实现的入门架构：每个选项编码为 query 向量 → 对上下文 token 做 attention 得到该选项专属的上下文向量 → 共享打分头算出分 → softmax 出分布。作者诚实标注：Wikispeedia 下一步点击预测上 26–29% 准确率（对照组 8%），8 选项场景一次前向比小 decoder 快约 100 倍，但<strong>未达到与 Jev 同等质量，也不是 Jev 的复刻</strong>。</p>
+<p><strong>Parallel Constrained Decoding</strong>（HF Space）——Apple Silicon + MLX + Qwen2.5-1.5B：对多字段 JSON schema 并行评估，M4 Max 上 5.6–7.0 倍加速、100% schema 有效、逐字段校准置信度。证明”并行受约束解码”用现成小模型就能做出来，差距在训练。</p>
+<p><strong>jev-ultrafast</strong>（browser-use 官方，10.5k star）——最能说明用途上限的例子：浏览器 agent 的动作空间做成”动态索引元素表”（每帧 DOM 快照产出编号控件列表），Jev 选操作和目标元素，小 LLM 只在 <code>TYPE_TEXT</code> 时生成文字。苏黎世→伦敦航班搜索 7.1 秒完成含打字和加载等待；浏览器协议调用从 1092 降到 101 次。<strong>模型的输出永远不变成选择器、坐标或可执行代码</strong>——执行器只认观察到过的 DOM 节点，这是结构化输出带来的安全性质。</p>
+<p>学术谱系上它不是凭空出现的：GLiNER（双向编码器做零样本实体抽取，3.8k star）早已证明”编码器 + 选项打分”可以零样本结构化输出；LLaDA 系列（含 inclusionAI 的 2.0 版）证明扩散式 LM 可以并行生成。HN 上还有人贴出 2025 年 3 月的 arXiv 论文（PPO over 序列嵌入输出转化概率），自认”一年前就做了同构的事”。<strong>Jev 的增量不在点子，而在”通用零样本 + 概率校准 + 工程化 API”三件事同时做到</strong>——这正好是面试里”这想法早就有人做”质疑的标准答案。</p>
+<h2 id="市场验证与质疑清单"><a href="#市场验证与质疑清单" class="headerlink" title="市场验证与质疑清单"></a>市场验证与质疑清单</h2><p>来自 TechCrunch 报道的真实案例：Vercel 用 Jev 替换 OpenAI 的命令安全分类器，快 5–18 倍且更准；Bryo AI 对比 Gemini 做邮件分类，Gemini 略准但贵 10–20 倍，其 CTO 最看重的反而是”唯一返回真实概率的模型”。Pi（Earendil）的 Armin Ronacher 给了两条用例——用 Jev 监控 LLM agent 轨迹防越狱（用 agent 监控 agent 太贵）、做模型路由的实时分诊；同时给了一句最锋利的批评：<strong>“它把幻觉问题部分外包给了用户”</strong>——0.5 概率是硬币，用不用这个答案是调用方的责任。</p>
+<p>发布帖在 HN 拿到 1921 赞 504 评论，质疑集中在四处，面试时值得替面试官问出来：</p>
+<ol>
+<li><strong>没有论文、没有权重、没有 live demo</strong>——“RLCD 和并行采样没有任何技术支撑，全是营销词汇”。</li>
+<li><strong>对比口径</strong>——“70ms vs 329 秒”拿的是推理模型满档输出，拿纯分类小模型比差距没这么大。官方博客自己也承认”这些是我们预期里偏高端的数字”。</li>
+<li><strong>Benchmark 全是自建的 workflow evals</strong>（参考答案是 GPT-6 Astra 与 Fable 5.1 的平均），官方另发一篇《Lies, Damned Lies, and Benchmarks》自陈立场：公共榜单已被 benchmaxx，他们选择公开 caveat 而不是刷榜。立场可以敬，验证只能靠第三方。</li>
+<li><strong>工程约束</strong>——64k 上下文、纯文本、英语主训、invite-only、单一供应商。</li>
+</ol>
+<h2 id="机会在哪"><a href="#机会在哪" class="headerlink" title="机会在哪"></a>机会在哪</h2><p>把用例分三层看：</p>
+<p><strong>替换层</strong>：管道里已有的零样本分类、路由、抽取、打标，直接换成 Jev。收益是钱和速度（一到两个数量级），风险是精度——先跑 <a target="_blank" rel="noopener" href="https://github.com/typesafe-ai/system-one-adapter-python">system-one-adapter-python</a>（官方出的 LLM 后端 drop-in 对比器）做 A&#x2F;B。</p>
+<p><strong>增强层</strong>：给现有 LLM 系统当守门员。confidence-gated routing（置信度三段门控）、agent 轨迹监控、越狱检测、给 LLM 输出做校验打分——<strong>用决策模型看住生成模型</strong>，这是官方叙事里最符合工程直觉的一块。</p>
+<p><strong>新交互层</strong>：100ms 级 + 输出免费，让”每帧问一次模型”变成可承受的交互设计——jev-ultrafast 的浏览器 agent 是第一个完整演示。同样打开的还有实时 UI 决策、搜索式重排。</p>
+<p>对我自己的场景（客服工单审核）：工单分类路由（Choice）、申诉结果打分（Score）、退款请求识别（Noul）全部落在原生语区，且置信度门控天然对应”低置信转人工复审”的客服流程——这正是申请 waitlist 时填的用例。</p>
+<h2 id="面试速查卡"><a href="#面试速查卡" class="headerlink" title="面试速查卡"></a>面试速查卡</h2><p><strong>Q：Jev 和 LLM 的 JSON mode 有什么区别？</strong><br>采样方式与约束位置都不同。JSON mode 仍是自回归逐 token 生成（语法约束采样，一条链走到底，中途偏一个 token 前功尽弃），概率分布只在词表上、不在你的 schema 上；Jev 是一次前向、直接在你的选项集合上输出分布。约束前者是”事后围栏”，后者是”构造本身”。</p>
+<p><strong>Q：底层架构是什么？是 Transformer 吗？</strong><br>官方未披露，但 Transformer 骨架基本确认（TechCrunch 报道口径 “transformer-based”；社区复刻全部基于现成 Transformer 改造）。社区证据指向”开源权重的 encoder + 选项打分头 + 扩散式预训练 + RLCD”——真正的新东西不在骨架，在出口和训练目标。类比：LLM 的输出头投影到全量词表，Jev 的输出头投影到本次请求的选项集合；同一个主干，头开在哪决定了输出空间的形状。</p>
+<p><strong>Q：非自回归是 TypeSafe 发明的吗？</strong><br>不是，这是一条十年的谱系：2017 NAT（ICLR 2018 最佳论文）为延迟首次提出并行解码 → 2018–2019 Mask-Predict 修补质量 → 2021 D3PM 把扩散搬上离散 token → 2024 SEDD 质量追平自回归 → 2025 LLaDA&#x2F;Mercury 规模化 → 2026 Jev 产品化。四年一个台阶，每个台阶主语都不同（FAIR → Cornell → 人大&#x2F;Inception → TypeSafe）。Jev 的原创主张只剩 RLCD 和通用决策 API 这两件事。</p>
+<p><strong>Q：n² 复杂度你怎么看？Jev 能躲开吗？</strong><br>躲不开，但要看清它住在哪个维度：n² 是单次前向内部的并行计算量（GPU 同时铺开算），不增加串行步数；它贵在显存物化、吞吐摊薄、每 token 成本，不在”慢”。Jev 每次请求都是全新 state、KV Cache 必 miss，prefill 的 n² 是每次都要付的过路费——所以它的命门是 state 长度，官方”只发相关上下文”的军规就是在压这个。</p>
+<p><strong>Q：理解（编码）这一步 Jev 比 LLM 快吗？</strong><br>不快，两边读同一份材料的 prefill 成本完全一样。Jev 省的只有”把答案写成文字”那一段（token 间串行链）。所以 Jev 的延迟天花板 &#x3D; 输入材料长度——材料是调用方可控的，输出长度是模型方不可控的，这就是延迟主导权的转移。</p>
+<p><strong>Q：零幻觉怎么做到的？</strong><br>幻觉是开放词表生成的属性，Jev 没有开放词表。但要立刻补一句：它仍可能选错选项，所以核心配套是校准概率与 confidence——“零类型错误”和”零错误”是两件事。</p>
+<p><strong>Q：为什么 RLHF 模型的置信度不可信？</strong><br>偏好优化奖励讨喜与自信的表述，并造成 mode dropping（分布压窄），模型的文字概率声明与真实命中频率脱钩；RLCD 直接把”概率与结果对齐”当训练目标。</p>
+<p><strong>Q：它是 System 1，System 2 的任务怎么办？</strong><br>拆。每个问题问”一秒钟判断”，多因素判断拆成多个 Score 在代码里加权组合（Composite Scoring 模式），控制流始终归代码。</p>
+<p><strong>Q：这想法是不是早就有了？</strong><br>单体技术上是的——GLiNER 的零样本抽取、LLaDA 的并行扩散生成、2025 年就有 RL 输出概率的工作。增量在”通用零样本 + 校准 + 产品化”三位一体，以及把定价压到输出免费。护城河更可能在 RLCD 训练数据与分布，而非架构。</p>
+<p><strong>Q：你会拿它做什么，怎么验证？</strong><br>替换层跑 adapter A&#x2F;B 看精度和成本；增强层先做 LLM 输出守门（风险低、收益明确）；同时盯 CJK 精度和供应商集中度两个风险。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ol>
+<li>waitlist 通过后先在 <a target="_blank" rel="noopener" href="https://console.typesafe.ai/playground">Playground</a> 用中文工单样例实测 CJK 精度——这是官方承认的短板，也是自己场景的生死线</li>
+<li>用 <a target="_blank" rel="noopener" href="https://github.com/typesafe-ai/system-one-adapter-python">system-one-adapter-python</a> 对比现有 LLM 分类管道的成本&#x2F;延迟&#x2F;准确率</li>
+<li>想吃透架构的，读 <a target="_blank" rel="noopener" href="https://github.com/vinnylarouge/jevlike">jevlike</a> 的 option-attention head 源码（一个周末的量），再看 <a target="_blank" rel="noopener" href="https://github.com/ml-gsai/LLaDA">LLaDA</a> 理解扩散式并行解码</li>
+</ol>
+<p>参考来源：<a target="_blank" rel="noopener" href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">发布博客</a> · <a target="_blank" rel="noopener" href="https://docs.typesafe.ai/introduction">官方文档</a>（<a target="_blank" rel="noopener" href="https://docs.typesafe.ai/introduction/machine-learning-primer">AI primer</a>、<a target="_blank" rel="noopener" href="https://docs.typesafe.ai/primitives">Primitives</a>、<a target="_blank" rel="noopener" href="https://docs.typesafe.ai/confidence">Confidence</a>、<a target="_blank" rel="noopener" href="https://docs.typesafe.ai/models">Models</a>）· <a target="_blank" rel="noopener" href="https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/">TechCrunch 报道</a> · <a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=49717558">HN 讨论帖</a> · <a target="_blank" rel="noopener" href="https://typesafe.ai/blog/antibenchmaxxing">Antibenchmaxxing</a> · <a target="_blank" rel="noopener" href="https://github.com/browser-use/jev-ultrafast">jev-ultrafast</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/jev-system-one-models/" data-id="cuidMpBfYTuZgEd0tg2pXTKbO" data-title="大模型的理解力，用户的解空间：Jev 如何填满一个空白象限" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-agent-book-ch2-prompt-injection" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/20/agent-book-ch2-prompt-injection/" class="article-date">
+  <time class="dt-published" datetime="2026-09-20T13:30:00.000Z" itemprop="datePublished">2026-09-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/20/agent-book-ch2-prompt-injection/">Agent 精读（七）：对人类友好，就是对模型友好</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第七篇，走第 2 章三条线索中的第一条：提示词怎么写、怎么防劫持。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章的提示工程与提示注入部分。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="先记住一个检验标准"><a href="#先记住一个检验标准" class="headerlink" title="先记住一个检验标准"></a>先记住一个检验标准</h2><p>原文给系统提示词设计了一个实用的检验标准：<strong>如果一个聪明的新员工读完你的系统提示词还不知道该怎么做，Agent 也一样不知道。</strong></p>
+<p>这一篇的所有技巧，都是这句话的展开——因为模型在训练中学习了人类的语言和思维模式，针对人类降低认知负担的方法，对模型同样有效。</p>
+<h2 id="用带实习员工的方式写提示词"><a href="#用带实习员工的方式写提示词" class="headerlink" title="用带实习员工的方式写提示词"></a>用带实习员工的方式写提示词</h2><p>书里有个小观察：大写强调（”NEVER do X”）比 “Please avoid doing X” 更能引起模型的注意，过度使用还会稀释效果——Claude Code 的工具定义里就有 “NEVER invoke grep or rg as a Bash command”。</p>
+<p>但这类命令式标记我不喜欢。我更认可的姿态是像教导实习员工（甚至小白）一样去提示模型：它是聪明但完全不了解你业务的新人——讲清楚业务背景，给正例也给反例，给标准流程，而不是堆一堆 NEVER 和 MUST 指望它自己悟。这也和全书的比喻一致：系统提示词是员工手册，流程是 SOP，好培训从来不是「你很聪明，自己看着办」。</p>
+<p><strong>示例是规则表达不了时的替代品。</strong> 当期望的输出难以用规则精确描述——文案风格、报告格式、语气分寸——给两三个高质量示例，胜过等量篇幅的抽象规则。数量不是越多越好：两三个覆盖边界情况的，胜过十个大同小异的（后者还会稀释模型对规则本身的注意力）。正例之外最好配反例，并写清适用范围——这是 Skill 写作里的明确建议。</p>
+<p><strong>示例的位置有缓存约束。</strong> 示例放在系统提示词里就成了静态前缀的一部分，处于上下文靠前的区域——一旦确定就要字节级稳定。按请求动态检索「最相关」的示例，等于每次改写前缀，缓存持续失效。生产系统的做法是为每类任务准备固定示例集，而不是逐请求挑选。</p>
+<h2 id="结构化：XML-Markdown-双层"><a href="#结构化：XML-Markdown-双层" class="headerlink" title="结构化：XML + Markdown 双层"></a>结构化：XML + Markdown 双层</h2><p>模型对结构化输入显著敏感（训练数据里就有大量结构化内容）。书里的方案是两种格式配合：</p>
+<ul>
+<li><strong>XML 负责精确语义</strong>：<code>&lt;working_directory&gt;</code> 这个标签名本身就告诉模型「这是工作目录信息」，纯文本「当前目录：&#x2F;Users&#x2F;project&#x2F;src」则需要模型额外思考冒号前后的关系</li>
+<li><strong>Markdown 负责层次组织</strong>：<code>#</code>、<code>##</code> 标题让人一眼看出结构，人机共读</li>
+</ul>
+<p>这个设计有消融数据背书：保留所有规则的内容、只打乱组织结构，<strong>任务成功率下降超过 30%</strong>——「先验证身份再处理退款」被拆散后，Agent 有时跳过身份验证直接退款；而去掉工具的描述性文本，<strong>工具调用错误率增加 45%</strong>。</p>
+<p>所以这一篇的标题就是原文实验的结论：对人类友好的信息组织方式，对模型同样友好。</p>
+<h2 id="流程驱动优于规则堆砌"><a href="#流程驱动优于规则堆砌" class="headerlink" title="流程驱动优于规则堆砌"></a>流程驱动优于规则堆砌</h2><p>给新员工一份上百条零散规则的手册，没有流程图、没有优先级——多条规则同时适用时怎么选？规则没覆盖时怎么办？最聪明的人也会困惑，模型也一样。</p>
+<p>流程驱动的提示词是标准操作流程（SOP）：模型在任何时刻都清楚自己处于哪个阶段、当前步骤的目标是什么、完成后进哪一步；遇到异常时按当前阶段处理，而不是遍历所有规则找匹配项。</p>
+<p>配套的是业务规则要细化到可执行的程度。书里打电话砍价的 Agent 例子：模糊的「根据任务情况选择合适的计费类型」会让行为极不稳定（退衣服算省钱吗？取消订阅算吗？），必须写死成 <code>NEVER use percentage_based_one_time for refunds</code>。设计哲学是：模型的优势在遵循复杂指令，<strong>不该在业务规则上有自由裁量权</strong>——好培训不是「你很聪明，自己看着办」，而是 SOP + 明确框架。</p>
+<h2 id="工具定义也开始渐进式披露"><a href="#工具定义也开始渐进式披露" class="headerlink" title="工具定义也开始渐进式披露"></a>工具定义也开始渐进式披露</h2><p>上一篇刚说过第一章的设计模式「渐进式披露」，这一节看到它落到了 API 层：静态前缀里只保留工具的<strong>名称和简述</strong>，模型搜索到要调用时，再把完整的 schema 注入到<strong>上下文末尾</strong>。OpenAI 的 <code>tool_search</code>、Anthropic 的 Tool Search、Codex CLI（默认开启）都是这个机制。</p>
+<p>为什么追加到末尾不破坏缓存？这是 KV Cache 前缀性质的直接推论：因果注意力决定了每个 token 的键值对只依赖它之前的 token——在末尾追加不改任何已缓存内容。而且 schema 只在被发现的那一轮注入一次，之后固定在轨迹原位，不是每轮重新搬运。</p>
+<p>有一条硬约束：模型必须在训练中见过「工具定义出现在对话中间」这种模式——所以目前只有较新的模型（GPT-5.4+、Claude 4.5+ 系列）支持，自托管开源模型需要专门训练。</p>
+<h2 id="提示注入：上下文层的三道防御"><a href="#提示注入：上下文层的三道防御" class="headerlink" title="提示注入：上下文层的三道防御"></a>提示注入：上下文层的三道防御</h2><p><strong>威胁的本质</strong>：攻击者通过 Agent 处理的外部内容（网页、邮件、文档）把伪装成系统指令的文本混入上下文，劫持 Agent 行为。Agent 有工具调用能力，比普通聊天机器人危险得多——被注入的指令可能导致文件删除、发送邮件、泄露隐私。注入入口包括网页不可见元素、PDF 元数据、甚至图片的 EXIF 信息。</p>
+<p>上下文层的防御核心是帮模型分清「指令」与「数据」：</p>
+<ol>
+<li><strong>来源标记</strong>：外部内容注入前用明确的标记包裹并标注来源（<code>&lt;external_content source=&quot;webpage&quot;&gt;...&lt;/external_content&gt;</code>），提示模型其中出现的「指令」不应执行</li>
+<li><strong>结构化角色</strong>：严格利用 Chat Template 的角色体系（system&#x2F;user&#x2F;assistant&#x2F;tool）传递信息，让模型依据训练时建立的优先级区分可信指令与外部数据——把工具结果混入 user 消息，等于亲手抹掉模型辨别来源的依据</li>
+<li><strong>输入清洗</strong>：过滤外部内容中的可疑模式（如「忽略之前的指令」）——容易被措辞变体绕过，只能作为辅助手段</li>
+</ol>
+<p>原文泼了两盆冷水，都很清醒：</p>
+<ul>
+<li><strong>上下文层防御只是第一道防线</strong>——只能降低攻击成功率，无法万无一失。执行层的权限控制、沙盒隔离在第四、五章展开</li>
+<li><strong>Skill 本身就是新的注入面</strong>——Skill 的本质是「把外部内容当作指令加载」的制度化形式，第三方 Skill 藏的恶意指令比网页隐藏文本更直接。安装来源不明的 Skill 之前必须审查内容，如同审查将要执行的代码</li>
+</ul>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>线索二：Agent 状态栏（尾部注入运行时元信息）；线索三：上下文压缩</li>
+<li><code>prompt-engineering</code> 实验（Tau-Bench 消融）找时间跑</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter2.md">《深入理解 AI Agent：设计原理与工程实践》第 2 章「上下文工程」</a>，李博杰著，GitHub 开源——本篇覆盖「提示工程：优化系统提示词」「工具定义的设计」「提示注入：上下文安全的核心威胁」</li>
+<li><a target="_blank" rel="noopener" href="https://developers.openai.com/api/docs/guides/tools-tool-search">OpenAI Tool Search 文档</a>与 <a target="_blank" rel="noopener" href="https://code.claude.com/docs/en/mcp">Anthropic MCP tool search</a>——工具渐进式披露的 API 原生实现</li>
+<li><a target="_blank" rel="noopener" href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a>——第一章引用过的工程经验，与本章流程驱动的思路一脉相承</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/20/agent-book-ch2-prompt-injection/" data-id="cuidWPpJGCVvU1yerykutS2ek" data-title="Agent 精读（七）：对人类友好，就是对模型友好" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-agent-book-ch2-chat-template-kvcache" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/18/agent-book-ch2-chat-template-kvcache/" class="article-date">
+  <time class="dt-published" datetime="2026-09-18T13:30:00.000Z" itemprop="datePublished">2026-09-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/18/agent-book-ch2-chat-template-kvcache/">Agent 精读（六）：KV Cache 的账，从 n² 到线性</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第六篇，继续第 2 章。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章的 Chat Template、思考链保留策略与 KV Cache 深水区——外加一段书外的延伸：vLLM 怎么管显存。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="Chat-Template：把-JSON-翻译成-token"><a href="#Chat-Template：把-JSON-翻译成-token" class="headerlink" title="Chat Template：把 JSON 翻译成 token"></a>Chat Template：把 JSON 翻译成 token</h2><p>上一篇说「遵守 API 规范」，这一篇补上原理。API 层面的结构化 JSON 消息，模型并不能直接吃——中间有一层 <strong>Chat Template（聊天模板）</strong>，把它格式化成模型可以接受的 token 流：用特殊标记（如 <code>&lt;|im_start|&gt;system</code>）划分每条消息的边界和角色。原文的比喻是信封格式：API 消息是信的内容，Chat Template 规定怎么在信封上写寄件人、收件人；不同模型家族用不同的信封（Qwen、Llama、Gemma 各不相同），API 服务端（vLLM、Ollama 等）自动完成转换。</p>
+<p>理解了这层，上一篇的第三条铁律就有了着落：自行拼接消息之所以危险，是因为它绕过了信封——把工具结果当 user 消息发，Chat Template 就会误判「用户换了话题」，顺手清空思考草稿。</p>
+<h2 id="思考链的保留：R1-剥离，V4-反转"><a href="#思考链的保留：R1-剥离，V4-反转" class="headerlink" title="思考链的保留：R1 剥离，V4 反转"></a>思考链的保留：R1 剥离，V4 反转</h2><p>多轮对话里怎么处理历史的思维链？DeepSeek 的策略演进是个好案例：</p>
+<ul>
+<li><strong>R1 时代：剥离全部历史思考</strong>。多轮对话只回传 <code>content</code>，推理过程（<code>reasoning_content</code>）忽略——因为 R1 训练时历史 CoT 从不出现在输入里，塞回去属于分布外输入，反而可能干扰输出。代价是：模型每轮都要从零重新思考，容易重复犯错、丢失长程计划，Agent 场景下错误概率更高。</li>
+<li><strong>V4 时代：彻底反转</strong>。只要请求携带 <code>tools</code> 参数，两个 user 消息之间的每条 assistant 消息都必须原样回传 <code>reasoning_content</code>，否则 API 直接返回 400 错误。Agent 天然携带 tools，这条强制规则躲不开——Kimi K2、GLM-5 也采用同样的协议。</li>
+</ul>
+<p>方向从「省 token」转向「保状态」：中间思考承载着「为什么调这个工具、排除了哪些假设」——草稿纸收走，推理就从零再来。</p>
+<h2 id="KV-Cache-的账：n²-与线性"><a href="#KV-Cache-的账：n²-与线性" class="headerlink" title="KV Cache 的账：n² 与线性"></a>KV Cache 的账：n² 与线性</h2><p>不使用缓存时，每生成一个新 token，都要把整个前缀从头前向计算一遍：前缀长到 N 个 token 时要算 N 组 K、V，<strong>累计计算量与 N² 成正比</strong>。几十轮工具调用的 Agent 任务，代价比想像中大得多。</p>
+<p>KV Cache 的做法是：每个 token 的 K、V 只在第一次进入上下文时计算一次，之后留在缓存里。新 token 只需遍历前缀的缓存 K、V 算注意力——<strong>计算量随上下文长度线性增长</strong>。省掉的是历史 token 的 K&#x2F;V 重算；但注意它不是免费午餐：每个新 token 的注意力仍要遍历全部缓存，长上下文解码依然线性变慢，KV Cache 的显存与带宽正是推理瓶颈。</p>
+<h2 id="缓存的未来：可编辑、可组合（研究前沿）"><a href="#缓存的未来：可编辑、可组合（研究前沿）" class="headerlink" title="缓存的未来：可编辑、可组合（研究前沿）"></a>缓存的未来：可编辑、可组合（研究前沿）</h2><p>书里有一节标着「深水区选读」，讲了一个反直觉的发现：模型在 prefill 阶段其实在「做笔记」——读到「用户所在城市：北京」时，不是原封不动缓存这个字段，而是把「这意味着什么」的结论写进了下游每层的 KV 状态。测量发现，字段自己的那几个 token 的 KV，对最终决策的贡献往往不到 1%。</p>
+<p>这打开了两种原本不可能的操作：</p>
+<ul>
+<li><strong>编辑</strong>：改掉一个字段后，只要有显式思考链，改动能顺着已缓存的思考传播下去——用约 1% 的算力得到与整段重算一致的结果（前提是有 CoT；没有思考路径，孤立改字段会被忽略）。</li>
+<li><strong>组合</strong>：把一段预计算的「技能」缓存，通过旋转位置编码（RoPE）重定位后直接拼接进另一段上下文——从 O(L²) 的重算降到 O(L) 的拼接。</li>
+</ul>
+<p>论文在 vLLM 上实现后：首 token 延迟（p90）最多降低数十倍到数百倍，前缀缓存命中率约 98.5%，输出与逐字重算在决策上完全一致。对 Agent 的意义：换一批工具、更新一个记忆字段、注入一条新状态——也许不必每轮都推倒重来，「上下文可变、但缓存收益还在」。<strong>这仍属研究阶段</strong>，今天生产系统里，上一篇那三条铁律依然是默认原则。</p>
+<h2 id="延伸阅读：vLLM-怎么管显存（书外）"><a href="#延伸阅读：vLLM-怎么管显存（书外）" class="headerlink" title="延伸阅读：vLLM 怎么管显存（书外）"></a>延伸阅读：vLLM 怎么管显存（书外）</h2><p>这一节是书外延伸，来自 vLLM 的论文与博客（参考见文末）。缓存省计算，vLLM 解决的是另一个问题——<strong>KV Cache 放哪</strong>。</p>
+<p>vLLM（virtual LLM，名字就来自它借用的操作系统虚拟内存思想）的核心技术是 <strong>PagedAttention</strong>：像操作系统用分页管理内存一样，把 KV Cache 切成固定大小的 block 按需分配。传统做法要为每个请求预留一整段连续显存，碎片和预留浪费让实际利用率只有 20%–40%；分页之后浪费降到 4% 以下，同等显存能装下更多并发序列，吞吐提升 2–4 倍。</p>
+<p>第二个优势是<strong>连续批处理（continuous batching）</strong>：不等整批请求全部完成才释放——每一步解码后，完成的请求立即退出、新请求立即插入，GPU 始终满载。配合针对 RoPE 的 kernel 融合（把分页导致的非连续显存读取与旋转位置编码的正余弦计算融合在一个 CUDA kernel 里，减少 HBM 与片上 SRAM 之间的搬运），把位置编码这一步从 I&#x2F;O 瓶颈变成顺手的计算。</p>
+<p>Agent 的上下文动辄几十轮、每轮都在增长——vLLM 这类推理引擎的显存管理，就是 KV Cache 的账最终落地的地方。</p>
+<h2 id="上下文组织的三个线索"><a href="#上下文组织的三个线索" class="headerlink" title="上下文组织的三个线索"></a>上下文组织的三个线索</h2><p>缓存讲完，第 2 章剩下的问题是：往上下文里放什么、怎么组织。书里给了三条相对独立的线索，后面几节（也是我接下来要读的）就沿这三条展开：</p>
+<ol>
+<li><strong>提示工程 + 提示注入 + 动态提示词</strong>：系统提示词怎么写、怎么防外部内容劫持上下文；提示词越写越长后，用 Agent Skills 渐进式披露按需加载——这是第一章设计模式「渐进式披露」的落地。</li>
+<li><strong>Agent 状态栏</strong>：在上下文末尾持续注入动态元信息（任务进度、工具调用计数），让模型随时「瞥一眼」就感知运行状态——对应「只增不改」，追加在尾部不破坏缓存。</li>
+<li><strong>上下文压缩</strong>：上下文膨胀后怎么做减法——什么时候压缩、怎么压缩、压缩如何与 KV Cache 共存。</li>
+</ol>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>沿三条线索继续：提示工程与注入攻防 → Agent Skills → 状态栏 → 压缩</li>
+<li><code>kv-cache</code>、<code>context-compression</code> 实验找时间跑</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter2.md">《深入理解 AI Agent：设计原理与工程实践》第 2 章「上下文工程」</a>，李博杰著，GitHub 开源——本篇覆盖「Chat Template」「KV Cache 的原理与约束」「KV Cache 未必是一次性的」与三条线索的总起</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2606.17107">Models Take Notes at Prefill: KV Cache Can Be Editable and Composable</a>, Li, Bojie, arXiv:2606.17107——「可编辑、可组合」一节的研究论文</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2309.06180">vLLM: Efficient Memory Management for Large Language Model Serving with PagedAttention</a>，arXiv:2309.06180——PagedAttention 与连续批处理的原始论文</li>
+<li><a target="_blank" rel="noopener" href="https://vllm.ai/blog/2023-06-20-vllm">vLLM 官方博客：PagedAttention 简介</a>——分页注意力与虚拟内存类比的入门读法</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a>，arXiv:1706.03762——Transformer 与注意力机制的源头；KV、Query、Value 的原初定义</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/18/agent-book-ch2-chat-template-kvcache/" data-id="cuidUZQg-3yNdXaBSYt5Jhfk7" data-title="Agent 精读（六）：KV Cache 的账，从 n² 到线性" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-agent-book-ch2-api-kv-cache" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/17/agent-book-ch2-api-kv-cache/" class="article-date">
+  <time class="dt-published" datetime="2026-09-17T13:30:00.000Z" itemprop="datePublished">2026-09-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/17/agent-book-ch2-api-kv-cache/">Agent 精读（五）：前面不能动，后面尽管加</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第五篇，正式进入第 2 章正篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第二章的 API 消息结构与 KV Cache——上下文工程的地基。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="上下文在-API-里长什么样"><a href="#上下文在-API-里长什么样" class="headerlink" title="上下文在 API 里长什么样"></a>上下文在 API 里长什么样</h2><p>上一阶段说过：上下文由五个部分组成，包括静态前缀和动态轨迹。到了 API 层面，它就是 messages 列表里的一条条消息。每条消息都带角色标记，一共四种角色：</p>
+<ul>
+<li><strong>system（系统）</strong>：开发者写的规则与说明</li>
+<li><strong>user（用户）</strong>：用户输入</li>
+<li><strong>assistant（模型）</strong>：模型生成的回复，可能携带 tool_calls</li>
+<li><strong>tool（工具）</strong>：Agent 框架执行工具后写回的结果，靠 <code>tool_call_id</code> 与调用一一对应</li>
+</ul>
+<p>三个容易忽略的细节：</p>
+<ol>
+<li><strong>每次调用都是无状态的</strong>——模型不会「记住」上一次的对话，Agent 框架必须每次把完整历史送回去。所谓多轮对话，其实是同一个列表被反复发送。</li>
+<li>模型上一轮的 assistant 消息要<strong>原样放回</strong>消息列表——让模型「看到」自己之前做了什么决策。</li>
+<li>Agent 框架的核心工作就是管理这个 messages 列表：在合适的时机往里追加，然后整个送给模型。本章后续所有的上下文工程技术，本质上都是在优化这个列表。</li>
+</ol>
+<h2 id="ReAct-的终止，就一行判断"><a href="#ReAct-的终止，就一行判断" class="headerlink" title="ReAct 的终止，就一行判断"></a>ReAct 的终止，就一行判断</h2><p>第 1 章讲了 ReAct 循环怎么转，第 2 章补上了它在 API 层面的实现和终止判断：模型直接回复用户、不携带工具调用指令，循环就结束；只要返回里还有 tool_calls，就执行工具、追加结果、再来一轮。书里核心循环的退出判断就一行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> assistant_message.tool_calls:</span><br><span class="line">    <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<p>异常退路另有几条：调用最终输出工具、遇到错误、达到最大轮数——但正常收工的信号就是这一条。</p>
+<h2 id="KV-Cache：静态前缀放最前面的原因"><a href="#KV-Cache：静态前缀放最前面的原因" class="headerlink" title="KV Cache：静态前缀放最前面的原因"></a>KV Cache：静态前缀放最前面的原因</h2><p>上下文设计里，静态前缀放在最前面，模型会使用 KV cache——Transformer 架构里缓存下来的 Key 和 Value（注意力机制的两类向量）：已经算过的 token 键值对留在缓存里，新 token 只算增量，不必每轮重跑整个前缀。</p>
+<p>书里有个故事把代价讲得非常具体：某客服 Agent 每天处理 10 万次对话，工程师为了让模型「知道」当前时间，在系统提示词里加了一行 <code>Current time: &#123;&#123;now&#125;&#125;</code>。第二天监控告警：首 token 延迟从 0.5 秒涨到 3–5 秒，月度推理账单几乎翻倍——时间戳每次都不同，从它所在位置起，缓存全部失效。</p>
+<p>精确一点，缓存有两个层级，原理相同（前缀不变性）、层级不同：</p>
+<ul>
+<li><strong>KV Cache</strong>：模型内部，缓存单次推理中已计算的键值对</li>
+<li><strong>Prompt Cache</strong>：推理引擎&#x2F;服务商，在多次 API 请求之间复用相同前缀的计算结果，缓存读取约为首次计算的十分之一价格</li>
+</ul>
+<p>静态前缀放最前面且保持稳定，跨请求命中的主要是 Prompt Cache——但原理都一样：<strong>前面不能动，后面尽管加</strong>。</p>
+<p><img src="/images/agent-book/ch2-message-list.svg" alt="messages 列表：前面不能动，后面尽管加"></p>
+<p>这个区分还有一个落点：<strong>fork 子 Agent 时的字节级对齐</strong>。主 Agent 派生子 Agent 或发起旁路查询时，如果子 Agent 继承父 Agent 的上下文，那么提示词、工具定义、模型配置、消息前缀和思考配置都要与父 Agent 逐字节匹配——这样才能命中 API 服务商的 Prompt Cache，省下费用和延迟。原文也注明了边界：如果子 Agent 本来就用不同的上下文或提示词，自然不要求字节级对齐。</p>
+<h2 id="三条铁律"><a href="#三条铁律" class="headerlink" title="三条铁律"></a>三条铁律</h2><p>书里把这个技术密度最高的章节压缩成三条核心结论，我把它们当上下文设计的铁律：</p>
+<ol>
+<li><strong>静态前缀一旦确定就不要随意修改</strong>——哪怕多一个空格，首个不同 token 之后的缓存全部失效；改动越靠前，代价越大。</li>
+<li><strong>只增不改</strong>，动态信息永远追加到末尾——时间戳、用户状态这些变化的内容，作为新消息追加，而不是去改系统提示词。第一章设计模式里的「只增不改」在这里再次出现：Append-only 换来缓存命中率，还顺手可重放、可审计。</li>
+<li><strong>遵守 API 规范，不要自行拼接消息</strong>——结构化消息会被 Chat Template 翻译成模型训练时见过的固定 token 序列；自行拼成 <code>&quot;USER: ... ASSISTANT: ...&quot;</code> 的根本问题不在缓存（缓存只认字节序列，拼得稳定照样命中），而在偏离了训练格式：模型要多花注意力去推断角色边界，把工具结果拼成 user 消息还会破坏思维链保留机制——相当于模型算到一半，草稿纸被收走了，多步推理只能从零再来。</li>
+</ol>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>第 2 章继续：提示注入攻防、Agent Skills、上下文压缩</li>
+<li><code>kv-cache</code> 与 <code>context-compression</code> 两个实验，找时间一起跑</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter2.md">《深入理解 AI Agent：设计原理与工程实践》第 2 章「上下文工程」</a>，李博杰著，GitHub 开源</li>
+<li>本篇覆盖第二章「API 消息结构」「KV Cache 友好的上下文设计」；官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/17/agent-book-ch2-api-kv-cache/" data-id="cuid-nrQR5NkjSby8GlKs2VgL" data-title="Agent 精读（五）：前面不能动，后面尽管加" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-agent-book-ch1-engineering" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/16/agent-book-ch1-engineering/" class="article-date">
+  <time class="dt-published" datetime="2026-09-16T15:50:00.000Z" itemprop="datePublished">2026-09-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/16/agent-book-ch1-engineering/">Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第四篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第一章的 Harness 工程与编排模式——第 1 章的最后一部分，读完这章就齐了。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="Demo-与生产之间，隔着什么"><a href="#Demo-与生产之间，隔着什么" class="headerlink" title="Demo 与生产之间，隔着什么"></a>Demo 与生产之间，隔着什么</h2><p>工业生产相对于 demo，对代码质量是有要求的：产品需要可靠性。Harness 就是这个可靠性的保障——在上下文管理和工具接口之外，再加上三个模块：</p>
+<ul>
+<li><strong>约束（Constrain）</strong>：限定 Agent 能做什么。故障安全默认——所有能力默认关闭、必须显式开放，像手机 App 的权限管理</li>
+<li><strong>验证（Verify）</strong>：自动判断操作结果的对错。只看结构化数据（工具返回的 JSON 字段），不看模型自由生成的文本——后者可能已经被提示注入操纵</li>
+<li><strong>纠正（Correct）</strong>：发现问题自动修正或回退。先静默重试，不行就回滚，连续失败就熔断，再不行交还人工</li>
+</ul>
+<p><img src="/images/agent-book/ch1-harness-loop.svg" alt="Harness 五要素循环"></p>
+<p>原文给了一个参照：Claude Code 的 Harness 里，绝大部分代码都是约束、验证与纠正——工具本身（文件读写、命令执行、搜索）只占一小部分。<strong>行业正在从「能做事」转向「可靠地做事」</strong>，这就是 Harness 工程成为核心竞争力的原因。</p>
+<h2 id="五波演进：每层都包着前一层"><a href="#五波演进：每层都包着前一层" class="headerlink" title="五波演进：每层都包着前一层"></a>五波演进：每层都包着前一层</h2><p>AI 应用的工程重心，这些年挪了五次家：</p>
+<ol>
+<li><strong>提示工程</strong>：优化输入给模型的自然语言指令</li>
+<li><strong>上下文工程</strong>：系统性管理模型能看到的一切——系统提示词、工具定义、用户输入、历史记录、工具返回</li>
+<li><strong>Harness 工程</strong>：Agent 如何组织模型运行并与环境交互——上一节那五件事</li>
+<li><strong>Loop 工程</strong>：跨轮次的持续自主运转——谁来发现下一件该做的事、何时验证、何时才算真正完成</li>
+<li><strong>Graph 工程</strong>：把 Agent 循环、确定性程序、人工审批组织成显式的执行图，节点承担能力，边规定路由与依赖</li>
+</ol>
+<p>关键在它们的关系：<strong>这五层不是替代关系，是层层包含</strong>——提示工程是上下文工程的子集，上下文工程是 Harness 的子集，Harness 是 Loop 的子集，Loop 又是 Graph 的子集。单个 Agent 循环，正是执行图中的一个节点。</p>
+<p><img src="/images/agent-book/ch1-paradigm-layers.svg" alt="五波工程演进，层层包含"></p>
+<h2 id="模型的差异在缩小"><a href="#模型的差异在缩小" class="headerlink" title="模型的差异在缩小"></a>模型的差异在缩小</h2><p>这条演进线的尽头，是那个我越读越信的判断：<strong>模型的差异在缩小，未来是模型的工程环境决定表现能力的差异。</strong></p>
+<p>这不只是推演，书里给了实测：LangChain 在 Terminal Bench 2.0 上从 52.8% 提升到 66.5%（排行榜 30 名开外跃进前 5），改变的不是模型，是 Harness——让 Agent 自动检查执行结果、检测是否陷入重复循环、优化思考策略。</p>
+<h2 id="写死，还是让它自己走"><a href="#写死，还是让它自己走" class="headerlink" title="写死，还是让它自己走"></a>写死，还是让它自己走</h2><p>工程视角落到怎么编排上，是两条路：</p>
+<p><strong>工作流</strong>——执行路径代码写死（订机票：核实身份 → 搜索航班 → 付款 → 确认预订）。流程控制严格，攻击面被限制在单个节点内；代价是遇到预设外的例外，无法变通。</p>
+<p><strong>自主 Agent</strong>——执行路径由环境反馈实时决定，就是第三篇说的 ReAct 循环。灵活，能应对例外；代价是延迟与成本更高，而且必须设退出条件（任务完成 &#x2F; 最大轮数 &#x2F; 不可恢复错误），否则死循环。</p>
+<p><img src="/images/agent-book/ch1-workflow-vs-agent.svg" alt="工作流 vs 自主 Agent"></p>
+<p>选择顺序很朴素：先单次调用，再工作流，最后才自主 Agent。实践里常常混合——关键合规流程用工作流保可靠，灵活决策用自主补变通；甚至可以让 Agent 先把工作流写出来，再由工作流执行。</p>
+<h2 id="贯穿全书的五个设计模式"><a href="#贯穿全书的五个设计模式" class="headerlink" title="贯穿全书的五个设计模式"></a>贯穿全书的五个设计模式</h2><p>第 1 章的末尾一次性命名了五个设计模式，说后面的章节会反复用到。我把它们记在这里，当全书的暗线看：</p>
+<ol>
+<li><strong>提议-审核</strong>：产出与评判由两个上下文不同的角色分别承担——审核方看到的是产物本身（渲染结果、测试输出、结构化参数），不是产出方的推理过程。它成立的前提是自审不可靠：同一个上下文里的模型，难以发现自己的盲区，也难以判断自己是否已被注入。</li>
+<li><strong>渐进式披露</strong>：不把全部信息一次性放进上下文，先给一份可检索的目录，再按需要去元数据里查找对应的完整指引。第二章的 Agent Skills 是最典型的形态：元数据常驻，正文按需加载。</li>
+<li><strong>只新增不修改</strong>：状态只追加、不回头改。最直接的好处是缓存命中率（第二章 KV Cache 的前缀稳定性就是它的性能形态），同时换来可重放、可审计。</li>
+<li><strong>最小 diff + 可回滚</strong>：每次修改尽量小、带来源、可单独回滚——出了问题能定位到具体哪一次改动。Matt Pocock 讲代码设计时也有同一个观点：需求要切得足够小，逐个去做，最好有 checkpoint，单一环节出错只改一个节点。</li>
+<li><strong>边界集 + 保留集</strong>：任何一次修改都要同时在「应当改变的样本」和「不应当影响的样本」上验证——只测前者会把过拟合当进步，只测后者会把无效修改当安全。</li>
+</ol>
+<h2 id="第-1-章读完了"><a href="#第-1-章读完了" class="headerlink" title="第 1 章读完了"></a>第 1 章读完了</h2><p>三篇笔记正好合成一层意思：能力边界由 Harness 决定（第一篇），模型即 Agent 只是搬家（第三篇），可靠性靠五要素闭环、工程重心五波上移、五个设计模式贯穿全书（这篇）。</p>
+<p>一句话收束第 1 章：<strong>模型负责聪明，Harness 负责可靠——聪明在快速商品化，可靠是工程活，也是竞争力。</strong></p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>开读第 2 章正篇：KV Cache、提示注入攻防、Agent Skills、上下文压缩——第二篇挂的 <code>context-compression</code> 实验一起跑</li>
+<li>这章的结论（能力边界、五波演进）会在第 7–9 章回头被用到，到时回看</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter1.md">《深入理解 AI Agent：设计原理与工程实践》第 1 章「AI Agent 入门」</a>，李博杰著，GitHub 开源</li>
+<li>本篇覆盖第一章「Harness 工程：模型之外的竞争力」「编排模式：工作流与自主」「贯穿全书的设计模式」；官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-engineering/" data-id="cuidaAC0110DlHi8Val7U1yMG" data-title="Agent 精读（四）：Harness 工程解决从 Demo 到生产的设计" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-agent-book-ch1-model-as-agent" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/16/agent-book-ch1-model-as-agent/" class="article-date">
+  <time class="dt-published" datetime="2026-09-16T15:00:00.000Z" itemprop="datePublished">2026-09-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/16/agent-book-ch1-model-as-agent/">Agent 精读（三）：模型即 Agent？循环只是搬到了服务端</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第三篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第一章的 ReAct 循环与「模型即 Agent」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="先补个尾巴：ReAct-循环"><a href="#先补个尾巴：ReAct-循环" class="headerlink" title="先补个尾巴：ReAct 循环"></a>先补个尾巴：ReAct 循环</h2><p>第一篇留了个钩子：ReAct 循环没展开，这次补上。</p>
+<p>Agent 干活的核心模式叫 ReAct（Reasoning + Acting）。名字里只有思考和行动两个词，循环其实有三个环节：模型先思考该做什么，然后调用工具行动，再观察工具返回的结果，接着想下一步。想 → 做 → 看，不断循环，直到任务完成。</p>
+<p>上一轮工具返回的观察，就是下一轮思考的输入。这个循环要做的事，是让模型的每一步决策都踩在真实结果上，而不是踩在参数记忆里。</p>
+<h2 id="新范式：模型即-Agent"><a href="#新范式：模型即-Agent" class="headerlink" title="新范式：模型即 Agent"></a>新范式：模型即 Agent</h2><p>书里抛出的新范式叫「模型即 Agent」（Model as Agent）：先进模型通过后训练（特别是强化学习），把工具调用能力内化为原生能力——何时调用工具、调哪个、传什么参数，模型自己决定，不需要人工编排。</p>
+<p>听起来像框架要完。书里马上补了一句：恰恰相反，模型越强大，围绕模型构建的 Harness 越关键。空口无凭，上两个实验。</p>
+<h2 id="Kimi-K3：决策进了参数，执行没有"><a href="#Kimi-K3：决策进了参数，执行没有" class="headerlink" title="Kimi K3：决策进了参数，执行没有"></a>Kimi K3：决策进了参数，执行没有</h2><p>实验 1-2 用的是 Kimi K3：约 2.8 万亿参数的混合专家（MoE）模型——像一个专家团队，面对不同的问题自动派合适的专家上阵，能力和效率兼得。</p>
+<p>但要分清因果：让 K3 对工具调用熟练的不是参数多，是强化学习把决策策略写进了参数——何时调用、调用哪个、传什么参数，都由模型自主决定。书里给了一个直观的数字：它能连续执行 200～300 次工具调用而保持思考的一致性，多数模型在几十次后就开始退化。</p>
+<p>然后是我读这部分抓到的最重要的一句话：</p>
+<p><strong>编排循环并没有消失，而是从客户端移到了服务端，决策权则交给了模型。</strong></p>
+<p>K3 依然不能真正执行工具——<code>web_search</code>、<code>code_runner</code> 的真实实现在模型之外的基础设施里，由一个叫 Formula 的服务端脚本引擎运行。决策权交了出去，执行没有。</p>
+<h2 id="GPT-5-6：两个变化，都还在接口层"><a href="#GPT-5-6：两个变化，都还在接口层" class="headerlink" title="GPT-5.6：两个变化，都还在接口层"></a>GPT-5.6：两个变化，都还在接口层</h2><p>实验 1-3 用的是 GPT-5.6，两个变化：</p>
+<ol>
+<li><strong>自由格式工具调用</strong>（Freeform Tool Calling）：不再把参数打包成严格的 JSON，模型可以直接给工具发原始文本——一段 Python、一条 SQL。但书里特意补了一句：这是 API 参数格式的演进，而非模型架构的革新，客户端的工具调用循环逻辑一个字没变。</li>
+<li><strong>Deep Research 能力</strong>：Responses API 内置了联网搜索和代码解释器，在服务端形成「搜索 → 阅读 → 分析 → 再搜索」的闭环；而且模型在动手之前会先和用户交互，问几个澄清问题得到用户的真实意图——问的是「你偏好哪个数据源、要看哪些技术指标」，不是闷头去搜。</li>
+</ol>
+<p>两个变化都指向同一个方向：把编排从客户端往服务端收。但注意第一条的定性——连「不再拘泥 JSON」都只是接口层的演进，谈不上模型学会了什么新东西。</p>
+<h2 id="我的判断：搬了个家，没长出手"><a href="#我的判断：搬了个家，没长出手" class="headerlink" title="我的判断：搬了个家，没长出手"></a>我的判断：搬了个家，没长出手</h2><p>两个实验看完，我的判断是：<strong>「模型即 Agent」更多只是转移到了服务端，并没有真正让模型具备真实运行工具的能力。</strong></p>
+<div class="mermaid">graph TB
+    subgraph S1["传统形态：循环跑在客户端"]
+        A["模型<br/>决定下一步"] --> B["客户端 Harness<br/>执行工具"]
+        B --> C["观察<br/>结果回传"]
+        C --> A
+    end
+    subgraph S2["模型即 Agent：循环跑在服务端"]
+        D["模型<br/>决定下一步"] --> E["服务端 Harness<br/>执行工具<br/>(Kimi Formula / OpenAI 内置工具)"]
+        E --> F["观察<br/>结果回传"]
+        F --> D
+    end</div>
+
+<p>循环的结构一模一样，搬了位置而已。理由可以拆成两层：</p>
+<p>第一层，执行的本质是对真实环境产生状态变化，而模型只会生成 token——<strong>生成不等于执行</strong>。写 SQL 是 token，把一条 UPDATE 真的跑进生产数据库是另一回事。书里的论证很硬：强化学习写进参数的是决策，工具及其执行在模型之外的基础设施里完成。</p>
+<p>第二层是我自己的延伸：工具是实时的，而模型是现有数据集之下的产物。搜索结果、股价、天气每天都在变，训练数据永远是历史快照——工具的返回值没法提前内化进参数，只能在推理时现场取。这也顺手解释了书里实验 1-1 的现象：上下文里缺了工具执行结果时，模型会就地编造，因为它只剩参数记忆可用了。</p>
+<p>当然要留余地。书里对「模型吃掉 Harness」的立场是「方向认同、节奏务实」：决策这一层确实已经被内化了——这正是「模型即 Agent」的实质；执行这一层短期内看不到被吃掉的可能，因为它从来就不在参数里。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>第 1 章还剩最后一块：编排模式（工作流 vs 自主），下篇补上</li>
+<li>第一篇欠的 <code>context</code> 实验还挂着，和下篇一起跑</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter1.md">《深入理解 AI Agent：设计原理与工程实践》第 1 章「AI Agent 入门」</a>，李博杰著，GitHub 开源</li>
+<li>本篇覆盖第一章「ReAct 循环」与「模型即 Agent」（实验 1-2、1-3）；官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch1-model-as-agent/" data-id="cuidsqaXJTK_1FcIEGcA8_78o" data-title="Agent 精读（三）：模型即 Agent？循环只是搬到了服务端" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-agent-book-ch2-context" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/16/agent-book-ch2-context/" class="article-date">
+  <time class="dt-published" datetime="2026-09-16T13:30:00.000Z" itemprop="datePublished">2026-09-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/16/agent-book-ch2-context/">Agent 精读（二）：模型的学习，与上下文的构成</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第二篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第一章末尾「Agent 的学习机制」与第二章开头「上下文的构成」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="模型的持续学习：三条路径"><a href="#模型的持续学习：三条路径" class="headerlink" title="模型的持续学习：三条路径"></a>模型的持续学习：三条路径</h2><p>模型的行为改变不只发生在训练阶段。按更新发生的位置和持续时间，有三条互补的路径：</p>
+<ul>
+<li><strong>上下文适应（临场）</strong>：通过填充上下文让模型”学”——示例、状态、检索结果进入上下文后，模型立即调整行为。优势是快、低成本；局限是<strong>会话结束就没了</strong>，不改模型，受上下文窗口约束。</li>
+<li><strong>外部产物（持久化）</strong>：把经验整理为知识文档，把可语言化的策略写进 Prompt 或 Skill，把确定性流程写成程序。这些产物跨任务保留、可审计、可修订。</li>
+<li><strong>参数更新（内化）</strong>：SFT、强化学习，直接改模型。部署成本最高，但泛化能力最强——适合医疗影像理解这类外部规则难以完整表达的高维能力。</li>
+</ul>
+<p>三条路不是互斥分类，而是不同时间尺度上的协同：<strong>上下文负责临场适应，外部产物负责可控积累，参数负责内化难以显式表达的能力。</strong></p>
+<h2 id="大模型为什么是通用底座"><a href="#大模型为什么是通用底座" class="headerlink" title="大模型为什么是通用底座"></a>大模型为什么是通用底座</h2><p>大语言模型是提前对海量数据做<strong>自监督学习</strong>训练出来的模型：参数量巨大，并且随规模出现了<strong>涌现能力</strong>——小模型没有、参数跨过某个量级后突然出现的能力。</p>
+<p>这件事对 Agent 的意义在于：模型具备了<strong>通用化</strong>的任务能力，人们靠指令就能让它完成新任务，而<strong>不需要为每个任务定制一个模型</strong>。这是”Agent &#x3D; Model + Harness”成立的全部前提——如果每个任务都要重训模型，Harness 的价值就不存在了。</p>
+<h2 id="模型会”吃掉”外部工程"><a href="#模型会”吃掉”外部工程" class="headerlink" title="模型会”吃掉”外部工程"></a>模型会”吃掉”外部工程</h2><p>模型是可以具备学习能力的，而且随着时间发展，它会逐步<strong>内化</strong>一些之前不具备的能力——包括更好的工具调用。今天靠提示词绕出来的能力，下一代模型可能原生就有。</p>
+<p>后果是真实的：新模型发布后，一些老的提示词技巧、外部工程和环境适配就失效了。书里对这条趋势的立场是”方向认同，节奏务实”：模型内化一层，Harness 就卸下一层，转而兜底新的能力前沿——<strong>模型此刻的能力边界，就是 Harness 此刻的价值所在。</strong></p>
+<h2 id="专业领域怎么补"><a href="#专业领域怎么补" class="headerlink" title="专业领域怎么补"></a>专业领域怎么补</h2><p>医学、法律这类专业领域，主流是两条路：</p>
+<ol>
+<li><strong>把领域知识送进上下文</strong>：RAG 检索、工具接入专业知识库——知识在模型外，随用随取，更新成本低</li>
+<li><strong>后训练进参数</strong>：领域 SFT&#x2F;RL——适合外部规则难以完整表达的高维能力（如医疗影像），部署成本高但泛化强</li>
+</ol>
+<p>一个提醒给自己：知识问题和边界问题是两回事。工具&#x2F;RAG 解决”模型不知道”，约束（Constrain）解决”模型不能做”——专业领域的准确性靠前者，行为边界靠后者，别混。</p>
+<h2 id="上下文的五个部分"><a href="#上下文的五个部分" class="headerlink" title="上下文的五个部分"></a>上下文的五个部分</h2><p>每次调用大模型时的上下文由五个部分构成：</p>
+<ol>
+<li><strong>系统提示词</strong>：开发者编写，相当于 Agent 的”岗位说明书”（身份、权限、行为准则），还会包含跨会话的用户记忆</li>
+<li><strong>工具定义</strong>：声明 Agent 可用工具的名称、功能描述和参数格式</li>
+<li><strong>用户消息</strong>：用户输入，可能包含 RAG 动态检索引入的外部知识</li>
+<li><strong>模型回复</strong>：最多包含三部分——思考过程（reasoning 思考链）、文本内容（content）、工具调用请求（tool_calls）</li>
+<li><strong>工具执行结果</strong>：Agent 下一步思考的直接依据，也是它”从执行结果中学习”的来源</li>
+</ol>
+<p>结构上分两段：<strong>前两项构成静态前缀，后三项是随交互动态增长的消息历史。</strong></p>
+<p>一个重要的精确化（我原来的理解偏差）：静态前缀不是”它们天然静态”，而是<strong>工程上要刻意保持稳定</strong>——因为前缀稳定是 KV Cache 命中的前提，改前缀的几个字符，缓存全部失效、重新计算。所以”前面不能动、后面可以压缩”不是巧合，是 KV Cache 友好设计的基础，也是第二章后面所有上下文布局技术的出发点。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>精读第二章 KV Cache 一节（原理、与 Prompt Cache 的两个层级、缓存作为架构约束）</li>
+<li>跑通第 2 章 <code>context-compression</code> Starter 实验</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter2.md">《深入理解 AI Agent：设计原理与工程实践》第一章「Agent 的学习机制」、第二章「从 API 视角看上下文的构成」</a>，李博杰著，GitHub 开源</li>
+<li>官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/16/agent-book-ch2-context/" data-id="cuidTzdQKdRGpiK1Ort8RsXaU" data-title="Agent 精读（二）：模型的学习，与上下文的构成" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-agent-book-ch1-harness" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/15/agent-book-ch1-harness/" class="article-date">
+  <time class="dt-published" datetime="2026-09-15T13:51:56.000Z" itemprop="datePublished">2026-09-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/15/agent-book-ch1-harness/">Agent 精读（一）：Agent 的能力边界，由 Harness 决定</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第一篇。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第一章「AI Agent 入门」，写下我自己的理解——不是摘抄，是用我的话重新讲一遍。<br>本章思维导图见 <a href="/agent-book/#%E7%AB%A0%E8%8A%82%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE">专题页 · 章节思维导图</a></p>
+</blockquote>
+<h2 id="一个公式，两个层次"><a href="#一个公式，两个层次" class="headerlink" title="一个公式，两个层次"></a>一个公式，两个层次</h2><p>最小实现是 <code>Agent = LLM + 上下文 + 工具</code>——大脑负责决策，眼睛（上下文）接收观察，手脚（工具）作用于环境。到了生产形态，同一个系统展开为 <code>Agent = Model + Harness</code>，其中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Harness = 上下文管理 + 工具接口 + 约束 + 验证 + 纠正</span><br></pre></td></tr></table></figure>
+
+<p>这两个公式不是宏观与微观之分，而是同一个系统的 Demo 视角和生产视角：最小形态的 Harness 就是「上下文构造 + 工具接口」，生产系统还要在同一层加上约束、验证、纠正三层保障。</p>
+<p>最容易记错的一点：Harness 不是模型的内部环境，原文的边界划得很死——Agent 边界内、模型之外。它环绕模型运行、治理模型与环境的交互，但沙箱里随行动变化的文件、外部数据库、网页和用户，永远属于 Environment。物理部署位置不决定概念归属。</p>
+<h2 id="Agent-和外部世界打交道，只靠两个接口"><a href="#Agent-和外部世界打交道，只靠两个接口" class="headerlink" title="Agent 和外部世界打交道，只靠两个接口"></a>Agent 和外部世界打交道，只靠两个接口</h2><p>观察通道和动作接口共同构成 Agent 与外部环境之间的边界。上下文是眼睛——但它不只是”历史数据”，而是 Agent 在每个决策点收到并保留的全部信息：环境观察、用户记忆、领域知识、自身状态、任务进展。工具是手脚——从预定义的工具调用到动态生成代码，从委托子 Agent 到主动与用户沟通。</p>
+<p>原文里我最认同的一句判断：没进上下文的信息，对模型来说不存在；没被动作接口允许的操作，模型即使知道该怎么做，也只能停留在文字建议上。</p>
+<h2 id="模型固定时，Harness-是唯一杠杆"><a href="#模型固定时，Harness-是唯一杠杆" class="headerlink" title="模型固定时，Harness 是唯一杠杆"></a>模型固定时，Harness 是唯一杠杆</h2><p>许多看似需要「更聪明模型」的问题，其实只是接口问题：把任务所需的数据纳入上下文，或把完成任务所需的操作封装成工具，原本不可解的任务就可能变得可解。</p>
+<p>这不是空话。LangChain 在 Terminal Bench 2.0 上从 52.8% 提升到 66.5%（排行榜 30 名开外跃升前 5），改变的不是模型，是 Harness——让 Agent 自动检查执行结果、检测循环、优化思考策略。所以书里说：当各家模型能力越来越接近，竞争优势就转移到了模型之外的工程实践。Harness 的五要素是一个闭环：上下文与工具让 Agent「能做事」，约束预防错误、验证发现偏差、纠正让闭环形成——三者共同让 Agent「不做错事」。</p>
+<h2 id="观察与动作空间的扩张"><a href="#观察与动作空间的扩张" class="headerlink" title="观察与动作空间的扩张"></a>观察与动作空间的扩张</h2><ul>
+<li><strong>三条路线各自为政</strong>：Deep Research（深度调研）、Coding（代码生成）、Computer Use（电脑操控）长期独立发展</li>
+<li><strong>Manus 首先合并</strong>：把三者放进同一个生产级 Agent——云端虚拟机里，虚拟浏览器扩大了观察空间，文件系统、代码执行与命令行扩大了动作空间</li>
+<li><strong>OpenClaw 再推一层</strong>：本地优先，跑在用户自己的设备上；通过 WhatsApp、Telegram 等消息渠道随时触达，本地 Gateway 把 Drive、Notion、本地文件——分散在各账号与设备的数字生活——在授权后拉进同一个观察空间</li>
+</ul>
+<p>Pattern 清晰：谁扩大了观察与动作空间，谁就重新定义了 Agent 的能力边界。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><ul>
+<li>本章的 ReAct 循环与编排模式（工作流 vs 自主）部分，第二篇笔记补全</li>
+<li>跑通第 1 章配套实验 <code>context</code>（Starter 入口），把「最小 Harness」亲手搭一遍</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter1.md">《深入理解 AI Agent：设计原理与工程实践》第 1 章</a>，李博杰著，GitHub 开源</li>
+<li>本篇理解覆盖第一章「三要素与 Harness 工程」部分；官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a>中的难度分级与实验入口</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/15/agent-book-ch1-harness/" data-id="cuidi9xA2geONYH5mNlp9W6ve" data-title="Agent 精读（一）：Agent 的能力边界，由 Harness 决定" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-about-me" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/14/about-me/" class="article-date">
+  <time class="dt-published" datetime="2026-09-14T06:51:49.000Z" itemprop="datePublished">2026-09-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/09/14/about-me/">关于我</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>你好，我是<strong>东玄蟒</strong>，一名后端工程师。这是我博客的第一篇文章，写点自己是谁、在做些什么、以及为什么开这个博客。</p>
+<blockquote>
+<p>乱花渐欲迷人眼，浅草才能没马蹄。</p>
+</blockquote>
+<h2 id="我的经历"><a href="#我的经历" class="headerlink" title="我的经历"></a>我的经历</h2><p><strong>从大数据引擎起步。</strong> 职业生涯的第一段是大数据方向，做 Hive 引擎相关的工作。长时间泡在分布式计算和 SQL 引擎的细节里，理解了一条查询语句从解析、优化到执行的完整链路，也体会过让大规模数据作业又快又稳需要付出什么。</p>
+<p><strong>大厂后端锤炼。</strong> 之后进入大厂做后端开发，在真实业务的规模和复杂度下打磨工程能力：高并发场景下的服务设计、稳定性保障、线上问题的排查与复盘。大厂教会我最重要的一课是——系统可靠比系统聪明更难，也更值钱。</p>
+<p><strong>转型 AI Agent 开发。</strong> 现在的主线是大模型应用方向：从传统后端转向 AI agent 开发，研究 agent 的任务规划、工具调用、记忆机制与多智能体协作，也在动手用 agent 重构自己的工作流。后端工程的底子让我更关注工程化的问题——agent 如何稳定、可观测、可回滚。</p>
+<p><strong>AI 短视频赛道探索。</strong> 同时在做 AI 短视频赛道的创业尝试：观察真实需求、做小原型、快速验证，尝试把内容生产流水线交给 AI——从选题、脚本到成片的自动化。这条路上的一切思考都会记录在博客里。</p>
+<h2 id="博客内容方向"><a href="#博客内容方向" class="headerlink" title="博客内容方向"></a>博客内容方向</h2><p>这个博客会围绕下面五个方向持续更新（各方向的学习进度见<a href="/learning/">学习路径</a>页面）：</p>
+<ol>
+<li><strong>短视频赛道</strong>：AI 短视频的实践、赛道观察与思考</li>
+<li><strong>AI 基础知识</strong>：用大白话讲清楚 AI 的基础概念和原理，给转型路上的同学铺路</li>
+<li><strong>前沿 skill 分享</strong>：值得上手的新工具、新玩法、新工作流</li>
+<li><strong>AI 优秀开源项目解析</strong>：带着问题去看源码——为什么这样设计、能抄什么作业</li>
+<li><strong>投资相关分享</strong>：认知、方法论与记录</li>
+</ol>
+<h2 id="为什么写博客"><a href="#为什么写博客" class="headerlink" title="为什么写博客"></a>为什么写博客</h2><p>把做过的东西写清楚，才算真的理解它。这个博客是我的「外置大脑」：</p>
+<ol>
+<li><strong>记录</strong>：踩过的坑、想通的原理、排查过的疑难问题，写下来防止遗忘，也帮后来的少走弯路</li>
+<li><strong>打磨</strong>：写作是压测思路的最好方式，含糊的地方在文字面前无处藏身</li>
+<li><strong>连接</strong>：希望这些内容能遇到同样对技术和创业感兴趣的人，欢迎交流</li>
+</ol>
+<h2 id="关于本站"><a href="#关于本站" class="headerlink" title="关于本站"></a>关于本站</h2><p>博客基于 Hexo + GitHub Pages 搭建，源码和文章都在 GitHub 上，全部内容仅代表个人观点。</p>
+<h2 id="联系我"><a href="#联系我" class="headerlink" title="联系我"></a>联系我</h2><p>如果你对上面任何话题有共鸣，或者正在做类似的事情，欢迎加微信交流：</p>
+<p><strong>微信号：abc15917977506</strong>（请备注「博客」或来意，更容易通过）</p>
+<p>感谢你的到访，希望这里的内容对你有价值。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/09/14/about-me/" data-id="cuidBkJDl5Ys9qWcxyNhPlf-0" data-title="关于我" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99%E7%AC%94%E8%AE%B0/">建站笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0/">精读笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Claude-Code/" rel="tag">Claude Code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RAG/" rel="tag">RAG</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" rel="tag">思考题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" rel="tag">用户记忆</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag">知识图谱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 16.67px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/Claude-Code/" style="font-size: 10px;">Claude Code</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 13.33px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 13.33px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RAG/" style="font-size: 10px;">RAG</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 16.67px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" style="font-size: 10px;">思考题</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 13.33px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" style="font-size: 10px;">用户记忆</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" style="font-size: 10px;">知识图谱</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">系统设计</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">九月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/10/05/claude-code-28min-boris-cherny/">prompt 写得再漂亮，不如给 AI 一双眼睛</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/28/agent-book-ch3-rag-retrieval/">Agent 精读（十二）：词有倒排，向量有图——RAG 检索的两条腿</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/24/agent-book-ch3-knowledge-map/">Agent 精读（十一）：第 3 章知识图谱——用户记忆和知识库</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/24/agent-book-ch3-memory-formats/">Agent 精读（十）：记住一个用户，四种存法，和一次跳出文本</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/24/agent-book-ch1-questions/">Agent 精读（十）：第 1 章思考题——选能力、算平方账、看循环搬家</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 东玄蟒<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/learning/" class="mobile-nav-link">学习路径</a>
+  
+    <a href="/agent-book/" class="mobile-nav-link">Agent 精读</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

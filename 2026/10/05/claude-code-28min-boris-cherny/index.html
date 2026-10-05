@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>prompt 写得再漂亮，不如给 AI 一双眼睛 | 东玄蟒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="这条链接在 X 上被搬运了好几轮——西班牙语版、英文版、中文版、日文版、韩文版我都搜到了，单条阅读量过百万。但推文本身没有内容，它只说了一件事：Claude Code 的作者发布了一支 28 分钟的视频。视频我找到了：27 分 52 秒，Anthropic 官方 session《Mastering Claude Code in 30 minutes》，主讲 Boris Cherny，Claude">
+<meta property="og:type" content="article">
+<meta property="og:title" content="prompt 写得再漂亮，不如给 AI 一双眼睛">
+<meta property="og:url" content="https://dongxuanmang.github.io/2026/10/05/claude-code-28min-boris-cherny/index.html">
+<meta property="og:site_name" content="东玄蟒">
+<meta property="og:description" content="这条链接在 X 上被搬运了好几轮——西班牙语版、英文版、中文版、日文版、韩文版我都搜到了，单条阅读量过百万。但推文本身没有内容，它只说了一件事：Claude Code 的作者发布了一支 28 分钟的视频。视频我找到了：27 分 52 秒，Anthropic 官方 session《Mastering Claude Code in 30 minutes》，主讲 Boris Cherny，Claude">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-05T13:10:00.000Z">
+<meta property="article:modified_time" content="2026-10-05T13:10:59.053Z">
+<meta property="article:author" content="东玄蟒">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="上下文工程">
+<meta property="article:tag" content="提示工程">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="东玄蟒" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<!-- hexo injector head_end start --><script src="/js/mermaid.min.js"></script><script>(function () {  function renderMermaid() {    if (!document.querySelector(".mermaid") || typeof mermaid === "undefined") return;    mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });  }  if (document.readyState === "loading") {    document.addEventListener("DOMContentLoaded", renderMermaid);  } else {    renderMermaid();  }})();</script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">东玄蟒</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">乱花渐欲迷人眼，浅草才能没马蹄</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/learning/">学习路径</a>
+        
+          <a class="main-nav-link" href="/agent-book/">Agent 精读</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/dongxuanmang"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://dongxuanmang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-claude-code-28min-boris-cherny" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/10/05/claude-code-28min-boris-cherny/" class="article-date">
+  <time class="dt-published" datetime="2026-10-05T13:10:00.000Z" itemprop="datePublished">2026-10-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0/">精读笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      prompt 写得再漂亮，不如给 AI 一双眼睛
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这条链接在 X 上被搬运了好几轮——西班牙语版、英文版、中文版、日文版、韩文版我都搜到了，单条阅读量过百万。但推文本身没有内容，它只说了一件事：Claude Code 的作者发布了一支 28 分钟的视频。视频我找到了：27 分 52 秒，Anthropic 官方 session《Mastering Claude Code in 30 minutes》，主讲 Boris Cherny，Claude Code 的创造者兼负责人。X 上那版视频拿不到字幕，所以这篇不是”看完原片”的产物——我找了一份逐句转写（Whisper 转写后人工校订术语）和几份现场听讲报告，交叉核对之后才动笔，有出入的地方下文会标出来。</p>
+</blockquote>
+<h2 id="你有过这种时刻吗"><a href="#你有过这种时刻吗" class="headerlink" title="你有过这种时刻吗"></a>你有过这种时刻吗</h2><p>晚上十点，一个需求让 AI 改了七遍。你把 prompt 从两行加到二十行：加上「先思考再回答」，加上「你是一位资深工程师」，加上三条约束，末尾再补一句「不要编造」。回车，结果好了一点，但没到能直接用的程度。你合上电脑，得出一个结论：我大概不太会写 prompt。</p>
+<p>这支视频给的诊断完全不一样。它甚至不太谈 prompt 的措辞。</p>
+<h2 id="28-分钟里，其实只有一句话"><a href="#28-分钟里，其实只有一句话" class="headerlink" title="28 分钟里，其实只有一句话"></a>28 分钟里，其实只有一句话</h2><p>Boris 的履历值得交代一句：前 Meta Instagram 首席工程师，2024 年加入 Anthropic，入职一个月内以 side project 立项 Claude Code，《Programming TypeScript》的作者，自学出身。他在开场就定了调子——不讲历史不讲理论，只讲实操。</p>
+<p>而实操讲完，真正立住的判断只有一句：</p>
+<p><strong>prompt 写得再漂亮，也不如给 AI 一双能看见结果的眼睛。</strong></p>
+<p>他把 Claude Code 定义成”完全 agentic”的工具：不是逐行补全，是交付整个功能、整个文件、整个 bug 修复；它的工具集只有三个——改文件、跑 bash、搜文件，复杂工作靠模型自己把它们串起来。串对了的标志，是它能自己看到串出来的结果。</p>
+<div class="mermaid">graph LR
+    A["提问 读懂代码"] --> B["给出计划"]
+    B --> C["你确认"]
+    C --> D["写代码"]
+    D --> E["跑测试或截图"]
+    E --> D
+    E --> F["对验收标准汇报"]
+    style E fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style F fill:#d1e7dd,stroke:#198754</div>
+
+<p>这张图是关键：缺了中间那个”跑测试或截图”，写代码那一步就只能靠你在旁边逐行盯。下面五级台阶，都是这一句话的推论。</p>
+<h2 id="一级：先问代码，别急着改"><a href="#一级：先问代码，别急着改" class="headerlink" title="一级：先问代码，别急着改"></a>一级：先问代码，别急着改</h2><p>他给新用户的第一条建议有点反直觉：不要从写代码开始，先从对着自己的代码库提问开始。Anthropic 内部新人技术 onboarding 就是这么做的，结果是从两三周压到了两三天。</p>
+<p>理由有三条。第一，问答阶段没有改文件的风险，却能同时练两件事：你怎么描述问题，以及它对这个项目究竟懂到哪一层。你会慢慢有边界感——什么任务一次能成，什么得来回两三轮。第二，零索引零配置：代码不上传、不建远程库、不用于训练，下载就能用。第三，这类任务容易验真，它答得对不对你自己一眼就知道。</p>
+<p>他给的几个问题可以直接抄：”这个类实际是怎么被实例化的？”——它不是做一次文本搜索，而是去找真实的调用点；”这个函数为什么有 15 个参数？”——让它翻 git 历史，看这些参数是哪次提交加的、当时在解决什么、关联了哪个 issue；再比如用 WebFetch 去读 GitHub issue 拿上下文。他自己每周一在站会上都会问一句”我这周 ship 了什么”，让它从 git log 里捞一份清单出来，复制进文档就完事。</p>
+<h2 id="二级：动手之前，先要一份计划"><a href="#二级：动手之前，先要一份计划" class="headerlink" title="二级：动手之前，先要一份计划"></a>二级：动手之前，先要一份计划</h2><p>一句自然语言就够了，不需要 plan mode 或任何特殊工具：</p>
+<blockquote>
+<p>先头脑风暴几个方案，做个计划，拿给我看，写代码之前先征得我同意。</p>
+</blockquote>
+<p>反例他讲得很实在：有人打开就一句”把这个 3000 行的功能实现了”——有时候一次就对，但有时候做出来的完全不是你想要的。先看一遍计划，通常一分钟就能发现它找错了入口、漏掉了兼容性，或者准备动三十个文件。</p>
+<p>计划确认之后再给验收标准。他给的说法是保留现有 API、不引入新依赖、跑完相关测试和类型检查，最后汇报改了哪些文件、还有哪些风险没覆盖。另外他常念的一句咒语是 <code>commit, push, pr</code>：Claude 会自己去看 git log 摸清 commit 格式，建分支、提交、开 PR。这句话短得有点吓人，我在下一节末尾补一句提醒。</p>
+<h2 id="三级：给它一双眼睛（最值钱的一级）"><a href="#三级：给它一双眼睛（最值钱的一级）" class="headerlink" title="三级：给它一双眼睛（最值钱的一级）"></a>三级：给它一双眼睛（最值钱的一级）</h2><p>这是全场反复强调的机制：当 Claude 有办法检验自己的成果，它就会自己迭代。</p>
+<p>手段按领域分。后端和逻辑类用单元测试、集成测试、真实请求结果；Web 前端用 Puppeteer 截图——Anthropic 内部把这套做成了 MCP server 提交进仓库，全队共享，没有哪个工程师需要自己装；移动端用 iOS 模拟器截图；做界面就直接把设计稿图片拖进去，让它对着比。他的原话是：一次能做到不错的水平，迭代两三轮往往就接近完美。</p>
+<p>但有个容易漏掉的细节，也是我从转写里特意标出来的一句：<strong>要给停止条件。</strong> 没有停止条件，它可能在一像素的视觉差异上无限消耗下去。比如”最多迭代三轮，最后汇报仍然不一致的地方”——重点不是这个数字，是让循环有出口。</p>
+<p>这也就解释了开头那个痛点。prompt 的措辞只影响第一次输出长什么样，而回路决定了它能不能自己收敛到能用。前者是你在写，后者是它在跑。</p>
+<h2 id="四级：把踩过的坑写进-CLAUDE-md"><a href="#四级：把踩过的坑写进-CLAUDE-md" class="headerlink" title="四级：把踩过的坑写进 CLAUDE.md"></a>四级：把踩过的坑写进 CLAUDE.md</h2><p><code>CLAUDE.md</code> 是一个每次会话开头都会被自动读入上下文的 Markdown 文件，Boris 管它叫”项目的记忆”。层级有五层：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>位置</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>企业</td>
+<td>企业根目录</td>
+<td>全公司强制策略</td>
+</tr>
+<tr>
+<td>用户</td>
+<td><code>~/.claude/CLAUDE.md</code></td>
+<td>个人跨项目偏好</td>
+</tr>
+<tr>
+<td>项目</td>
+<td>项目根 <code>CLAUDE.md</code></td>
+<td>提交进 git，团队共享</td>
+</tr>
+<tr>
+<td>个人</td>
+<td><code>CLAUDE.local.md</code></td>
+<td>不提交，只给自己</td>
+</tr>
+<tr>
+<td>子目录</td>
+<td><code>subdir/CLAUDE.md</code></td>
+<td>在该目录干活时才载入</td>
+</tr>
+</tbody></table>
+<p>该写什么：常用的 bash 命令、代码风格约定、核心文件的位置、架构决策、MCP 工具的用法。然后他强调了一句：<strong>写短。</strong> 写长了会白白吃掉一大块上下文，而且通常也没那么有用。</p>
+<p>两件容易被忽略的事。一是这套层级不只管记忆文件——斜杠命令、权限白名单与黑名单、MCP server 定义全都按同一套层级走。企业策略里可以把全公司都要跑的测试命令设成自动批准，也可以把某个 URL 永久拉黑、员工无法覆盖。二是记忆能就地写：输入 <code>#</code> 再跟一句话，就当场记进相应的文件，最典型的用法是”这个工具你用错了，以后这样用”；<code>/memory</code> 用来查看和编辑当前载入的所有记忆文件。他的建议是从共享的项目级上下文起步——一个人写一点，全队都受益。</p>
+<h2 id="五级：当-Unix-工具用，再谈并行"><a href="#五级：当-Unix-工具用，再谈并行" class="headerlink" title="五级：当 Unix 工具用，再谈并行"></a>五级：当 Unix 工具用，再谈并行</h2><p><code>claude -p &quot;...&quot;</code> 就是 SDK 形态的 CLI：可以传 prompt、限定允许使用的工具、指定 JSON 或流式 JSON 输出。他说 Claude Code 自己就是用这套 SDK 做的，Anthropic 拿它在 CI 和事故响应里跑。用法上要”当一个 Unix 工具想”：<code>git status | claude -p &quot;...&quot; | jq</code>，从对象存储里拉一份巨大的日志喂进去让它找异常，用 Sentry CLI 拉错误让它分析。他自己的判断是这条路才刚刚触到皮毛。</p>
+<p>再往上一级才是并行：多开终端 tab、用 tmux 挂住 session、同一个仓库 check out 好几份、用 git worktree 做隔离。</p>
+<p>这里有个我觉得比技巧更值得记的地方：他在台上说自己算个”普通用户”，一般一次只跑一个 Claude，最多开几个 tab 对应不同仓库；真正多开的是内外的重度用户。所以并行不是入门必修——前四级跑顺了再谈它，否则你只是把还没验证的改动同时铺开。</p>
+<h3 id="顺手抄走的几个快捷键"><a href="#顺手抄走的几个快捷键" class="headerlink" title="顺手抄走的几个快捷键"></a>顺手抄走的几个快捷键</h3><table>
+<thead>
+<tr>
+<th>按键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Shift+Tab</code></td>
+<td>切到自动接受编辑，bash 命令仍然要确认</td>
+</tr>
+<tr>
+<td><code>#</code></td>
+<td>让它记住一件事，写进记忆文件</td>
+</tr>
+<tr>
+<td><code>!</code></td>
+<td>进 bash 模式，命令和输出一起进上下文</td>
+</tr>
+<tr>
+<td><code>@</code></td>
+<td>把文件或目录拉进上下文</td>
+</tr>
+<tr>
+<td><code>Esc</code></td>
+<td>中断再换方向，适合”二十行里只改一行”的精细修正</td>
+</tr>
+<tr>
+<td><code>Esc Esc</code></td>
+<td>回退到更早的会话节点</td>
+</tr>
+<tr>
+<td><code>Ctrl+R</code></td>
+<td>看完整输出，也就是它在上下文里看到的同一份</td>
+</tr>
+</tbody></table>
+<h2 id="几句实在话"><a href="#几句实在话" class="headerlink" title="几句实在话"></a>几句实在话</h2><p><strong>一、推文那句话是增长话术。</strong>“前 10 分钟超过 300 美元的课程”——视频是 Anthropic 官方免费的 session，内容是从入门到中级的高密度实操，价值在顺序正确、可以照着抄，不在”别人不知道”。同一段文案被翻译成五种语言反复搬运，本身也说明它更适合当入口，而不是当秘籍。</p>
+<p><strong>二、这支视频已经过期了一部分。</strong> 安装方式当时是 npm，后来官方推荐原生安装器；视频里那个”Claude Code SDK”后来改名成了 Claude Agent SDK；快捷键也随版本变过。照着做之前以官方文档为准。</p>
+<p><strong>三、<code>commit, push, pr</code> 有前提。</strong> 这种极短指令能成立，靠的是仓库规范清晰、权限和沙箱你信得过。刚上手的仓库，把提交、推送、建 PR 分开确认更稳。</p>
+<p><strong>四、它是一场现场分享的录像。</strong> 官方标题写的是 30 分钟，实际 27 分 52 秒，结尾还有 Q&amp;A。Q&amp;A 里最坦白的一段是：他觉得实现上最难的是 bash 的安全——既要少弹确认框，又不能让它以意外方式改掉系统状态，最后的解法是只读命令白名单、对命令组合做静态分析，再加一套分层权限；难的地方还在于不是所有人都在容器里跑代码。</p>
+<h2 id="从一个闭环开始"><a href="#从一个闭环开始" class="headerlink" title="从一个闭环开始"></a>从一个闭环开始</h2><p>如果这 28 分钟只带走一件东西，就带走那张图：先读懂代码 → 要一份计划 → 你确认 → 写代码 → 它自己验证 → 继续改。</p>
+<p><strong>一个能自己看见结果的闭环，比二十条 prompt 模板值钱。</strong></p>
+<p>具体怎么落地，他也给了最小版本，我建议按这个顺序跑一遍：挑手上一个真实的小需求，先让它把相关代码讲清楚（明确不许改文件）→ 要一份计划并挑一次刺 → 给它一个能验证的手段，哪怕只是”跑这条测试命令”→ 让它自己迭代到通过 → 最后把这次纠错写进 <code>CLAUDE.md</code>。五步一个闭环，跑顺了再谈放权、脚本化和并行。</p>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li>你给的那条推文（西班牙语搬运版）：<a target="_blank" rel="noopener" href="https://x.com/arceyul/status/2062847275471175976">arc. on X</a></li>
+<li>逐句转写（Whisper 转写 + 人工校订术语的中译）：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000048200756">Claude Code 实用技巧工作坊 —— Boris Cherny</a></li>
+<li>现场听讲报告（含 Q&amp;A 整理）：<a target="_blank" rel="noopener" href="https://zenn.dev/truestar/articles/21ddde684eb51b">『30分でClaude Codeをマスターする』公式セッション聴講レポート</a></li>
+<li>另一份中文整理（对照当前官方文档核过一遍，标了过时点）：<a target="_blank" rel="noopener" href="https://yunpan.plus/t/28168-1-1">Claude Code 创建者亲授：从代码问答到并行工作流的 28 分钟实战</a></li>
+<li>英文原始文案版本（同一支视频的另一条搬运）：<a target="_blank" rel="noopener" href="https://x.com/vikas_ai_/status/2073039026983157870">Vikas Singh on X</a></li>
+<li>官方文档：<a target="_blank" rel="noopener" href="https://code.claude.com/docs/en/memory">记忆与 CLAUDE.md</a> · <a target="_blank" rel="noopener" href="https://code.claude.com/docs/en/best-practices">最佳实践</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/10/05/claude-code-28min-boris-cherny/" data-id="cuidA-_DcMXwlZL-CGIH5p0oy" data-title="prompt 写得再漂亮，不如给 AI 一双眼睛" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Claude-Code/" rel="tag">Claude Code</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/09/28/agent-book-ch3-rag-retrieval/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Agent 精读（十二）：词有倒排，向量有图——RAG 检索的两条腿</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99%E7%AC%94%E8%AE%B0/">建站笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0/">精读笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Claude-Code/" rel="tag">Claude Code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RAG/" rel="tag">RAG</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" rel="tag">思考题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" rel="tag">用户记忆</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag">知识图谱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 16.67px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/Claude-Code/" style="font-size: 10px;">Claude Code</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Harness/" style="font-size: 13.33px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/KV-Cache/" style="font-size: 13.33px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RAG/" style="font-size: 10px;">RAG</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 16.67px;">上下文工程</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" style="font-size: 10px;">思考题</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 13.33px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" style="font-size: 10px;">用户记忆</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" style="font-size: 10px;">知识图谱</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">系统设计</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">读书笔记</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">九月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/10/05/claude-code-28min-boris-cherny/">prompt 写得再漂亮，不如给 AI 一双眼睛</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/28/agent-book-ch3-rag-retrieval/">Agent 精读（十二）：词有倒排，向量有图——RAG 检索的两条腿</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/24/agent-book-ch3-knowledge-map/">Agent 精读（十一）：第 3 章知识图谱——用户记忆和知识库</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/24/agent-book-ch3-memory-formats/">Agent 精读（十）：记住一个用户，四种存法，和一次跳出文本</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/24/agent-book-ch1-questions/">Agent 精读（十）：第 1 章思考题——选能力、算平方账、看循环搬家</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 东玄蟒<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/learning/" class="mobile-nav-link">学习路径</a>
+  
+    <a href="/agent-book/" class="mobile-nav-link">Agent 精读</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

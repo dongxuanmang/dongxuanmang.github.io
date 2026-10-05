@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="-apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif">
+  <rect x="0" y="0" width="900" height="620" fill="#ffffff"/>
+
+  <text x="450" y="34" text-anchor="middle" font-size="24" font-weight="700" fill="#2b2b2b">messages 列表：前面不能动，后面尽管加</text>
+  <text x="450" y="60" text-anchor="middle" font-size="15" fill="#8a8578">Agent 框架的核心工作就是管理这个列表——每一轮都把完整的它送给模型</text>
+
+  <!-- 静态前缀区 -->
+  <rect x="50" y="85" width="800" height="100" rx="14" fill="#fffdf5" stroke="#b8860b" stroke-width="1.6" stroke-dasharray="7 5"/>
+  <rect x="340" y="73" width="220" height="24" rx="12" fill="#ffffff" stroke="#b8860b" stroke-width="1.2"/>
+  <text x="450" y="90" text-anchor="middle" font-size="13.5" font-weight="600" fill="#8f6607">静态前缀 · 每轮原样发送</text>
+  <rect x="70" y="112" width="370" height="58" rx="10" fill="#3d4753"/>
+  <text x="255" y="136" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">system · 系统提示词</text>
+  <text x="255" y="157" text-anchor="middle" font-size="12.5" fill="#c9ced6">开发者写的，跨轮不变</text>
+  <rect x="460" y="112" width="370" height="58" rx="10" fill="#4a5568"/>
+  <text x="645" y="136" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">tools · 工具定义</text>
+  <text x="645" y="157" text-anchor="middle" font-size="12.5" fill="#c9ced6">与 messages 并列的请求参数，同样每次发</text>
+
+  <!-- 轨迹三列 -->
+  <text x="165" y="230" text-anchor="middle" font-size="14" font-weight="700" fill="#5c6672">第 1 次调用前</text>
+  <text x="450" y="230" text-anchor="middle" font-size="14" font-weight="700" fill="#5c6672">第 1 次调用后</text>
+  <text x="735" y="230" text-anchor="middle" font-size="14" font-weight="700" fill="#5c6672">第 2 次调用后 · 循环结束</text>
+
+  <!-- 列 1 -->
+  <rect x="55" y="250" width="220" height="40" rx="8" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.4"/>
+  <text x="165" y="275" text-anchor="middle" font-size="13" fill="#1a4d8f">user · 温哥华的时间天气？</text>
+
+  <!-- 列 2 -->
+  <rect x="340" y="250" width="220" height="40" rx="8" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.4"/>
+  <text x="450" y="275" text-anchor="middle" font-size="13" fill="#1a4d8f">user · 温哥华的时间天气？</text>
+  <rect x="340" y="296" width="220" height="40" rx="8" fill="#fff3cd" stroke="#2f9e6e" stroke-width="2.4"/>
+  <text x="450" y="321" text-anchor="middle" font-size="13" fill="#7a5800">assistant · tool_calls ×2</text>
+  <rect x="340" y="342" width="220" height="40" rx="8" fill="#d1e7dd" stroke="#2f9e6e" stroke-width="2.4"/>
+  <text x="450" y="367" text-anchor="middle" font-size="13" fill="#1d5c3f">tool · 时间结果</text>
+  <rect x="340" y="388" width="220" height="40" rx="8" fill="#d1e7dd" stroke="#2f9e6e" stroke-width="2.4"/>
+  <text x="450" y="413" text-anchor="middle" font-size="13" fill="#1d5c3f">tool · 天气结果</text>
+
+  <!-- 列 3 -->
+  <rect x="625" y="250" width="220" height="40" rx="8" fill="#dbe8fb" stroke="#4a83d4" stroke-width="1.4"/>
+  <text x="735" y="275" text-anchor="middle" font-size="13" fill="#1a4d8f">user · 温哥华的时间天气？</text>
+  <rect x="625" y="296" width="220" height="40" rx="8" fill="#fff3cd" stroke="#b8860b" stroke-width="1.4"/>
+  <text x="735" y="321" text-anchor="middle" font-size="13" fill="#7a5800">assistant · tool_calls ×2</text>
+  <rect x="625" y="342" width="220" height="40" rx="8" fill="#d1e7dd" stroke="#2f9e6e" stroke-width="1.4"/>
+  <text x="735" y="367" text-anchor="middle" font-size="13" fill="#1d5c3f">tool · 时间结果</text>
+  <rect x="625" y="388" width="220" height="40" rx="8" fill="#d1e7dd" stroke="#2f9e6e" stroke-width="1.4"/>
+  <text x="735" y="413" text-anchor="middle" font-size="13" fill="#1d5c3f">tool · 天气结果</text>
+  <rect x="625" y="434" width="220" height="40" rx="8" fill="#fff3cd" stroke="#2f9e6e" stroke-width="2.4"/>
+  <text x="735" y="459" text-anchor="middle" font-size="13" fill="#7a5800">assistant · 最终回复 ✓</text>
+
+  <text x="735" y="498" text-anchor="middle" font-size="12.5" fill="#d25360">回复里没有 tool_calls → 退出循环</text>
+
+  <!-- 底部结论 -->
+  <rect x="50" y="530" width="800" height="58" rx="12" fill="#f6f5f2" stroke="#dcd8ce" stroke-width="1"/>
+  <text x="450" y="553" text-anchor="middle" font-size="14.5" font-weight="700" fill="#7a5800">绿框 = 本轮新增 · 旧消息原样放回 —— 前面不能动，后面尽管加</text>
+  <text x="450" y="575" text-anchor="middle" font-size="12.5" fill="#8a8578">缓存只复用稳定前缀：KV Cache 管单次推理，Prompt Cache 管跨请求复用</text>
+</svg>

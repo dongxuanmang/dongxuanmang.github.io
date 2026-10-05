@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 660" font-family="-apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif">
+  <rect x="0" y="0" width="900" height="660" fill="#ffffff"/>
+
+  <!-- 标题 -->
+  <text x="450" y="34" text-anchor="middle" font-size="24" font-weight="700" fill="#2b2b2b">从提示工程到 Graph 工程：五波演进，层层包含</text>
+  <text x="450" y="60" text-anchor="middle" font-size="15.5" fill="#8a8578">不是替代关系——每一层都是前一层的超集，工程师的关注范围逐层扩大</text>
+
+  <!-- 嵌套层（左区）：Graph ⊃ Loop ⊃ Harness ⊃ 上下文 ⊃ 提示 -->
+  <rect x="25" y="95" width="420" height="470" rx="20" fill="#e2d9f3" opacity="0.5" stroke="#7c5cbf" stroke-width="1.6"/>
+  <rect x="65" y="135" width="340" height="390" rx="17" fill="#ffe0c2" opacity="0.55" stroke="#d97706" stroke-width="1.6"/>
+  <rect x="105" y="175" width="260" height="310" rx="14" fill="#fff3cd" opacity="0.65" stroke="#b8860b" stroke-width="1.6"/>
+  <rect x="145" y="215" width="180" height="230" rx="12" fill="#d1e7dd" opacity="0.7" stroke="#2f9e6e" stroke-width="1.6"/>
+  <rect x="185" y="255" width="100" height="150" rx="10" fill="#cfe2ff" stroke="#4a83d4" stroke-width="1.6"/>
+
+  <!-- 层名贴片（骑边框） -->
+  <g font-size="15" font-weight="700">
+    <rect x="106" y="83" width="130" height="24" rx="12" fill="#ffffff" stroke="#7c5cbf" stroke-width="1.2"/>
+    <text x="171" y="100" text-anchor="middle" fill="#5d3fa0">⑤ Graph 工程</text>
+
+    <rect x="162" y="123" width="124" height="24" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="1.2"/>
+    <text x="224" y="140" text-anchor="middle" fill="#a35a04">④ Loop 工程</text>
+
+    <rect x="155" y="163" width="142" height="24" rx="12" fill="#ffffff" stroke="#b8860b" stroke-width="1.2"/>
+    <text x="226" y="180" text-anchor="middle" fill="#8f6607">③ Harness 工程</text>
+
+    <rect x="173" y="203" width="124" height="24" rx="12" fill="#ffffff" stroke="#2f9e6e" stroke-width="1.2"/>
+    <text x="235" y="220" text-anchor="middle" fill="#1d5c3f">② 上下文工程</text>
+
+    <rect x="185" y="243" width="100" height="24" rx="12" fill="#ffffff" stroke="#4a83d4" stroke-width="1.2"/>
+    <text x="235" y="260" text-anchor="middle" fill="#1a4d8f">① 提示工程</text>
+  </g>
+
+  <!-- 各层关键词（层内底部） -->
+  <g font-size="13.5" fill="#5c5650" text-anchor="middle">
+    <text x="235" y="392">优化指令</text>
+    <text x="235" y="432">管理模型看到的一切</text>
+    <text x="235" y="472">约束 · 验证 · 纠正</text>
+    <text x="235" y="512">跨轮次自主运转</text>
+    <text x="235" y="552">显式执行图</text>
+  </g>
+
+  <!-- 右侧注释列 -->
+  <g>
+    <circle cx="502" cy="128" r="6" fill="#4a83d4"/>
+    <text x="518" y="133" font-size="17" font-weight="700" fill="#2b2b2b">提示工程 <tspan fill="#9aa0a6" font-size="13.5" font-weight="400">第一波</tspan></text>
+    <text x="518" y="154" font-size="14.5" fill="#5c5650">优化输入给模型的自然语言指令</text>
+
+    <circle cx="502" cy="196" r="6" fill="#2f9e6e"/>
+    <text x="518" y="201" font-size="17" font-weight="700" fill="#2b2b2b">上下文工程 <tspan fill="#9aa0a6" font-size="13.5" font-weight="400">第二波</tspan></text>
+    <text x="518" y="222" font-size="14.5" fill="#5c5650">系统性管理模型能看到的一切：</text>
+    <text x="518" y="241" font-size="14.5" fill="#5c5650">系统指令、工具定义、对话历史、外部知识</text>
+
+    <circle cx="502" cy="282" r="6" fill="#b8860b"/>
+    <text x="518" y="287" font-size="17" font-weight="700" fill="#2b2b2b">Harness 工程 <tspan fill="#9aa0a6" font-size="13.5" font-weight="400">第三波</tspan></text>
+    <text x="518" y="308" font-size="14.5" fill="#5c5650">Agent 如何组织模型运行并与环境交互：</text>
+    <text x="518" y="327" font-size="14.5" fill="#5c5650">上下文 + 工具接口 + 约束/验证/纠正</text>
+
+    <circle cx="502" cy="368" r="6" fill="#d97706"/>
+    <text x="518" y="373" font-size="17" font-weight="700" fill="#2b2b2b">Loop 工程 <tspan fill="#9aa0a6" font-size="13.5" font-weight="400">第四波</tspan></text>
+    <text x="518" y="394" font-size="14.5" fill="#5c5650">跨轮次的持续自主运转：谁发现下一件事、</text>
+    <text x="518" y="413" font-size="14.5" fill="#5c5650">何时验证、何时算真正完成</text>
+
+    <circle cx="502" cy="454" r="6" fill="#7c5cbf"/>
+    <text x="518" y="459" font-size="17" font-weight="700" fill="#2b2b2b">Graph 工程 <tspan fill="#9aa0a6" font-size="13.5" font-weight="400">第五波</tspan></text>
+    <text x="518" y="480" font-size="14.5" fill="#5c5650">把 Agent 循环、确定性程序、人工审批组成显式执行图：</text>
+    <text x="518" y="499" font-size="14.5" fill="#5c5650">节点承担能力，边规定路由与依赖</text>
+  </g>
+
+  <!-- 包含关系说明 -->
+  <text x="462" y="545" font-size="14" fill="#9aa0a6">① ⊂ ② ⊂ ③ ⊂ ④ ⊂ ⑤ · 单个 Agent 循环正是执行图中的一个节点</text>
+
+  <!-- 底部金句条 -->
+  <rect x="25" y="575" width="850" height="52" rx="12" fill="#fffdf5" stroke="#b8860b" stroke-width="1.2"/>
+  <text x="450" y="596" text-anchor="middle" font-size="16.5" font-weight="700" fill="#7a5800">当各家模型能力越来越接近，竞争优势就转移到模型之外的工程实践。</text>
+  <text x="450" y="616" text-anchor="middle" font-size="14" fill="#96762f">例证：Terminal Bench 2.0，不改模型，Harness 把 LangChain 从 52.8% 提到 66.5%</text>
+</svg>
