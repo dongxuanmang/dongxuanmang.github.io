@@ -48,7 +48,7 @@ graph LR
 2. 精读上面这本开源书：按官方难度分级推进（🟢 1–2 章 → 🔵 3–4 章 → 🟣 5–6 章 → 🟡 7 章 → 🔴 8 章 → 🟠 9–10 章），每章输出自己的理解
 3. 自己造：用 agent 重构自己的工作流，把过程写成文章
 
-**笔记**：（精读专题已开 → [/agent-book/](/agent-book/)）
+**笔记**：精读专题已开 → [/agent-book/](/agent-book/)；另外收了一份 Claude Code 作者 Boris Cherny 的实操方法论：[prompt 写得再漂亮，不如给 AI 一双眼睛](/2026/10/05/claude-code-28min-boris-cherny/)
 
 ## 🎬 AI 短视频（支线）
 
@@ -78,6 +78,7 @@ Hive 引擎与大数据链路 → 大厂后端的高并发与稳定性。这一�
 
 > 每一步都算数。倒序记录，最新在上。
 
+- **2026-10-05** 精读笔记第二篇：[prompt 写得再漂亮，不如给 AI 一双眼睛](/2026/10/05/claude-code-28min-boris-cherny/)——Claude Code 作者 Boris Cherny 的 28 分钟官方 session，五级台阶讲解"验证回路"为什么比 prompt 措辞重要
 - **2026-09-28** 第 3 章 RAG 基础：[词有倒排，向量有图：RAG 检索的两条腿](/2026/09/28/agent-book-ch3-rag-retrieval/)——倒排索引=按词建二级索引、BM25 两修正、ANN 近似、RRF 与重排序；[第 3 章知识图谱页](/2026/09/24/agent-book-ch3-knowledge-map/) RAG 区块同步点亮
 - **2026-09-24** 第 3 章前半读完：[记住一个用户，四种存法，和一次跳出文本](/2026/09/24/agent-book-ch3-memory-formats/)——四种存储格式的修 bug 链 + User as Code；同步上线[第 3 章知识图谱页](/2026/09/24/agent-book-ch3-knowledge-map/)（新形态：随精读持续更新的活页面）
 - **2026-09-24** 第 1 章思考题：[选能力、算平方账、看循环搬家](/2026/09/24/agent-book-ch1-questions/)——三道重点题的思考过程，含两次被自己答案打脸的修正
