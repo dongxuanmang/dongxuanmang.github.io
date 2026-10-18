@@ -1,16 +1,16 @@
 ---
-title: Agent 精读（十三）：随机切一刀，掷硬币定层——ANN 索引四个直觉的实测
+title: 随机切一刀，掷硬币定层：ANN 索引四个细节的实测
 date: 2026-10-06 21:30:00
 categories:
-  - Agent 精读
+  - 随笔
 tags:
   - AI Agent
   - RAG
-  - 读书笔记
   - HNSW
+  - 检索算法
 ---
 
-> 这是[《深入理解 AI Agent》精读专题](/agent-book/)的第十三篇，还在第 3 章。上一篇[词有倒排，向量有图](/2026/09/28/agent-book-ch3-rag-retrieval/)画出了两条检索路线的轮廓；这一篇往下挖一层，看 ANN 索引内部怎么转。
+> 这篇不是读书笔记。[《深入理解 AI Agent》](https://github.com/bojieli/ai-agent-book)第 3 章把 ANN 索引的结论给全了，我把其中四个细节单独拎出来实现了一遍：中垂面为什么等价于"离谁更近"、层号公式到底在抽什么、边数为什么不会膨胀、以及分层究竟贡献了多少。上一篇[词有倒排，向量有图](/2026/09/28/agent-book-ch3-rag-retrieval/)画的是轮廓，这一篇是轮廓下面的砖。
 
 ## 我能背出结论，却答不上"节点里存了什么"
 
@@ -218,11 +218,11 @@ HNSW 层 0 候选           ef_search = 10~200
 
 第 3 章还剩结构化索引（RAPTOR / GraphRAG）、知识更新、智能体化 RAG 和上下文感知检索没读。按书里的判断，混合检索已经能覆盖大多数需求，结构化索引只在需要跨文档综合或多层次导航时才值得投入——等读完再验证这句话。
 
-实验代码：[第 3 章 ANN 实验](/agent-book/)，含中垂面几何验证、ANNOY 与 HNSW 从零实现、分层对照实验、层号公式的动图生成脚本。
+文中所有数字都来自我自己跑的脚本：中垂面几何验证、ANNOY 与 HNSW 从零实现、分层对照实验、层号公式的动图生成。代码与图表见[精读专题页](/agent-book/)。
 
 ## 参考来源
 
-- [《深入理解 AI Agent：设计原理与工程实践》第 3 章「用户记忆和知识库」](https://github.com/bojieli/ai-agent-book/blob/main/book/chapter3.md)，李博杰著，GitHub 开源——本篇覆盖「RAG 基础」与「混合检索」两节
+- [《深入理解 AI Agent：设计原理与工程实践》第 3 章「用户记忆和知识库」](https://github.com/bojieli/ai-agent-book/blob/main/book/chapter3.md)，李博杰著，GitHub 开源——本篇是对其中「RAG 基础」与「混合检索」两节算法的补充
 - [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/abs/1603.09320)，Malkov & Yashunin，HNSW 原论文（邻层分配与 Algorithm 4 的出处）
 - [annoy](https://github.com/spotify/annoy)，Spotify 的 C++/Python ANN 库，随机投影树实现
 - [BAAI/bge-m3](https://huggingface.co/BAAI/bge-m3)，同时输出稠密、稀疏、多向量三种表示
