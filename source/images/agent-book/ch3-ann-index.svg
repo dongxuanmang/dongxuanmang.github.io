@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="640" viewBox="0 0 1700 640">
+<rect width="1700" height="640" fill="#ffffff"/>
+<text x="46" y="34" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="22" font-weight="700" fill="#16162a">稠密检索的两类 ANN 索引：构建出来长什么样</text>
+<text x="46" y="57" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="13" fill="#6b6b80">12 个 chunk = 12 个向量 = 12 个节点；查询「苹果手机」与「怎么种水果」各走一遍</text>
+<rect x="46" y="122" width="430" height="430" fill="#fbfbfd" stroke="#d8d8e0" stroke-width="1" rx="10"/>
+<line x1="78.8" y1="552.0" x2="78.8" y2="122.0" stroke="#eeeeF4"/>
+<line x1="46.0" y1="519.2" x2="476.0" y2="519.2" stroke="#eeeeF4"/>
+<line x1="261.0" y1="552.0" x2="261.0" y2="122.0" stroke="#eeeeF4"/>
+<line x1="46.0" y1="337.0" x2="476.0" y2="337.0" stroke="#eeeeF4"/>
+<line x1="443.2" y1="552.0" x2="443.2" y2="122.0" stroke="#eeeeF4"/>
+<line x1="46.0" y1="154.8" x2="476.0" y2="154.8" stroke="#eeeeF4"/>
+<text x="46" y="86" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="17.5" font-weight="600" fill="#16162a">① 节点 = chunk 的向量；边 = 「谁离我近」</text>
+<text x="46" y="108" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" fill="#6b6b80">HNSW 层 0（最底层，全量 12 个节点）</text>
+<line x1="378.1" y1="476.6" x2="358.7" y2="419.0" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="378.1" y1="476.6" x2="345.0" y2="471.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="378.1" y1="476.6" x2="441.4" y2="362.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="378.1" y1="476.6" x2="409.9" y2="379.7" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="358.7" y1="419.0" x2="345.0" y2="471.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="358.7" y1="419.0" x2="441.4" y2="362.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="358.7" y1="419.0" x2="409.9" y2="379.7" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="345.0" y1="471.4" x2="441.4" y2="362.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="345.0" y1="471.4" x2="384.9" y2="337.0" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="329.3" y1="168.1" x2="287.5" y2="212.2" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="329.3" y1="168.1" x2="339.3" y2="201.3" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="329.3" y1="168.1" x2="415.5" y2="240.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="329.3" y1="168.1" x2="358.5" y2="249.2" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="287.5" y1="212.2" x2="339.3" y2="201.3" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="287.5" y1="212.2" x2="415.5" y2="240.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="287.5" y1="212.2" x2="358.5" y2="249.2" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="339.3" y1="201.3" x2="415.5" y2="240.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="339.3" y1="201.3" x2="358.5" y2="249.2" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="415.5" y1="240.4" x2="358.5" y2="249.2" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="415.5" y1="240.4" x2="409.7" y2="276.9" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="415.5" y1="240.4" x2="384.9" y2="337.0" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="358.5" y1="249.2" x2="409.7" y2="276.9" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="409.7" y1="276.9" x2="441.4" y2="362.4" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="409.7" y1="276.9" x2="384.9" y2="337.0" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="441.4" y1="362.4" x2="384.9" y2="337.0" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="441.4" y1="362.4" x2="409.9" y2="379.7" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<line x1="384.9" y1="337.0" x2="409.9" y2="379.7" stroke="#9aa0b5" stroke-width="1.6" stroke-opacity="0.8"/>
+<circle cx="378.1" cy="476.6" r="9" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="378.1" y="480.0" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a1</text>
+<circle cx="358.7" cy="419.0" r="9" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="358.7" y="422.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a2</text>
+<circle cx="345.0" cy="471.4" r="9" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="345.0" y="474.8" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a3</text>
+<circle cx="441.4" cy="362.4" r="9" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="441.4" y="365.8" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d1</text>
+<circle cx="384.9" cy="337.0" r="9" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="384.9" y="340.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d2</text>
+<circle cx="409.9" cy="379.7" r="9" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="409.9" y="383.1" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d3</text>
+<circle cx="415.5" cy="240.4" r="9" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="415.5" y="243.8" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c1</text>
+<circle cx="358.5" cy="249.2" r="9" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="358.5" y="252.6" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c2</text>
+<circle cx="409.7" cy="276.9" r="9" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="409.7" y="280.3" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c3</text>
+<circle cx="329.3" cy="168.1" r="9" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="329.3" y="171.5" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b1</text>
+<circle cx="287.5" cy="212.2" r="9" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="287.5" y="215.6" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b2</text>
+<circle cx="339.3" cy="201.3" r="9" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="339.3" y="204.7" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b3</text>
+<text x="58" y="528" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="11.5" fill="#6b6b80">点的「方向」就是语义，半径不参与余弦计算 —— 距离近就一定有边</text>
+<text x="58" y="543" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="11.5" fill="#b35c00">注意那些跨很远的边 —— 小世界图正是靠「长边」才能跨区域导航</text>
+<rect x="526" y="122" width="430" height="430" fill="#fbfbfd" stroke="#d8d8e0" stroke-width="1" rx="10"/>
+<line x1="558.8" y1="552.0" x2="558.8" y2="122.0" stroke="#eeeeF4"/>
+<line x1="526.0" y1="519.2" x2="956.0" y2="519.2" stroke="#eeeeF4"/>
+<line x1="741.0" y1="552.0" x2="741.0" y2="122.0" stroke="#eeeeF4"/>
+<line x1="526.0" y1="337.0" x2="956.0" y2="337.0" stroke="#eeeeF4"/>
+<line x1="923.2" y1="552.0" x2="923.2" y2="122.0" stroke="#eeeeF4"/>
+<line x1="526.0" y1="154.8" x2="956.0" y2="154.8" stroke="#eeeeF4"/>
+<text x="526" y="86" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="17.5" font-weight="600" fill="#16162a">② 基于树：ANNOY 随机超平面递归二分</text>
+<text x="526" y="108" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" fill="#6b6b80">第 1 棵树的分割面（虚线）= 随机两点连线的中垂面，与余弦无关</text>
+<line x1="759.8" y1="552.0" x2="854.5" y2="122.0" stroke="#1c7ed6" stroke-width="1.5" stroke-dasharray="6,4" stroke-opacity="0.9"/>
+<line x1="526.0" y1="221.2" x2="956.0" y2="358.0" stroke="#1c7ed6" stroke-width="1.5" stroke-dasharray="6,4" stroke-opacity="0.9"/>
+<line x1="829.4" y1="552.0" x2="896.3" y2="122.0" stroke="#1c7ed6" stroke-width="1.5" stroke-dasharray="6,4" stroke-opacity="0.9"/>
+<line x1="526.0" y1="314.1" x2="956.0" y2="455.0" stroke="#1c7ed6" stroke-width="1.5" stroke-dasharray="6,4" stroke-opacity="0.9"/>
+<circle cx="858.1" cy="476.6" r="9" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="858.1" y="480.0" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a1</text><circle cx="858.1" cy="476.6" r="17" fill="none" stroke="#f59f00" stroke-width="2.6"/>
+<circle cx="838.7" cy="419.0" r="9" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="838.7" y="422.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a2</text><circle cx="838.7" cy="419.0" r="17" fill="none" stroke="#f59f00" stroke-width="2.6"/>
+<circle cx="825.0" cy="471.4" r="9" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="825.0" y="474.8" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a3</text><circle cx="825.0" cy="471.4" r="17" fill="none" stroke="#f59f00" stroke-width="2.6"/>
+<circle cx="921.4" cy="362.4" r="9" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="921.4" y="365.8" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d1</text>
+<circle cx="864.9" cy="337.0" r="9" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="864.9" y="340.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d2</text>
+<circle cx="889.9" cy="379.7" r="9" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="889.9" y="383.1" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d3</text>
+<circle cx="895.5" cy="240.4" r="9" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="895.5" y="243.8" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c1</text>
+<circle cx="838.5" cy="249.2" r="9" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="838.5" y="252.6" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c2</text>
+<circle cx="889.7" cy="276.9" r="9" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="889.7" y="280.3" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c3</text>
+<circle cx="809.3" cy="168.1" r="9" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="809.3" y="171.5" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b1</text>
+<circle cx="767.5" cy="212.2" r="9" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="767.5" y="215.6" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b2</text>
+<circle cx="819.3" cy="201.3" r="9" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="819.3" y="204.7" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b3</text>
+<polygon points="867.6,456.1 870.5,464.0 879.0,464.4 872.3,469.6 874.6,477.8 867.6,473.1 860.5,477.8 862.8,469.6 856.2,464.4 864.6,464.0" fill="#f59f00" stroke="#fff" stroke-width="1.6"/><text x="861.6" y="446.1" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" font-weight="600" fill="#b35c00" text-anchor="middle">查询 苹果手机</text>
+<text x="538" y="528" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="11.5" fill="#6b6b80">金圈 = 查询落到那片叶子里的点；跨 3 棵树取并集才是候选集</text>
+<text x="538" y="543" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="11.5" fill="#6b6b80">余弦只在最后对候选集精确算一遍 —— 树本身从头到尾没用过余弦</text>
+<rect x="1006" y="122" width="648" height="430" fill="#fbfbfd" stroke="#d8d8e0" stroke-width="1" rx="10"/>
+<text x="1006" y="86" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="17.5" font-weight="600" fill="#16162a">③ 基于图：HNSW 的分层结构（构建结果）</text>
+<text x="1006" y="108" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" fill="#6b6b80">上层稀疏做粗导航，下层稠密做精查找；橙色 = 查询「苹果手机」的下降路线</text>
+<line x1="1116.0" y1="498.0" x2="1116.0" y2="342.0" stroke="#c9ccd8" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1212.0" y1="498.0" x2="1212.0" y2="186.0" stroke="#c9ccd8" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1404.0" y1="498.0" x2="1404.0" y2="186.0" stroke="#c9ccd8" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1500.0" y1="498.0" x2="1500.0" y2="342.0" stroke="#c9ccd8" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1548.0" y1="498.0" x2="1548.0" y2="186.0" stroke="#c9ccd8" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="1018" y="502.0" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#8a8aa0">L0</text>
+<path d="M 1068.0 489.0 Q 1140.0 451.2 1212.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1068.0 489.0 Q 1116.0 460.8 1164.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1068.0 489.0 Q 1092.0 470.4 1116.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1068.0 489.0 Q 1188.0 449.0 1308.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1116.0 489.0 Q 1164.0 460.8 1212.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1116.0 489.0 Q 1140.0 470.4 1164.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1116.0 489.0 Q 1212.0 449.0 1308.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1164.0 489.0 Q 1188.0 470.4 1212.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1164.0 489.0 Q 1212.0 460.8 1260.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1212.0 489.0 Q 1236.0 470.4 1260.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1212.0 489.0 Q 1260.0 460.8 1308.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1260.0 489.0 Q 1284.0 470.4 1308.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1260.0 489.0 Q 1308.0 460.8 1356.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1356.0 489.0 Q 1404.0 460.8 1452.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1356.0 489.0 Q 1380.0 470.4 1404.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1404.0 489.0 Q 1428.0 470.4 1452.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1212.0 489.0 Q 1332.0 449.0 1452.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1260.0 489.0 Q 1356.0 449.0 1452.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1500.0 489.0 Q 1548.0 460.8 1596.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1404.0 489.0 Q 1452.0 460.8 1500.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1500.0 489.0 Q 1524.0 470.4 1548.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1356.0 489.0 Q 1428.0 451.2 1500.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1548.0 489.0 Q 1572.0 470.4 1596.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1404.0 489.0 Q 1476.0 451.2 1548.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1356.0 489.0 Q 1452.0 449.0 1548.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1404.0 489.0 Q 1500.0 449.0 1596.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1356.0 489.0 Q 1476.0 449.0 1596.0 489.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<circle cx="1068.0" cy="498.0" r="10" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1068.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a1</text>
+<circle cx="1116.0" cy="498.0" r="10" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1116.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a2</text>
+<circle cx="1164.0" cy="498.0" r="10" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1164.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a3</text>
+<circle cx="1500.0" cy="498.0" r="10" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1500.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b1</text>
+<circle cx="1548.0" cy="498.0" r="10" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1548.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b2</text>
+<circle cx="1596.0" cy="498.0" r="10" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1596.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b3</text>
+<circle cx="1356.0" cy="498.0" r="10" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1356.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c1</text>
+<circle cx="1404.0" cy="498.0" r="10" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1404.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c2</text>
+<circle cx="1452.0" cy="498.0" r="10" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1452.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c3</text>
+<circle cx="1212.0" cy="498.0" r="10" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1212.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d1</text>
+<circle cx="1260.0" cy="498.0" r="10" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1260.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d2</text>
+<circle cx="1308.0" cy="498.0" r="10" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1308.0" y="501.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d3</text>
+<text x="1018" y="346.0" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#8a8aa0">L1</text>
+<path d="M 1116.0 333.0 Q 1164.0 304.8 1212.0 333.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1116.0 333.0 Q 1260.0 293.0 1404.0 333.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1404.0 333.0 Q 1452.0 304.8 1500.0 333.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1500.0 333.0 Q 1524.0 314.4 1548.0 333.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1404.0 333.0 Q 1476.0 295.2 1548.0 333.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<circle cx="1116.0" cy="342.0" r="10" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1116.0" y="345.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">a2</text>
+<circle cx="1500.0" cy="342.0" r="10" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1500.0" y="345.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b1</text>
+<circle cx="1548.0" cy="342.0" r="10" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1548.0" y="345.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b2</text>
+<circle cx="1404.0" cy="342.0" r="10" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1404.0" y="345.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c2</text>
+<circle cx="1212.0" cy="342.0" r="10" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1212.0" y="345.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d1</text>
+<text x="1018" y="190.0" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#8a8aa0">L2</text>
+<path d="M 1212.0 177.0 Q 1308.0 137.0 1404.0 177.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1212.0 177.0 Q 1380.0 137.0 1548.0 177.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<path d="M 1404.0 177.0 Q 1476.0 139.2 1548.0 177.0" fill="none" stroke="#9aa0b5" stroke-width="1.4" stroke-opacity="0.9"/>
+<circle cx="1548.0" cy="186.0" r="10" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1548.0" y="189.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">b2</text>
+<circle cx="1404.0" cy="186.0" r="10" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1404.0" y="189.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">c2</text>
+<circle cx="1212.0" cy="186.0" r="10" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.5"/><text x="1212.0" y="189.4" font-family="Menlo,Consolas,monospace" font-size="9.5" fill="#fff" text-anchor="middle">d1</text>
+<circle cx="1212.0" cy="186.0" r="15" fill="none" stroke="#f59f00" stroke-width="2.6"/>
+<text x="1232.0" y="172.0" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="11.5" font-weight="600" fill="#b35c00">入口点</text>
+<path d="M 1212.0 344.0 L 1116.0 344.0" stroke="#f59f00" stroke-width="3" stroke-linecap="round"/>
+<text x="1164.0" y="368.0" font-family="Menlo,Consolas,monospace" font-size="10" fill="#b35c00" text-anchor="middle">d1→a2</text>
+<circle cx="1116.0" cy="498.0" r="15" fill="none" stroke="#f59f00" stroke-width="2.6"/>
+<text x="1018" y="528" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="11.5" fill="#6b6b80">层号按指数衰减概率随机构建（跳表同款思路），所以上层天然稀疏</text>
+<text x="1018" y="543" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="11.5" fill="#6b6b80">每层存的是图的边，不是有序链表的 next 指针 —— 图上没有全序</text>
+<text x="46" y="615" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" font-weight="600" fill="#16162a">图例：</text>
+<circle cx="110" cy="610" r="8" fill="#e8552d" fill-opacity="0.9" stroke="#fff" stroke-width="1.4"/>
+<text x="126" y="614.5" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" fill="#3a3a52">文章a 苹果手机</text>
+<circle cx="244.0" cy="610" r="8" fill="#2f9e44" fill-opacity="0.9" stroke="#fff" stroke-width="1.4"/>
+<text x="260.0" y="614.5" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" fill="#3a3a52">文章b 水果苹果</text>
+<circle cx="378.0" cy="610" r="8" fill="#1c7ed6" fill-opacity="0.9" stroke="#fff" stroke-width="1.4"/>
+<text x="394.0" y="614.5" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" fill="#3a3a52">文章c 智能手机</text>
+<circle cx="512.0" cy="610" r="8" fill="#7048e8" fill-opacity="0.9" stroke="#fff" stroke-width="1.4"/>
+<text x="528.0" y="614.5" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" fill="#3a3a52">文章d 笔记本</text>
+<polygon points="638.5,601 630.5,617 646.5,617" fill="#f59f00"/>
+<text x="654.5" y="614.5" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="12.5" fill="#3a3a52">查询向量（每个 chunk 的颜色 = 它属于哪篇文章）</text>
+</svg>

@@ -180,13 +180,16 @@ graph LR
 
     D1 --> D11["两条腿：词有倒排（精确）<br/>向量有图（ANN 近似）"]
     D11 --> D12["倒排 = 按词建二级索引<br/>BM25 = 稀有度+饱和+长度归一"]
-    D11 --> D13["跳表思想：顶层大步跳<br/>近似代价：可能漏"]
+    D11 --> D13["树不看余弦：随机超平面<br/>= 中垂面 · 只负责路由"]
+    D11 --> D15["层号 = 掷硬币<br/>mL 只是换底 · M^-k 衰减"]
+    D11 --> D16["实测：分层没提升召回<br/>多样性启发式比分层更重要"]
     D1 --> D14["混合：RRF 扔分只看排名<br/>→ 跨编码器重排 top50"]
 
     style CH3 fill:#fff3cd,stroke:#b8860b
     style A3 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style C6 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style D11 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style D16 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style D2 fill:#f1f3f5,stroke:#adb5bd,stroke-dasharray:5 4
 {% endmermaid %}
 
@@ -198,7 +201,7 @@ graph LR
 | :--: | --- | :--: | :--: |
 | 1 | AI Agent 入门：三要素、ReAct 循环、Harness 工程 | 🟢 | ✅ [能力边界由 Harness 决定](/2026/09/15/agent-book-ch1-harness/) · [模型即 Agent？循环只是搬到了服务端](/2026/09/16/agent-book-ch1-model-as-agent/) · [Harness 工程解决从 Demo 到生产的设计](/2026/09/16/agent-book-ch1-engineering/) · [第 1 章思考题：选能力、算平方账、看循环搬家](/2026/09/24/agent-book-ch1-questions/) |
 | 2 | 上下文工程：KV Cache、提示工程、Skills、压缩（官方称全书最关键一章） | 🟢 | ✅ [先导：模型的学习与上下文的构成](/2026/09/16/agent-book-ch2-context/) · [前面不能动，后面尽管加](/2026/09/17/agent-book-ch2-api-kv-cache/) · [KV Cache 的账，从 n² 到线性](/2026/09/18/agent-book-ch2-chat-template-kvcache/) · [对人类友好，就是对模型友好](/2026/09/20/agent-book-ch2-prompt-injection/) · [上下文是台只有一半的检索引擎](/2026/09/21/agent-book-ch2-skills-status-bar/) · [装得下，但找不到了](/2026/09/22/agent-book-ch2-compression/) |
-| 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 🔄 [记住一个用户，四种存法，和一次跳出文本](/2026/09/24/agent-book-ch3-memory-formats/) · [词有倒排，向量有图：RAG 检索的两条腿](/2026/09/28/agent-book-ch3-rag-retrieval/) · [第 3 章知识图谱（持续更新）](/2026/09/24/agent-book-ch3-knowledge-map/)（结构化索引往后待读） |
+| 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 🔄 [记住一个用户，四种存法，和一次跳出文本](/2026/09/24/agent-book-ch3-memory-formats/) · [词有倒排，向量有图：RAG 检索的两条腿](/2026/09/28/agent-book-ch3-rag-retrieval/) · [随机切一刀，掷硬币定层：ANN 索引四个直觉的实测](/2026/10/06/agent-book-ch3-ann-index/) · [第 3 章知识图谱（持续更新）](/2026/09/24/agent-book-ch3-knowledge-map/)（结构化索引往后待读） |
 | 4 | 工具：MCP 协议、五类工具、主动工具发现 | 🔵 | 📋 未开始 |
 | 5 | Coding Agent 与通用 Agent：代码是创造工具的元能力 | 🟣 | 📋 未开始 |
 | 6 | 交互：语音、Computer Use、机器人（模态 × 时序） | 🟣 | 📋 未开始 |
