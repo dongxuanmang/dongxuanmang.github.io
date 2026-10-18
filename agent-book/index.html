@@ -14,7 +14,7 @@
 <meta property="og:description" content="这是我的精读专题：逐章读李博杰的开源书《深入理解 AI Agent：设计原理与工程实践》，每一章写下我自己的理解和输出——不是摘抄，是用我的话重新讲一遍，加上我的追问和实践。全书围绕一个公式展开：  graph LR     LLM[&quot;🧠 LLM大脑&quot;] --- CTX[&quot;👁️ 上下文眼睛&quot;]     CTX --- TOOLS[&quot;🤲 工具手脚&quot;]     TOOLS --- LLM">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-15T14:30:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T14:27:56.997Z">
+<meta property="article:modified_time" content="2026-10-18T15:46:51.139Z">
 <meta property="article:author" content="东玄蟒">
 <meta name="twitter:card" content="summary">
   
@@ -273,6 +273,7 @@
     D11 --> D13["树不看余弦：随机超平面<br/>= 中垂面 · 只负责路由"]
     D11 --> D15["层号 = 掷硬币<br/>mL 只是换底 · M^-k 衰减"]
     D11 --> D16["🔧 算法补充：分层没提升召回<br/>多样性启发式比分层更重要"]
+    D11 --> D17["🔧 算法补充：精确 KNN 靠三角不等式<br/>16 维后剪枝归零 = 维数灾难"]
     D1 --> D14["混合：RRF 扔分只看排名<br/>→ 跨编码器重排 top50"]
 
     style CH3 fill:#fff3cd,stroke:#b8860b
@@ -280,6 +281,7 @@
     style C6 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style D11 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style D16 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
+    style D17 fill:#fff3cd,stroke:#b8860b,stroke-width:2px
     style D2 fill:#f1f3f5,stroke:#adb5bd,stroke-dasharray:5 4</div>
 
 <h2 id="章节清单与我的输出"><a href="#章节清单与我的输出" class="headerlink" title="章节清单与我的输出"></a>章节清单与我的输出</h2><h3 id="构建篇（第-1–6-章）"><a href="#构建篇（第-1–6-章）" class="headerlink" title="构建篇（第 1–6 章）"></a>构建篇（第 1–6 章）</h3><table>
@@ -307,7 +309,7 @@
 <td align="center">3</td>
 <td>用户记忆和知识库：记忆策略、RAG、知识图谱</td>
 <td align="center">🔵</td>
-<td align="center">🔄 <a href="/2026/09/24/agent-book-ch3-memory-formats/">记住一个用户，四种存法，和一次跳出文本</a> · <a href="/2026/09/28/agent-book-ch3-rag-retrieval/">词有倒排，向量有图：RAG 检索的两条腿</a> · <a href="/2026/09/24/agent-book-ch3-knowledge-map/">第 3 章知识图谱（持续更新）</a>（结构化索引往后待读）<br/>🔧 算法补充（非读书笔记）：<a href="/2026/10/06/agent-book-ch3-ann-index/">随机切一刀，掷硬币定层：ANN 索引四个细节的实测</a></td>
+<td align="center">🔄 <a href="/2026/09/24/agent-book-ch3-memory-formats/">记住一个用户，四种存法，和一次跳出文本</a> · <a href="/2026/09/28/agent-book-ch3-rag-retrieval/">词有倒排，向量有图：RAG 检索的两条腿</a> · <a href="/2026/09/24/agent-book-ch3-knowledge-map/">第 3 章知识图谱（持续更新）</a>（结构化索引往后待读）<br/>🔧 算法补充（非读书笔记）：<a href="/2026/10/06/agent-book-ch3-ann-index/">随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板</a></td>
 </tr>
 <tr>
 <td align="center">4</td>
@@ -374,7 +376,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/agent-book/index.html" data-id="cuidfy6bPYRbP4KHkfrue7cpe" data-title="《深入理解 AI Agent》精读" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/agent-book/index.html" data-id="cuidOXGzAdr8yIi1LDF1L2Xze" data-title="《深入理解 AI Agent》精读" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -436,7 +438,7 @@
       <ul>
         
           <li>
-            <a href="/2026/10/06/agent-book-ch3-ann-index/">随机切一刀，掷硬币定层：ANN 索引四个细节的实测</a>
+            <a href="/2026/10/06/agent-book-ch3-ann-index/">随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板</a>
           </li>
         
           <li>

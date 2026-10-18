@@ -4,20 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>随机切一刀，掷硬币定层：ANN 索引四个细节的实测 | 东玄蟒</title>
+  <title>随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板 | 东玄蟒</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="这篇不是读书笔记。《深入理解 AI Agent》第 3 章把 ANN 索引的结论给全了，我把其中四个细节单独拎出来实现了一遍：中垂面为什么等价于”离谁更近”、层号公式到底在抽什么、边数为什么不会膨胀、以及分层究竟贡献了多少。上一篇词有倒排，向量有图画的是轮廓，这一篇是轮廓下面的砖。  我能背出结论，却答不上”节点里存了什么”读 RAG 那几节，我很快就能说出”树适合静态库、图适合动态库、两者都要">
+  <meta name="description" content="这篇不是读书笔记。《深入理解 AI Agent》第 3 章把 ANN 索引的结论给全了，我把其中四个细节单独拎出来实现了一遍：中垂面为什么等价于”离谁更近”、层号公式到底在抽什么、边数为什么不会膨胀、以及分层究竟贡献了多少。上一篇词有倒排，向量有图画的是轮廓，这一篇是轮廓下面的砖。最后还补了对照组：精确 KNN 为什么做不到一个都不漏。  我能背出结论，却答不上”节点里存了什么”读 RAG 那几">
 <meta property="og:type" content="article">
-<meta property="og:title" content="随机切一刀，掷硬币定层：ANN 索引四个细节的实测">
+<meta property="og:title" content="随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板">
 <meta property="og:url" content="https://dongxuanmang.github.io/2026/10/06/agent-book-ch3-ann-index/index.html">
 <meta property="og:site_name" content="东玄蟒">
-<meta property="og:description" content="这篇不是读书笔记。《深入理解 AI Agent》第 3 章把 ANN 索引的结论给全了，我把其中四个细节单独拎出来实现了一遍：中垂面为什么等价于”离谁更近”、层号公式到底在抽什么、边数为什么不会膨胀、以及分层究竟贡献了多少。上一篇词有倒排，向量有图画的是轮廓，这一篇是轮廓下面的砖。  我能背出结论，却答不上”节点里存了什么”读 RAG 那几节，我很快就能说出”树适合静态库、图适合动态库、两者都要">
+<meta property="og:description" content="这篇不是读书笔记。《深入理解 AI Agent》第 3 章把 ANN 索引的结论给全了，我把其中四个细节单独拎出来实现了一遍：中垂面为什么等价于”离谁更近”、层号公式到底在抽什么、边数为什么不会膨胀、以及分层究竟贡献了多少。上一篇词有倒排，向量有图画的是轮廓，这一篇是轮廓下面的砖。最后还补了对照组：精确 KNN 为什么做不到一个都不漏。  我能背出结论，却答不上”节点里存了什么”读 RAG 那几">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://dongxuanmang.github.io/images/agent-book/ch3-ann-geometry.svg">
 <meta property="og:image" content="https://dongxuanmang.github.io/images/agent-book/ch3-ann-index.svg">
 <meta property="og:image" content="https://dongxuanmang.github.io/images/agent-book/ch3-hnsw-formula.gif">
+<meta property="og:image" content="https://dongxuanmang.github.io/images/agent-book/ch3-knn-curse.svg">
 <meta property="article:published_time" content="2026-10-06T13:30:00.000Z">
-<meta property="article:modified_time" content="2026-10-18T14:27:52.796Z">
+<meta property="article:modified_time" content="2026-10-18T15:46:47.107Z">
 <meta property="article:author" content="东玄蟒">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="HNSW">
@@ -111,7 +112,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      随机切一刀，掷硬币定层：ANN 索引四个细节的实测
+      随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板
     </h1>
   
 
@@ -120,7 +121,7 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>这篇不是读书笔记。<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">《深入理解 AI Agent》</a>第 3 章把 ANN 索引的结论给全了，我把其中四个细节单独拎出来实现了一遍：中垂面为什么等价于”离谁更近”、层号公式到底在抽什么、边数为什么不会膨胀、以及分层究竟贡献了多少。上一篇<a href="/2026/09/28/agent-book-ch3-rag-retrieval/">词有倒排，向量有图</a>画的是轮廓，这一篇是轮廓下面的砖。</p>
+<p>这篇不是读书笔记。<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">《深入理解 AI Agent》</a>第 3 章把 ANN 索引的结论给全了，我把其中四个细节单独拎出来实现了一遍：中垂面为什么等价于”离谁更近”、层号公式到底在抽什么、边数为什么不会膨胀、以及分层究竟贡献了多少。上一篇<a href="/2026/09/28/agent-book-ch3-rag-retrieval/">词有倒排，向量有图</a>画的是轮廓，这一篇是轮廓下面的砖。最后还补了对照组：精确 KNN 为什么做不到一个都不漏。</p>
 </blockquote>
 <h2 id="我能背出结论，却答不上”节点里存了什么”"><a href="#我能背出结论，却答不上”节点里存了什么”" class="headerlink" title="我能背出结论，却答不上”节点里存了什么”"></a>我能背出结论，却答不上”节点里存了什么”</h2><p>读 RAG 那几节，我很快就能说出”树适合静态库、图适合动态库、两者都要重排序”。这套话术成立，所以我也就没再往下问。</p>
 <p>直到有人问我：那棵树里的内部节点，到底存了什么？层号是怎么定的？</p>
@@ -226,6 +227,91 @@
 
 <p>只有下降阶段是”只留 1 个点”，但那是路由，不是结果。整条管道一路都是”一批”，因为早期就砍到 1 个，后面没有补救余地。</p>
 <p>而 HNSW 本身<strong>不做重排序</strong>。它交出的候选已经按余弦排好了，但那只是向量相似度这个廉价信号。重排序用的是另一个贵得多的模型，把 query 和 chunk 拼在一起送进交叉编码器，能做词级交互。</p>
+<h2 id="有没有一个都不漏的办法？"><a href="#有没有一个都不漏的办法？" class="headerlink" title="有没有一个都不漏的办法？"></a>有没有一个都不漏的办法？</h2><p>前面五节讲的全是 ANN。但”近似”这个词，只有在有精确对照时才成立。所以最后把对照组补上。</p>
+<p>先把两个词分清：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>是什么</th>
+<th>保证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>KNN</strong></td>
+<td><strong>问题</strong>：找离 q 最近的 k 个点</td>
+<td><strong>一个都不许漏</strong></td>
+</tr>
+<tr>
+<td><strong>ANN</strong></td>
+<td><strong>解法</strong>：快速找到”大概是最近的”</td>
+<td>允许漏，用召回率衡量</td>
+</tr>
+</tbody></table>
+<p>所以 ANN 不是 KNN 的替代品，是它的妥协解法。</p>
+<p>精确求解 KNN 有几条经典路线：暴力扫描、KD 树、Ball 树。我把它们都实现了一遍，第一件事是验证结果完全一致——这是 exact 的定义：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">暴力 vs KD 树 ：50/50 个查询的 top-10 完全一致</span><br><span class="line">暴力 vs Ball树：50/50 个查询的 top-10 完全一致</span><br></pre></td></tr></table></figure>
+
+<p>对照一下：前面测 HNSW，600 个点时 top-1 就只有 95% 命中率。</p>
+<p>后两种树的加速全部来自同一个东西——<strong>三角不等式剪枝</strong>。树结构想跳过一整棵子树，必须先证明”那棵子树里不可能有比当前第 k 名更近的点”：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d(q, x) ≥ d(q, c) - d(c, x) ≥ d(q, c) - r</span><br></pre></td></tr></table></figure>
+
+<p><code>c</code> 是子树包住的球的球心，<code>r</code> 是半径。q 到球心的距离减去半径，就是 q 到球面的最短可能距离——它若已经比当前第 k 名还远，整棵子树可以跳过。</p>
+<p>KD 树是它的特例：切分面对应一个”无限薄的超平面”，用「q 到切分面的垂直距离」代替 <code>d(q,c) - r</code>。两者其实是同一个条件的两种写法。</p>
+<p>那为什么不一直用精确方法？因为这条路有硬天花板。同样 N&#x3D;3000，扫描不同维度：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">维度   暴力       KD树      KD 剪枝率   Ball树     Ball 剪枝率</span><br><span class="line">2     360000   3019      99.2%      5292      98.5%</span><br><span class="line">4     360000   51237     85.8%      349800    2.8%</span><br><span class="line">8     360000   327609    9.0%       427904    -18.9%</span><br><span class="line">16    360000   360000    0.0%       427680    -18.8%</span><br><span class="line">32    360000   360000    0.0%       427920    -18.9%</span><br><span class="line">128   360000   360000    0.0%       426240    -18.4%</span><br><span class="line">768   360000   360000    0.0%       426960    -18.6%</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/agent-book/ch3-knn-curse.svg" alt="维数灾难：剪枝率在 16 维归零，而最近&#x2F;最远距离比一路爬到 0.89"></p>
+<p>柱子在 16 维掉到 0——索引白建了。橙色线一路爬到 0.89：当”最近的”和”最远的”几乎一样远，任何剪枝都无从下手。</p>
+<p>Ball 树的负数是真实结果，不是 bug：我的向量都归一化在单位球面上（真实 RAG 正是这个形态），超球之间重叠严重，本来就难剪；而它每访问一个内部节点要额外算两次球心距离，剪不掉东西时这个固定开销就显露出来了。</p>
+<p><strong>这是维数灾难，不是工程没优化好。</strong> KD 树、Ball 树、VP 树、cover tree，全都死在同一堵墙上。</p>
+<h2 id="那精确-KNN-还有用吗"><a href="#那精确-KNN-还有用吗" class="headerlink" title="那精确 KNN 还有用吗"></a>那精确 KNN 还有用吗</h2><p>有，而且不少场景必须用。</p>
+<p><strong>小库中库直接暴力算。</strong> 真实 RAG 里 faiss 的 <code>IndexFlatIP</code> 就是暴力扫描。几十万向量以内，很多系统根本不上 ANN——省掉一堆调参和召回率的不确定性。</p>
+<p><strong>需要 100% 召回。</strong> 法规、医疗、合规检索漏一条可能就是事故，95% 召回不可接受。</p>
+<p><strong>它是 ANN 的标尺。</strong> 调 <code>ef_search</code> 时拿什么判断召回够不够？拿精确 KNN 当真值。我前面测 HNSW 的 recall@10，基准就是暴力扫描。</p>
+<p><strong>重排序本身就是暴力 KNN。</strong> 粗召回 100 个候选后对这 100 个精确算距离，N 从百万变成了 100。</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐方案</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt; 10 万向量</td>
+<td>暴力 &#x2F; IndexFlat</td>
+<td>精确、零调参，速度够</td>
+</tr>
+<tr>
+<td>10 万 ~ 100 万</td>
+<td>ANN + 精确重排</td>
+<td>粗排省时间，精排保质量</td>
+</tr>
+<tr>
+<td>&gt; 100 万 或高 QPS</td>
+<td>ANN（HNSW&#x2F;IVF）</td>
+<td>只能近似，靠调 ef 控召回</td>
+</tr>
+<tr>
+<td>维度 &lt; 20</td>
+<td>KD 树</td>
+<td>剪枝有效，精确且快</td>
+</tr>
+<tr>
+<td>维度 128+</td>
+<td>ANN</td>
+<td>树结构已退化，别浪费</td>
+</tr>
+<tr>
+<td>调 ANN 参数时</td>
+<td>暴力当基准</td>
+<td>没有真值就不知道召回多少</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>最后一行最容易被忽略：<strong>没有精确基准，你说不出自己的近似算法到底漏了多少。</strong></p>
+</blockquote>
 <h2 id="如果你也在读这一章"><a href="#如果你也在读这一章" class="headerlink" title="如果你也在读这一章"></a>如果你也在读这一章</h2><p>三条建议，按我的踩坑顺序：</p>
 <p><strong>先把结论放下，去实现一个最小的。</strong> 我用两百行不到的 Python 把 ANNOY 和 HNSW 都写了一遍。写不出来的地方，就是没懂的地方——我第一次实现 <code>_search_layer</code> 时堆的符号写反了，查询直接返回余弦值 1.0655（归一化向量不可能超过 1），这种错误只有跑起来才会暴露。</p>
 <p><strong>任何一个”某设计一定更好”的说法，先在自己手上量一遍。</strong> 我为这句话付出了代价：第一版分层结论是错的。现在脚本里所有结论都从实测数字生成，就是为了防止叙述和数据打架。</p>
@@ -242,7 +328,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://dongxuanmang.github.io/2026/10/06/agent-book-ch3-ann-index/" data-id="cuidJiwXGne8f2z0FOtZIYw63" data-title="随机切一刀，掷硬币定层：ANN 索引四个细节的实测" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://dongxuanmang.github.io/2026/10/06/agent-book-ch3-ann-index/" data-id="cuidJ4qg6ycuqx97oU1_tA24Y" data-title="随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -316,7 +402,7 @@
       <ul>
         
           <li>
-            <a href="/2026/10/06/agent-book-ch3-ann-index/">随机切一刀，掷硬币定层：ANN 索引四个细节的实测</a>
+            <a href="/2026/10/06/agent-book-ch3-ann-index/">随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板</a>
           </li>
         
           <li>

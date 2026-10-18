@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="620" viewBox="0 0 1480 620">
+<rect width="1480" height="620" fill="#ffffff"/>
+<text x="110" y="46" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="24" font-weight="700" fill="#16162a">维数灾难：两条曲线在同一根横轴上交叉</text>
+<text x="110" y="76" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="14" fill="#6b6b80">N=3000 个归一化向量 · 左轴 = KD 树剪掉的扫描量 · 右轴 = 最近邻距离 / 最远点距离</text>
+<rect x="542.5581395348837" y="128" width="807.4418604651163" height="372" fill="#e8552d" fill-opacity="0.05"/>
+<text x="558.5581395348837" y="158" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="14" font-weight="600" fill="#b3441a">树结构失效区：剪枝率归零，建索引等于白建</text>
+<line x1="110" y1="500.0" x2="1350" y2="500.0" stroke="#eef0f6"/>
+<text x="96" y="505.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#1c7ed6" text-anchor="end">0%</text>
+<line x1="110" y1="407.0" x2="1350" y2="407.0" stroke="#eef0f6"/>
+<text x="96" y="412.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#1c7ed6" text-anchor="end">25%</text>
+<line x1="110" y1="314.0" x2="1350" y2="314.0" stroke="#eef0f6"/>
+<text x="96" y="319.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#1c7ed6" text-anchor="end">50%</text>
+<line x1="110" y1="221.0" x2="1350" y2="221.0" stroke="#eef0f6"/>
+<text x="96" y="226.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#1c7ed6" text-anchor="end">75%</text>
+<line x1="110" y1="128.0" x2="1350" y2="128.0" stroke="#eef0f6"/>
+<text x="96" y="133.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#1c7ed6" text-anchor="end">100%</text>
+<text x="1364" y="505.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.00</text>
+<text x="1364" y="412.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.25</text>
+<text x="1364" y="319.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.50</text>
+<text x="1364" y="226.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.75</text>
+<text x="1364" y="133.0" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">1.00</text>
+<text x="52" y="110" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="13" font-weight="600" fill="#1c7ed6">KD 剪枝率</text>
+<text x="1400" y="110" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="13" font-weight="600" fill="#e8552d">最近/最远</text>
+<line x1="110" y1="500" x2="1350" y2="500" stroke="#c9ccd8" stroke-width="2"/>
+<rect x="87.0" y="131.0" width="46" height="369.0" fill="#1c7ed6" fill-opacity="0.78" rx="4"/>
+<text x="110.0" y="121.0" font-family="Menlo,Consolas,monospace" font-size="13" fill="#1c7ed6" text-anchor="middle">99.2%</text>
+<text x="110.0" y="526" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#16162a" text-anchor="middle">2</text>
+<rect x="231.2" y="180.8" width="46" height="319.2" fill="#1c7ed6" fill-opacity="0.78" rx="4"/>
+<text x="254.2" y="170.8" font-family="Menlo,Consolas,monospace" font-size="13" fill="#1c7ed6" text-anchor="middle">85.8%</text>
+<text x="254.2" y="526" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#16162a" text-anchor="middle">4</text>
+<rect x="375.4" y="466.5" width="46" height="33.5" fill="#1c7ed6" fill-opacity="0.78" rx="4"/>
+<text x="398.4" y="456.5" font-family="Menlo,Consolas,monospace" font-size="13" fill="#1c7ed6" text-anchor="middle">9.0%</text>
+<text x="398.4" y="526" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#16162a" text-anchor="middle">8</text>
+<rect x="519.6" y="500.0" width="46" height="0.0" fill="#1c7ed6" fill-opacity="0.78" rx="4"/>
+<text x="542.6" y="490.0" font-family="Menlo,Consolas,monospace" font-size="13" fill="#1c7ed6" text-anchor="middle">0.0%</text>
+<text x="542.6" y="526" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#16162a" text-anchor="middle">16</text>
+<rect x="663.7" y="500.0" width="46" height="0.0" fill="#1c7ed6" fill-opacity="0.78" rx="4"/>
+<text x="686.7" y="490.0" font-family="Menlo,Consolas,monospace" font-size="13" fill="#1c7ed6" text-anchor="middle">0.0%</text>
+<text x="686.7" y="526" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#16162a" text-anchor="middle">32</text>
+<rect x="807.9" y="500.0" width="46" height="0.0" fill="#1c7ed6" fill-opacity="0.78" rx="4"/>
+<text x="830.9" y="490.0" font-family="Menlo,Consolas,monospace" font-size="13" fill="#1c7ed6" text-anchor="middle">0.0%</text>
+<text x="830.9" y="526" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#16162a" text-anchor="middle">64</text>
+<rect x="952.1" y="500.0" width="46" height="0.0" fill="#1c7ed6" fill-opacity="0.78" rx="4"/>
+<text x="975.1" y="490.0" font-family="Menlo,Consolas,monospace" font-size="13" fill="#1c7ed6" text-anchor="middle">0.0%</text>
+<text x="975.1" y="526" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#16162a" text-anchor="middle">128</text>
+<rect x="1324.8" y="500.0" width="46" height="0.0" fill="#1c7ed6" fill-opacity="0.78" rx="4"/>
+<text x="1347.8" y="490.0" font-family="Menlo,Consolas,monospace" font-size="13" fill="#1c7ed6" text-anchor="middle">0.0%</text>
+<text x="1347.8" y="526" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#16162a" text-anchor="middle">768</text>
+<polyline points="110.0,499.8 254.2,473.6 398.4,414.1 542.6,345.2 686.7,292.8 830.9,247.8 975.1,217.7 1347.8,170.4" fill="none" stroke="#e8552d" stroke-width="3.2" stroke-linejoin="round"/>
+<circle cx="110.0" cy="499.8" r="6" fill="#fff" stroke="#e8552d" stroke-width="3"/>
+<text x="122.0" y="487.8" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.00</text>
+<circle cx="254.2" cy="473.6" r="6" fill="#fff" stroke="#e8552d" stroke-width="3"/>
+<text x="266.2" y="461.6" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.07</text>
+<circle cx="398.4" cy="414.1" r="6" fill="#fff" stroke="#e8552d" stroke-width="3"/>
+<text x="410.4" y="402.1" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.23</text>
+<circle cx="542.6" cy="345.2" r="6" fill="#fff" stroke="#e8552d" stroke-width="3"/>
+<text x="554.6" y="333.2" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.42</text>
+<circle cx="686.7" cy="292.8" r="6" fill="#fff" stroke="#e8552d" stroke-width="3"/>
+<text x="698.7" y="280.8" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.56</text>
+<circle cx="830.9" cy="247.8" r="6" fill="#fff" stroke="#e8552d" stroke-width="3"/>
+<text x="842.9" y="235.8" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.68</text>
+<circle cx="975.1" cy="217.7" r="6" fill="#fff" stroke="#e8552d" stroke-width="3"/>
+<text x="987.1" y="205.7" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.76</text>
+<circle cx="1347.8" cy="170.4" r="6" fill="#fff" stroke="#e8552d" stroke-width="3"/>
+<text x="1359.8" y="158.4" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#e8552d">0.89</text>
+<line x1="542.6" y1="128" x2="542.6" y2="500" stroke="#b3441a" stroke-width="2" stroke-dasharray="7,5"/>
+<text x="110" y="562" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="14" fill="#6b6b80">横轴：向量维度（对数刻度）</text>
+<text x="110" y="590" font-family="PingFang SC,Hiragino Sans GB,Helvetica" font-size="15" fill="#16162a">柱子在 16 维掉到 0，而橙色线一路爬到 0.89 —— 当「最近的」和「最远的」几乎一样远，任何剪枝都无从下手。</text>
+</svg>
