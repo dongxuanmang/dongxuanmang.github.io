@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Agent 精读（十三）：为什么最通用的 Agent，内核偏偏是写代码 | 东玄蟒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第十三篇，进入第 5 章「Coding Agent 与通用 Agent」的前半部分。读的是李博杰的开源书第 5 章从「Coding Agent」到「Coding Agent 的安全」——通用 Agent 的内核、七个工具、五种改文件方案，以及一套比提示词更硬的 Harness。后半部分「代码：通用 Agent 的元能力」六个方向还没读完，读完出下篇。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 精读（十三）：为什么最通用的 Agent，内核偏偏是写代码">
+<meta property="og:url" content="https://dongxuanmang.github.io/2026/10/26/agent-book-ch5-coding-agent-core/index.html">
+<meta property="og:site_name" content="东玄蟒">
+<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第十三篇，进入第 5 章「Coding Agent 与通用 Agent」的前半部分。读的是李博杰的开源书第 5 章从「Coding Agent」到「Coding Agent 的安全」——通用 Agent 的内核、七个工具、五种改文件方案，以及一套比提示词更硬的 Harness。后半部分「代码：通用 Agent 的元能力」六个方向还没读完，读完出下篇。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-26T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-26T13:45:52.870Z">
+<meta property="article:author" content="东玄蟒">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Coding Agent">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="东玄蟒" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<!-- hexo injector head_end start --><script src="/js/mermaid.min.js"></script><script>(function () {  function renderMermaid() {    if (!document.querySelector(".mermaid") || typeof mermaid === "undefined") return;    mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });  }  if (document.readyState === "loading") {    document.addEventListener("DOMContentLoaded", renderMermaid);  } else {    renderMermaid();  }})();</script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">东玄蟒</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">乱花渐欲迷人眼，浅草才能没马蹄</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/learning/">学习路径</a>
+        
+          <a class="main-nav-link" href="/agent-book/">Agent 精读</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/dongxuanmang"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://dongxuanmang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-agent-book-ch5-coding-agent-core" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/10/26/agent-book-ch5-coding-agent-core/" class="article-date">
+  <time class="dt-published" datetime="2026-10-26T14:00:00.000Z" itemprop="datePublished">2026-10-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Agent 精读（十三）：为什么最通用的 Agent，内核偏偏是写代码
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第十三篇，进入第 5 章「Coding Agent 与通用 Agent」的前半部分。读的是<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book">李博杰的开源书</a>第 5 章从「Coding Agent」到「Coding Agent 的安全」——通用 Agent 的内核、七个工具、五种改文件方案，以及一套比提示词更硬的 Harness。后半部分「代码：通用 Agent 的元能力」六个方向还没读完，读完出下篇。</p>
+</blockquote>
+<p>Manus 刚出来的时候，我以为它“通用”靠的是能上网、能点浏览器、能自己调研。读完第 5 章，书里给的答案更收敛：这些都是外壳，内核是一个 Coding Agent——一把 shell、七个基础工具、一个文件夹。</p>
+<p>听着像暴论。但书里的推理很朴素：<strong>凡是高效的内容生成，最后几乎都落到代码上</strong>。</p>
+<h2 id="三类-Agent，三种动作空间"><a href="#三类-Agent，三种动作空间" class="headerlink" title="三类 Agent，三种动作空间"></a>三类 Agent，三种动作空间</h2><p>第 1 章说，Manus 出现之前，生产级 Agent 大多沿着三条相对独立的路线发展。换成“眼睛”和“手脚”的说法，一眼就能看出区别：</p>
+<table>
+<thead>
+<tr>
+<th>路线</th>
+<th>眼睛（观察空间）</th>
+<th>手脚（动作空间）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Deep Research</td>
+<td>搜索结果、网页内容、论文摘要与引用</td>
+<td>发查询、读网页、生成报告</td>
+</tr>
+<tr>
+<td>Coding</td>
+<td>需求、代码片段、目录列表、终端输出</td>
+<td>搜代码、读写文件、执行命令</td>
+</tr>
+<tr>
+<td>Computer Use</td>
+<td>屏幕截图、DOM 或无障碍树</td>
+<td>点击、输入、滚动、截图</td>
+</tr>
+</tbody></table>
+<p>三条路线的动作空间都是开放的——这是 Agent 和“只能从固定按钮里选”的传统程序的分水岭。Manus 的突破不是靠换一个更强的模型，而是把三者的观察空间和动作空间取了并集：虚拟浏览器扩大观察，文件系统、代码执行和命令行扩大动作。第 5 章接着追问：并集之后，为什么内核是 Coding，而不是另外两个？</p>
+<div class="mermaid">graph LR
+    A["Deep Research<br/>读网页 · 写报告"] --> C["Coding Agent 内核<br/>+ 文件系统"]
+    B["Computer Use<br/>截图 · 点击"] --> C
+    D["Coding<br/>改文件 · 跑命令"] --> C
+    C --> E["七个工具<br/>沙盒 · shell · 读写改 · glob · grep"]
+    E --> F["Harness<br/>测试 · Linter · Git"]</div>
+
+<p>理由一，几乎所有高效的产物最终都是代码。PPT、Word 本质上是 OOXML；PDF 报告可以由 Markdown、HTML 或 LaTeX 生成；数据分析和图表是 Python 脚本；连 GUI 里成功的一次操作序列，也可以被固化成可复用的代码。Deep Research 的搜索和信息综合，同样能落到 Web 请求与解析代码上。理由二，Computer Use 虽然最通用——什么界面都能点——但成本、延迟和稳定性都远不如直接调代码或 API。所以代码生成是效率最高、成本最低、可复用性最强的基座。</p>
+<p>还有一层是文件系统。书里把它称作 Agent 的“中枢”：长期记忆存在 <code>MEMORY.md</code> 和按日期归档的 Markdown 日志里，产物写进文件，中间结果也落在文件里。选 Markdown 而不是向量数据库，乍看反直觉，其实很实用——用户可以直接打开文件阅读和修改记忆，Markdown 天然保留时间顺序，Git 还能版本控制和回滚。</p>
+<p>这里要修正我口述时的一个判断。我口述时给三类分了个“危险程度”，说 Deep Research 危害性低。书里没有这么排。更准确的说法是看动作空间：Deep Research 以读为主，直接破坏性确实低；但它把不受信任的网页内容读进了上下文，恰恰是提示注入最顺手的入口。风险由“动作空间 + 信任边界”共同决定，不由品类决定。书里也专门划了边界：以开放任务为目标的通用 Agent 才以 Coding 为内核；垂直客服这类 Agent 仍以固定业务流程、领域工具和对话策略为核心，代码只是工具箱里的一件。</p>
+<h2 id="七个工具，五类动作"><a href="#七个工具，五类动作" class="headerlink" title="七个工具，五类动作"></a>七个工具，五类动作</h2><p>书里给了一个极简工具箱，七个工具：</p>
+<ol>
+<li>Code Interpreter：在隔离沙盒里执行 Python</li>
+<li>Bash：在终端里执行命令</li>
+<li>读文件：读代码、配置、文档、日志</li>
+<li>写文件：创建新文件，或完全重写</li>
+<li>编辑文件：对现有文件做局部修改</li>
+<li>Glob：按模式找文件名，比如 <code>**/*.py</code></li>
+<li>Grep：在文件内容里搜文本</li>
+</ol>
+<p>七个工具覆盖五类动作：浏览目录、读、改、跑命令、找模式。</p>
+<p>我口述的时候把它们归成了三类——执行（bash）、文件（读、写、改）、搜索（glob + grep）——正好漏掉了 Code Interpreter。顺便记一句容易混的：glob 找的是文件名，grep 找的是文件内容，这两个在脑子里总是挨着，作用完全不一样。</p>
+<p>有意思的是，书里并不认为七个是必须的。OpenAI Codex 只用 shell + <code>apply_patch</code> 两个工具：shell 负责浏览、查找、读取，<code>apply_patch</code> 负责改文件。书里说“七个”只是为了讲清 Coding Agent 需要哪些基本能力。工具数量不是重点，动作类别覆盖全了才是。</p>
+<p>再往下看一层，工具少不代表能力弱。一个最小任务：“把项目里的 TODO 整理成清单”——用 Grep 搜出三行 TODO，再用 Write 写一个 <code>TODO_LIST.md</code>，两个工具就够了。七个工具组合起来，已经能做很杂的任务。</p>
+<h2 id="改文件：难的不是改，是“说清楚改哪里”"><a href="#改文件：难的不是改，是“说清楚改哪里”" class="headerlink" title="改文件：难的不是改，是“说清楚改哪里”"></a>改文件：难的不是改，是“说清楚改哪里”</h2><p>七个工具里，最麻烦的是编辑文件。书里一句话点得很准：难点不在操作本身，而在于如何让 LLM 高效又可靠地告诉系统“改哪里、怎么改”。</p>
+<p>自然语言说“把这段改一下”很容易，机器要执行，就得精确到某个位置、某段文本。为了在“人说话”和“机器执行”之间搭桥，业界试过五种方案。</p>
+<p><strong>一、差异描述 + Apply Model</strong>。模型不直接改文件，而是生成一份变更描述——类似 git diff 的差异文本，或者带“此处保持不变”省略标记的代码骨架。这份描述交给一个更小、更快的“应用模型”去合并。分工很漂亮：大模型管代码逻辑，小模型管文本操作。但合并环节很脆：变更描述和实际代码有微小出入时，要判断是不是同一处；文件里有多段相似代码时，可能合并到错的地方。Cursor 是这条路线的代表，后来基础模型变强，也不再用了。</p>
+<p><strong>二、旧字符串 → 新字符串</strong>。模型给出要被替换的原文和新文本，框架做字符串查找替换。优势是可预测、透明：原文存在且唯一就成功，否则失败，没有模棱两可。代价是删大段代码时必须完整输出所有原文，一个字符不对就匹配失败；同一段代码出现多次时，还得提供更长的上下文来消歧。Claude Code、Codex 和今天的 Cursor 都用这个方案。</p>
+<p><strong>三、行号定位</strong>。模型说“删除第 X 到 Y 行，插入新内容”。行号精确无歧义，删大段只给两个数字。但每次编辑后行号都会变化，一次思考输出多处编辑时，要约定都用初始行号来定位，否则越改越乱。</p>
+<p><strong>四、类 Vim 编辑命令</strong>。复制、剪切、粘贴，对“把函数从一处搬到另一处”很高效。但命令语法的学习负担大，强模型能玩转，小模型错误率明显上升。更深的洞察是使用者假设：Vim 是为人类设计的——人需要不断看到当前状态，再规划下一步的小操作；而模型的工作模式是长思考之后，批量做复杂的操作。</p>
+<p><strong>五、字符串首尾匹配</strong>。模型只给要删内容的开头几行和结尾几行，中间省略；框架用这对首尾去定位，唯一就准确。这是前几个方案的折中：删大段不必贴全文，又保留了内容匹配的可靠性。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>怎么定位</th>
+<th>删大段代码的成本</th>
+<th>编辑后行号漂移</th>
+<th>代表</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>差异描述 + Apply Model</td>
+<td>差异文本 &#x2F; 骨架 + 小模型合并</td>
+<td>中，diff 仍要列出被删行</td>
+<td>不受影响</td>
+<td>Cursor（早期）</td>
+</tr>
+<tr>
+<td>旧字符串 → 新字符串</td>
+<td>完整原文精确匹配</td>
+<td>高，要逐字符复现原文</td>
+<td>不受影响</td>
+<td>Claude Code、Codex、Cursor</td>
+</tr>
+<tr>
+<td>行号定位</td>
+<td>第 X 到 Y 行</td>
+<td>低，两个数字</td>
+<td>会漂移，需用初始行号</td>
+<td>部分工具</td>
+</tr>
+<tr>
+<td>类 Vim 命令</td>
+<td>复制 &#x2F; 剪切 &#x2F; 粘贴</td>
+<td>低</td>
+<td>会漂移</td>
+<td>强模型可用</td>
+</tr>
+<tr>
+<td>首尾匹配</td>
+<td>头几行 + 尾几行锚点</td>
+<td>低，只给边界</td>
+<td>不受影响</td>
+<td>折中方案</td>
+</tr>
+</tbody></table>
+<p>这里还有三处是我口述时说岔了，顺手记下来：</p>
+<ul>
+<li>我最初只数出三种方案（diff、字符串替换、行号），漏了 Vim 命令和首尾匹配。首尾匹配恰恰是给“删大段要贴全文”开的药方，漏了它，这条演进线就断了。</li>
+<li>我说“删除文件会有大量文本输入”——准确说是删大段代码。删文件一个 <code>rm</code> 就完了。而且“大量文本”也不是字符串替换独有：diff 对删掉的行同样要逐行列出来，除非用省略标记的骨架。字符串替换真正独有的痛点是：必须逐字符复现原文，还要保证唯一。</li>
+<li>我说“行号在大文件里可能有问题”——书里讲的是行号会随每次编辑漂移，跟文件大小无关。大文件的问题反而在上下文预算，所以读文件工具要支持按行号范围读，并且每行带行号前缀；这样模型才能准确引用“第 42 行”。</li>
+</ul>
+<p>五种方案看下来，没有纯赢家。它们在“定位的可靠性”和“表达的成本”之间来回换位置。更有意思的是，方案的流行跟着模型能力走：模型变强之后，专门做合并的 Apply Model 这层退休了；而“贴原文”这种最笨的办法，因为可预测、透明，反而回到主流。工具设计不是一锤子买卖，是跟模型能力此消彼长。</p>
+<h2 id="它成熟，不是因为模型强"><a href="#它成熟，不是因为模型强" class="headerlink" title="它成熟，不是因为模型强"></a>它成熟，不是因为模型强</h2><p>这是本章最反直觉的一节。Coding Agent 是当前成熟度最高的 Agent 类型，但原因不是代码生成模型特别强——是测试套件、Linter、类型检查、Git 这些软件工程攒了几十年的基础设施，天然就是一套 Harness。代码编写是所有 Agent 任务里可验证性最高的一类。</p>
+<p>书里用两个维度给任务分了个四象限：目标清不清晰、结果能不能自动验证。</p>
+<ul>
+<li>目标明确 + 自动验证：最佳区域，比如修复一个有测试用例的 bug</li>
+<li>目标明确 + 人工验证：吞吐量被人的审查速度卡住，比如重构</li>
+<li>目标模糊 + 自动验证：高效地往错误方向跑，比如用 linter 去优化“代码质量”</li>
+<li>两个都没有：难以启动，比如“让 UI 更好看”</li>
+</ul>
+<p>Harness 的目标，就是把尽可能多的任务推向左上角。这也解释了为什么 Coding Agent 的成熟度最高——它的验收、反馈、回退都有现成的基础设施，不用从零搭。</p>
+<p>落到工程上，是四件事：</p>
+<ul>
+<li>完成标准从“代码写完”改成“测试通过”。最常见的偷懒，就是写完不跑测试就报告任务完成。</li>
+<li>约束优先于指导。Linter 规则、类型约束、CI 检查是“做不了”，系统提示词里的“请遵循”只是“建议别做”。</li>
+<li>反馈越快、越结构化越好。文件一写完就跑 linter，把错误作为工具返回值带回去；错误信息越具体，模型自我纠正的成功率越高。</li>
+<li>回退要可靠。Git 分支、沙盒、快照，让 Agent 在安全网里大胆试错。</li>
+</ul>
+<p>书里还给了一串具体机制：并行工具调用、流式执行与级联中止（一个调用失败只影响同一批里依赖它的调用，不连坐整个任务）、持久终端会话（<code>cd</code> 和虚拟环境不会每条命令丢一次）、以及把当前工作目录、git 分支、最近提交和变更概览作为状态栏，每轮追加进上下文。全是工程手段，没有一条靠提示词“求”模型做对。</p>
+<p>故障恢复那节是同一个思路：故障按 API、工具、上下文、控制流分四层；可重试和不可重试要分开；恢复分静默重试、降级接续、暴露给用户三级；每条恢复路径都要有熔断上限——上下文压缩连续失败三次就放弃，这个阈值来自真实会话统计，不是拍脑袋。一句话，错误处理的边界不是单次请求，而是整个恢复循环。</p>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><p>第 5 章后半讲“代码：通用 Agent 的元能力”，六个方向：代码作为思考工具、业务规则约束、多媒体生成、系统适配器、生成式 UI、Agent 自举。读完出下篇。</p>
+<p>留一个问题先挂着：Coding Agent 有测试、类型系统、Git 当裁判，那写作、调研、做图这些没有测试套件的任务，Harness 从哪来？后半章的“代码作为验证器”是一条线索，更完整的答案在后面的评估与持续进化章节。</p>
+<ul>
+<li>实验债：官方 Starter 实验 <code>coding-agent</code> 还没跑；本章实验 5-1 到 5-16，挑两三个补</li>
+<li><a href="/agent-book/">专题页</a>第 5 章状态同步更新</li>
+</ul>
+<h2 id="参考来源"><a href="#参考来源" class="headerlink" title="参考来源"></a>参考来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter5.md">《深入理解 AI Agent：设计原理与工程实践》第 5 章「Coding Agent 与通用 Agent」</a>，李博杰著，GitHub 开源——本篇覆盖前半部分：Coding Agent 的整体流程、Harness 实践、故障恢复、实现技巧、搜索与文件编辑工具、安全</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter1.md">第 1 章「AI Agent 入门」</a>——三类 Agent 路线，以及观察空间与动作空间</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter4.md">第 4 章「工具」</a>——五类通用工具分类，以及与专用工具的边界</li>
+<li>官方<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/docs/zh-CN/LEARNING.md">学习建议</a>——第 5 章 Starter 实验入口 <code>coding-agent</code></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/10/26/agent-book-ch5-coding-agent-core/" data-id="cuid2rCC2U9fl3SMwDvVVJ8B1" data-title="Agent 精读（十三）：为什么最通用的 Agent，内核偏偏是写代码" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Coding-Agent/" rel="tag">Coding Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/10/18/sunyuchen-alan-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">我把孙宇晨那 4 小时拆成清单：能抄的 6 条，和别抄的 5 条</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99%E7%AC%94%E8%AE%B0/">建站笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0/">精读笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Claude-Code/" rel="tag">Claude Code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-Agent/" rel="tag">Coding Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HNSW/" rel="tag">HNSW</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JXA/" rel="tag">JXA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RAG/" rel="tag">RAG</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sidecar/" rel="tag">Sidecar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/" rel="tag">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%81%A5%E5%BA%B7%E7%AE%A1%E7%90%86/" rel="tag">健康管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%99%E5%AE%87%E6%99%A8/" rel="tag">孙宇晨</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" rel="tag">思考题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%92%E6%9F%A5/" rel="tag">排查</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A3%80%E7%B4%A2%E7%AE%97%E6%B3%95/" rel="tag">检索算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" rel="tag">用户记忆</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag">知识图谱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%81%E6%9C%89API/" rel="tag">私有API</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%96%84%E8%82%8C%E7%90%86%E8%AE%BA/" rel="tag">薄肌理论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A4%E7%9F%A5%E5%8D%87%E7%BA%A7/" rel="tag">认知升级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AC%E5%9E%8B/" rel="tag">转型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/Claude-Code/" style="font-size: 10px;">Claude Code</a> <a href="/tags/Coding-Agent/" style="font-size: 10px;">Coding Agent</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/HNSW/" style="font-size: 10px;">HNSW</a> <a href="/tags/Harness/" style="font-size: 12.5px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/JXA/" style="font-size: 10px;">JXA</a> <a href="/tags/KV-Cache/" style="font-size: 12.5px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RAG/" style="font-size: 12.5px;">RAG</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/Sidecar/" style="font-size: 10px;">Sidecar</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 15px;">上下文工程</a> <a href="/tags/%E5%81%A5%E5%BA%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">健康管理</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%AD%99%E5%AE%87%E6%99%A8/" style="font-size: 10px;">孙宇晨</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" style="font-size: 10px;">思考题</a> <a href="/tags/%E6%8E%92%E6%9F%A5/" style="font-size: 10px;">排查</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 12.5px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A3%80%E7%B4%A2%E7%AE%97%E6%B3%95/" style="font-size: 10px;">检索算法</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" style="font-size: 10px;">用户记忆</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" style="font-size: 10px;">知识图谱</a> <a href="/tags/%E7%A7%81%E6%9C%89API/" style="font-size: 10px;">私有API</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">系统设计</a> <a href="/tags/%E8%96%84%E8%82%8C%E7%90%86%E8%AE%BA/" style="font-size: 10px;">薄肌理论</a> <a href="/tags/%E8%AE%A4%E7%9F%A5%E5%8D%87%E7%BA%A7/" style="font-size: 12.5px;">认知升级</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 17.5px;">读书笔记</a> <a href="/tags/%E8%BD%AC%E5%9E%8B/" style="font-size: 10px;">转型</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">九月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/10/26/agent-book-ch5-coding-agent-core/">Agent 精读（十三）：为什么最通用的 Agent，内核偏偏是写代码</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/18/sunyuchen-alan-2/">我把孙宇晨那 4 小时拆成清单：能抄的 6 条，和别抄的 5 条</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/18/sunyuchen-alan-1/">孙宇晨 4 小时对谈精编：AI 时代什么都变便宜了，只有寿命在升值</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/06/agent-book-ch3-ann-index/">随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/05/sidecar-ipad-second-screen/">iPad 插着数据线，Mac 却说&#34;附近没有任何显示器&#34;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 东玄蟒<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/learning/" class="mobile-nav-link">学习路径</a>
+  
+    <a href="/agent-book/" class="mobile-nav-link">Agent 精读</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
