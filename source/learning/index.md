@@ -48,7 +48,7 @@ graph LR
 2. 精读上面这本开源书：按官方难度分级推进（🟢 1–2 章 → 🔵 3–4 章 → 🟣 5–6 章 → 🟡 7 章 → 🔴 8 章 → 🟠 9–10 章），每章输出自己的理解
 3. 自己造：用 agent 重构自己的工作流，把过程写成文章
 
-**笔记**：精读专题已开 → [/agent-book/](/agent-book/)；另外收了一份 Claude Code 作者 Boris Cherny 的实操方法论：[prompt 写得再漂亮，不如给 AI 一双眼睛](/2026/10/05/claude-code-28min-boris-cherny/)
+**笔记**：精读专题已开 → [/agent-book/](/agent-book/)；另外收了一份 Claude Code 作者 Boris Cherny 的实操方法论：[prompt 写得再漂亮，不如给 AI 一双眼睛](/2026/10/05/claude-code-28min-boris-cherny/)；还有一篇对 DeepSeek 开源的 Super-agent 架构拆解：[一个人只能同时盯 5 个会话，于是 Agent 被拆成了两层](/2026/11/01/dsh-superagent-attention-bottleneck/)
 
 ## 🎬 AI 短视频（支线）
 
@@ -78,6 +78,7 @@ Hive 引擎与大数据链路 → 大厂后端的高并发与稳定性。这一�
 
 > 每一步都算数。倒序记录，最新在上。
 
+- **2026-11-01** 架构拆解（非读书笔记）：[一个人只能同时盯 5 个会话，于是 Agent 被拆成了两层](/2026/11/01/dsh-superagent-attention-bottleneck/)——DeepSeek 开源 Super-agent 的拆解：为什么"多任务上限取决于人的注意力"、双层 Router/Worker 与 Thread 多对多订阅（上下文隔离的代价是互相失明）、快慢两级过滤与客服系统分流之间那层转换（授权闸门 + 批处理）、投机执行的"沉默权"、存算分离与看门狗，最后和 Anthropic Claude Tag 做两种路线对照
 - **2026-10-27** 第 4 章补读「多模态感知」：[给 Agent 接多模态：看原图、转文字、叫外援](/2026/10/27/agent-book-ch4-multimodal-paths/)——原生/提取为文本/工具化三条路，各自吃多少上下文、丢什么信息，以及按内容类型怎么选；第 4 章其余小节待读
 - **2026-10-26** 第 5 章前半读完：[为什么最通用的 Agent，内核偏偏是写代码](/2026/10/26/agent-book-ch5-coding-agent-core/)——三类 Agent 的动作空间、七个基础工具、五种改文件方案的取舍，以及为什么 Coding Agent 的成熟度靠的是测试/Linter/Git 这套 Harness；后半「代码是元能力」待读
 - **2026-10-06** ANN 算法补充（非读书笔记）：[随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板](/2026/10/06/agent-book-ch3-ann-index/)——读完第 3 章 RAG 那两节之后，把书中四个 ANN 细节单独实现并实测：随机超平面其实只做中垂面二分（与余弦无关）、稀疏与稠密是两根正交的轴、层号公式 `floor(-ln u × mL)` 等价于掷硬币、一次把自己结论推翻的分层对照实验，以及精确 KNN 为什么在 16 维后剪枝归零（维数灾难）
