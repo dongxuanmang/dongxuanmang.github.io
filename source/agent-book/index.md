@@ -206,7 +206,7 @@ graph LR
 | 3 | 用户记忆和知识库：记忆策略、RAG、知识图谱 | 🔵 | 🔄 [记住一个用户，四种存法，和一次跳出文本](/2026/09/24/agent-book-ch3-memory-formats/) · [词有倒排，向量有图：RAG 检索的两条腿](/2026/09/28/agent-book-ch3-rag-retrieval/) · [第 3 章知识图谱（持续更新）](/2026/09/24/agent-book-ch3-knowledge-map/)（结构化索引往后待读）<br/>🔧 算法补充（非读书笔记）：[随机切一刀，掷硬币定层：ANN 索引四个细节，与精确 KNN 的天花板](/2026/10/06/agent-book-ch3-ann-index/) |
 | 4 | 工具：MCP 协议、五类工具、主动工具发现 | 🔵 | 🔄 [给 Agent 接多模态：看原图、转文字、叫外援](/2026/10/27/agent-book-ch4-multimodal-paths/)（先读「多模态感知」一节）；工具分类、MCP、工具发现待读 |
 | 5 | Coding Agent 与通用 Agent：代码是创造工具的元能力 | 🟣 | 🔄 [为什么最通用的 Agent，内核偏偏是写代码](/2026/10/26/agent-book-ch5-coding-agent-core/)（前半：Coding Agent 与 Harness）；后半「代码是元能力」待读 |
-| 6 | 交互：语音、Computer Use、机器人（模态 × 时序） | 🟣 | 📋 未开始 |
+| 6 | 交互：语音、Computer Use、机器人（模态 × 时序） | 🟣 | 🔄 [世界不会等你回完话，Agent 也不该只有一个会话](/2026/11/03/agent-book-ch6-observation-action-space/)（异步与事件驱动、语音、本章小结已读；Computer Use 与机器人两节待补） |
 
 ### 提升篇（第 7–10 章）
 
