@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Agent 精读（十五）：世界不会等你回完话，Agent 也不该只有一个会话 | 东玄蟒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="这是《深入理解 AI Agent》精读专题的第十五篇，进入第 6 章「交互：观察与动作空间的扩展」。异步与事件驱动、语音两节精读完，Computer Use 与机器人两节先扫了骨架、留待补读。读的时候手上正好也有两份 2026 年的材料——DeepSeek 十月底开源的 Super-agent 架构，和 Anthropic 的 Claude Tag——放一起对完之后，我发现它们在说同一件事，只是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 精读（十五）：世界不会等你回完话，Agent 也不该只有一个会话">
+<meta property="og:url" content="https://dongxuanmang.github.io/2026/11/03/agent-book-ch6-observation-action-space/index.html">
+<meta property="og:site_name" content="东玄蟒">
+<meta property="og:description" content="这是《深入理解 AI Agent》精读专题的第十五篇，进入第 6 章「交互：观察与动作空间的扩展」。异步与事件驱动、语音两节精读完，Computer Use 与机器人两节先扫了骨架、留待补读。读的时候手上正好也有两份 2026 年的材料——DeepSeek 十月底开源的 Super-agent 架构，和 Anthropic 的 Claude Tag——放一起对完之后，我发现它们在说同一件事，只是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-03T13:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-03T00:46:09.240Z">
+<meta property="article:author" content="东玄蟒">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="事件驱动">
+<meta property="article:tag" content="系统设计">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="东玄蟒" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<!-- hexo injector head_end start --><script src="/js/mermaid.min.js"></script><script>(function () {  function renderMermaid() {    if (!document.querySelector(".mermaid") || typeof mermaid === "undefined") return;    mermaid.initialize({ startOnLoad: true, securityLevel: "loose" });  }  if (document.readyState === "loading") {    document.addEventListener("DOMContentLoaded", renderMermaid);  } else {    renderMermaid();  }})();</script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">东玄蟒</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">乱花渐欲迷人眼，浅草才能没马蹄</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/learning/">学习路径</a>
+        
+          <a class="main-nav-link" href="/agent-book/">Agent 精读</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/dongxuanmang"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://dongxuanmang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-agent-book-ch6-observation-action-space" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/11/03/agent-book-ch6-observation-action-space/" class="article-date">
+  <time class="dt-published" datetime="2026-11-03T13:30:00.000Z" itemprop="datePublished">2026-11-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Agent 精读（十五）：世界不会等你回完话，Agent 也不该只有一个会话
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>这是<a href="/agent-book/">《深入理解 AI Agent》精读专题</a>的第十五篇，进入第 6 章「交互：观察与动作空间的扩展」。异步与事件驱动、语音两节精读完，Computer Use 与机器人两节先扫了骨架、留待补读。读的时候手上正好也有两份 2026 年的材料——DeepSeek 十月底开源的 Super-agent 架构，和 Anthropic 的 Claude Tag——放一起对完之后，我发现它们在说同一件事，只是尺度不同。</p>
+</blockquote>
+<h2 id="你有没有遇到过这种时候"><a href="#你有没有遇到过这种时候" class="headerlink" title="你有没有遇到过这种时候"></a>你有没有遇到过这种时候</h2><p>Agent 正在跑一个二十分钟的重构。跑到第七分钟，你发现方案选错了。</p>
+<p>你只能等。或者更常见的一种：它停下来问你”要继续吗”，而你正在开会；等你看手机的时候，世界已经变了。</p>
+<p>第 6 章把这个别扭说得比我想的狠：</p>
+<blockquote>
+<p>在前五章的内容中，Agent 与世界的交互是轮流的。用户说完一句，Agent 想一段、调用几个工具，再回一句；在它思考的这段时间里，世界被默认为静止的。这个前提如此自然，以至于很少被当成一个假设写出来。</p>
+</blockquote>
+<h2 id="这一章把交互拆成两根轴"><a href="#这一章把交互拆成两根轴" class="headerlink" title="这一章把交互拆成两根轴"></a>这一章把交互拆成两根轴</h2><p>前五章扩展的是观察空间和动作空间的内容（上下文、记忆、工具、代码）。这一章扩展的是它们的模态和时机：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>观察空间的扩展</th>
+<th>动作空间的扩展</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>内容（第 2–5 章）</td>
+<td>上下文工程、记忆与知识库</td>
+<td>工具、代码生成</td>
+</tr>
+<tr>
+<td>模态（本章）</td>
+<td>语音、屏幕、物理传感器</td>
+<td>说话、点击、关节运动</td>
+</tr>
+<tr>
+<td>时机（本章）</td>
+<td>世界主动推送、连续流</td>
+<td>跨回合、可打断、可抢占</td>
+</tr>
+</tbody></table>
+<p>模态这条轴好理解，语音、Computer Use、机器人三节讲的就是它。真正让我停下来的是时机这条轴——因为它把四个相差六个数量级的场景，压到了同一张表上：</p>
+<p>秒到天是异步与事件驱动；10 毫秒到 1 秒是语音；亚秒到秒是 Computer Use；毫秒是机器人。</p>
+<p>这四个场景看起来毫无关系，但书里的结论是它们共享同一批系统原语。</p>
+<h2 id="时机：观察从”我去取”变成”世界推给我”"><a href="#时机：观察从”我去取”变成”世界推给我”" class="headerlink" title="时机：观察从”我去取”变成”世界推给我”"></a>时机：观察从”我去取”变成”世界推给我”</h2><p>异步那一节的开头有一句我很喜欢：回合制是模型与接口的一种交互约定，不是环境的性质。</p>
+<p>这句话解释了为什么”Agent 主动轮询”这件事从工程上就是错的——不是它慢，是它把接口的假设当成了世界的性质。真实环境不会等模型反应：邮件在它思考时到达，用户在它说到一半时插话，页面在两次截图之间已经变了样。</p>
+<p>要接住这些，第一步是把输入统一建模成结构化事件：来源（谁）、渠道（什么方式）、内容（什么）、上下文（跟什么有关）。书里举的例子里，一封客户退款邮件会变成带 <code>priority</code>、<code>customer_tier</code>、<code>related_orders</code> 的 JSON。</p>
+<p>第二步才是处理策略。书里按紧急度分三种：</p>
+<ul>
+<li>取消式：为紧急事件提前制造一个安全点，立刻停下当前步骤、清空队列、把新事件和紧急事件一起追加进轨迹，重新调模型。</li>
+<li>队列式：常规事件进队列，等当前工具返回、轨迹出现一个自然安全点时再一起消费——顺带就实现了批量处理。</li>
+<li>并行式：与主任务无关的轻量查询，另起一个推理会话，结果追加回来并标记”与主任务并行”。</li>
+</ul>
+<p>然后是我觉得这一节最实用的一句：硬编码的规则判不准语义，书里建议用轻量的分类 LLM 做事件路由器。</p>
+<h2 id="五个原语"><a href="#五个原语" class="headerlink" title="五个原语"></a>五个原语</h2><p>本章小结把四类交互拍平，收了五个词：唤醒、安全点、取消、抢占、快慢分离。</p>
+<p>前四个是工程里非常具体的东西，值得各说一句。</p>
+<p>唤醒是”世界能叫醒 Agent”。书里列了三类事件触发工具：定时器（一次性和循环）、后台任务监控（不想让 Agent 盯着命令行烧 token，就让它监控输出里的关键词）、外部事件通道（邮件到达、API 回调、IM 消息）。</p>
+<p>书里还顺手批了一个短板：OpenClaw 的 Hooks、Cron、Heartbeat 三种机制里，真正能让 Agent 在没有用户消息时自己动起来的只有 Cron 和 Heartbeat，而它们都是时间驱动的——第三方事件源没有即时通道，只能等下一个周期才察觉。</p>
+<p>安全点是”事件只能在某处被合法消费”。同步接口下，这个点出现在一段推理结束、或一次工具返回；原生异步则由系统自己选时机。书里那句提醒挺硬：取消点必须是工具或推理能够安全收尾的位置，未完成的工具结果用显式占位符表示，不能伪造成功。</p>
+<p>取消是”停”这件事本身不等于撤销。书里拿 Go 的 <code>ctx.Done()</code> 打比方：收到停止消息只是发了个信号，已经发生的动作不会因此消失。</p>
+<p>抢占在毫秒尺度上是必需品——机械臂伸手途中杯子被碰倒，不抢占就来不及。这个原语在软件 Agent 里其实是弱的，后面会说到。</p>
+<p>快慢分离是这一章最容易被误读的一个。书里讲的是认知时序：前台模型要在用户还在线时回应，后台模型可以慢慢想。三种方案是取舍不是迭代——快回应慢回答（两个实例各想一遍，容易自相矛盾）、快交互慢提醒（后台给前台递建议，稳定但通信间接）、端到端统一（真正边想边说，但每次升级都要重新训练）。书里对解耦路线给了一个我很认同的工程论证：慢模型迭代时只换后台，不用重训整套实时系统。</p>
+<h2 id="把它和-Super-agent-对一遍"><a href="#把它和-Super-agent-对一遍" class="headerlink" title="把它和 Super-agent 对一遍"></a>把它和 Super-agent 对一遍</h2><p>读到这里我基本确定：<strong>这五个原语，正好是 Super-agent 那篇架构文章的设计清单。</strong> 对一遍看：</p>
+<table>
+<thead>
+<tr>
+<th>原语</th>
+<th>第 6 章里的形态</th>
+<th>Super-agent 的实现</th>
+<th>我的判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>唤醒</td>
+<td>定时器、心跳、外部事件通道</td>
+<td>Trigger：群聊、PR 评论、CI 结果、定时</td>
+<td>更强：在模型判断前加了一层程序快筛</td>
+</tr>
+<tr>
+<td>安全点</td>
+<td>回合边界、推理结束</td>
+<td>异步 ReAct：<code>start()</code> 立刻返回，后台结果作为新事件投进会话</td>
+<td>一致，只是把安全点从回合末尾挪到了推理步之后</td>
+</tr>
+<tr>
+<td>取消</td>
+<td><code>user.interrupt</code></td>
+<td><code>stop</code> 工具；Ticket 结束后工具调用直接被拒</td>
+<td>一致</td>
+</tr>
+<tr>
+<td>抢占</td>
+<td>动作分块被打断</td>
+<td>没有显式机制，靠 Router 排队</td>
+<td>弱的一环</td>
+</tr>
+<tr>
+<td>快慢分离</td>
+<td>前台快回应、后台慢推理</td>
+<td>程序层快筛、模型层慢判</td>
+<td>同名不同物</td>
+</tr>
+</tbody></table>
+<p>最后一行是我这篇最想写下来的。<strong>书里的快慢分离治的是延迟，Super-agent 的快慢分离治的是成本。</strong> 前者是同一个交互里，先给一个能听的回应、再补上想清楚的答案；后者是同一条事件流里，用确定性代码吃掉大部分噪音、把模型留给真正需要判断的少数。同构的只是”分层”，不同构的是”为什么分层”。</p>
+<p>中间一行也值得说：书里建议用轻量分类 LLM 当事件路由器，而工程系统在这一层前面又加了一道确定性闸门——来源、群组范围、白名单。差别不在技术，在代价：误唤醒烧掉的不只是 token，还有同事的注意力。</p>
+<p>至于抢占为什么弱，我的解释是：软件 Agent 的动作几乎都可逆，回滚一个 PR 比拦住一只机械臂便宜得多。所以这一行原语在软件里被”取消”顶掉了大部分职责。</p>
+<h2 id="两套系统其实在解同一类”遗留约定”"><a href="#两套系统其实在解同一类”遗留约定”" class="headerlink" title="两套系统其实在解同一类”遗留约定”"></a>两套系统其实在解同一类”遗留约定”</h2><p>第 6 章挑战的是回合制这个约定。Super-agent 那篇挑战的是另一个约定——它那句原话是：Session 应当是系统的实现细节，而不应是用户的认知负担。</p>
+<p>两个约定来自同一个地方：它们都是从 LLM API 的形状里长出来的，不是从任务的性质里长出来的。单会话是 API 的调用单位，回合制是 API 的消息单位；等模型能力够了，这两个从技术约束就变成了产品债务。</p>
+<p>我读这两份材料时最强的一个感受是：<strong>这一代 Agent 系统设计，有相当一部分工作是在把 API 遗留的形状一点点扭回任务本来的形状。</strong></p>
+<p>我十月三十一号写过一篇更细的架构拆解，讲它怎么用双层 Router&#x2F;Worker、Thread 多对多订阅、投机执行的”沉默权”把这些原语落到系统层，这里不再重复：<a href="/2026/11/01/dsh-superagent-attention-bottleneck/">一个人只能同时盯 5 个会话，于是 Agent 被拆成了两层</a>。</p>
+<h2 id="Claude-Tag-是产品侧的另一个尺度"><a href="#Claude-Tag-是产品侧的另一个尺度" class="headerlink" title="Claude Tag 是产品侧的另一个尺度"></a>Claude Tag 是产品侧的另一个尺度</h2><p>顺手把 Anthropic 的 Claude Tag 也对了一遍（公测中，形态是 Claude 住在团队的 Slack 里）。它同样把这五个原语用全了，只是尺度小一号：</p>
+<p>唤醒靠 routine——定时、盯着某个频道、订阅单个 PR；安全点就是 thread 边界，沙箱一轮释放、下一条消息重建；取消是 thread 里的 Stop 按钮，”停下但保留会话”；快慢分离是平时静默观察、判断要不要插话（快），需要调查才开一个 working session（慢）。</p>
+<p>它缺的恰好也是抢占，而且缺得更彻底：thread 之间互不共享状态，所以谈不上谁打断谁。</p>
+<p>真正的差别不在原语用没用全，在尺度和授权。尺度上，Claude Tag 是”一个人、一个话题”；Super-agent 是”一个团队、多条任务流”。授权上，前者按频道（静态，进了频道就有频道的权限），后者按请求（每张工单一个授权，动作前再校验一次）。</p>
+<h2 id="第-6-章思考题里最该答的一道"><a href="#第-6-章思考题里最该答的一道" class="headerlink" title="第 6 章思考题里最该答的一道"></a>第 6 章思考题里最该答的一道</h2><p>第 12 题问：同一个原语在”事件驱动（秒到天）”和”机器人动作分块（毫秒）”两处实现差异由什么决定——环境变化的速度、动作的可逆性，还是观察的获取成本？</p>
+<p>我的答案是可逆性，其次才是速度。毫秒尺度上抢占必须做，代价只是动作没做完；秒到天尺度上抢占也能做，但代价从”动作失败”变成了”打断一个人的思路”。所以尺度越小，抢占越重要；尺度越大，取消和安全点越重要——因为大尺度上喊停的是人，人要的是停在一个自己能理解的地方。</p>
+<p>顺着这个推下去有一条更实用的结论：软件 Agent 里”取消”比”抢占”重要得多。<strong>软件动作大多可逆，大不了回滚；人的注意力不可逆。</strong></p>
+<h2 id="我能拿走的三件事"><a href="#我能拿走的三件事" class="headerlink" title="我能拿走的三件事"></a>我能拿走的三件事</h2><p>一是设计任何交互，先问时机在谁手里：观察是 Agent 去拉还是世界推来，动作是回合内做完还是跨回合收尾。这两个问题一答，剩下的架构大半就定了。</p>
+<p>二是事件入口别只放一个模型。规则快筛在前、模型判断在后，书里给的是后者，工程系统补的是前者。</p>
+<p>三是看到”快慢分离”先分清它治的是延迟还是成本，混在一起就会用错——把认知时序的取舍套到事件过滤上，你会以为多加一个模型就能解决噪音。</p>
+<p>下一步是第 7 章，评估。这一章我最需要的恰恰是它：上面这些”更强””弱的一环””更彻底”，目前都还没有一个指标接住。</p>
+<hr>
+<p>参考来源：</p>
+<ul>
+<li>书：<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book/blob/main/book/chapter6.md">第 6 章「交互：观察与动作空间的扩展」</a></li>
+<li>架构原文：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/zoS7GlReWPhfCjENGxXCdg">《Super-agent 设计探索：迈向更自主的 Agent 系统》</a>（<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/2099987320443237060">知乎镜像</a>），仓库 <a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/dsh-superagent-prototype">deepseek-ai&#x2F;dsh-superagent-prototype</a></li>
+<li>产品对照：<a target="_blank" rel="noopener" href="https://claude.com/docs/claude-tag/concepts/how-it-works">Claude Tag 官方文档</a></li>
+<li>我上一篇架构拆解：<a href="/2026/11/01/dsh-superagent-attention-bottleneck/">一个人只能同时盯 5 个会话，于是 Agent 被拆成了两层</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://dongxuanmang.github.io/2026/11/03/agent-book-ch6-observation-action-space/" data-id="cuidvvLEOnXyfb5qBOkvntgAX" data-title="Agent 精读（十五）：世界不会等你回完话，Agent 也不该只有一个会话" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" rel="tag">事件驱动</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/11/01/dsh-superagent-attention-bottleneck/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">一个人只能同时盯 5 个会话，于是 Agent 被拆成了两层</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Agent-%E7%B2%BE%E8%AF%BB/">Agent 精读</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%A8%A1%E5%9E%8B/">前沿模型</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BB%BA%E7%AB%99%E7%AC%94%E8%AE%B0/">建站笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0/">精读笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AGI/" rel="tag">AGI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-Agent/" rel="tag">AI Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI-%E5%89%8D%E6%B2%BF/" rel="tag">AI 前沿</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent/" rel="tag">Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-Skills/" rel="tag">Agent Skills</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" rel="tag">Agent 状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Claude-Code/" rel="tag">Claude Code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Coding-Agent/" rel="tag">Coding Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DeepSeek/" rel="tag">DeepSeek</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/" rel="tag">GitHub Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HNSW/" rel="tag">HNSW</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harness/" rel="tag">Harness</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IndexNow/" rel="tag">IndexNow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JXA/" rel="tag">JXA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KV-Cache/" rel="tag">KV Cache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MoE/" rel="tag">MoE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RAG/" rel="tag">RAG</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RLCD/" rel="tag">RLCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RL%E8%AE%AD%E7%BB%83/" rel="tag">RL训练</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SEO/" rel="tag">SEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sidecar/" rel="tag">Sidecar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macOS/" rel="tag">macOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vLLM/" rel="tag">vLLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" rel="tag">上下文压缩</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="tag">上下文工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" rel="tag">事件驱动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%81%A5%E5%BA%B7%E7%AE%A1%E7%90%86/" rel="tag">健康管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag">决策模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag">多智能体</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" rel="tag">多模态</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%99%E5%AE%87%E6%99%A8/" rel="tag">孙宇晨</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" rel="tag">思维链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" rel="tag">思考题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%92%E6%9F%A5/" rel="tag">排查</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" rel="tag">提示工程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" rel="tag">提示注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%98%BE%E5%AD%98/" rel="tag">显存</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" rel="tag">架构设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" rel="tag">梁文锋</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A3%80%E7%B4%A2%E7%AE%97%E6%B3%95/" rel="tag">检索算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" rel="tag">模型即 Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%AE%B1/" rel="tag">沙箱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" rel="tag">混合精度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" rel="tag">用户记忆</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="tag">知识图谱</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%81%E6%9C%89API/" rel="tag">私有API</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%80%E4%BB%8B/" rel="tag">简介</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" rel="tag">系统设计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%96%84%E8%82%8C%E7%90%86%E8%AE%BA/" rel="tag">薄肌理论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A4%E7%9F%A5%E5%8D%87%E7%BA%A7/" rel="tag">认知升级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag">读书笔记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AC%E5%9E%8B/" rel="tag">转型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" rel="tag">面试储备</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AGI/" style="font-size: 10px;">AGI</a> <a href="/tags/AI/" style="font-size: 14px;">AI</a> <a href="/tags/AI-Agent/" style="font-size: 20px;">AI Agent</a> <a href="/tags/AI-%E5%89%8D%E6%B2%BF/" style="font-size: 10px;">AI 前沿</a> <a href="/tags/Agent/" style="font-size: 16px;">Agent</a> <a href="/tags/Agent-Skills/" style="font-size: 10px;">Agent Skills</a> <a href="/tags/Agent-%E7%8A%B6%E6%80%81%E6%A0%8F/" style="font-size: 10px;">Agent 状态栏</a> <a href="/tags/Claude-Code/" style="font-size: 10px;">Claude Code</a> <a href="/tags/Coding-Agent/" style="font-size: 10px;">Coding Agent</a> <a href="/tags/DeepSeek/" style="font-size: 10px;">DeepSeek</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/HNSW/" style="font-size: 10px;">HNSW</a> <a href="/tags/Harness/" style="font-size: 12px;">Harness</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IndexNow/" style="font-size: 10px;">IndexNow</a> <a href="/tags/JXA/" style="font-size: 10px;">JXA</a> <a href="/tags/KV-Cache/" style="font-size: 12px;">KV Cache</a> <a href="/tags/MoE/" style="font-size: 10px;">MoE</a> <a href="/tags/RAG/" style="font-size: 12px;">RAG</a> <a href="/tags/RLCD/" style="font-size: 10px;">RLCD</a> <a href="/tags/RL%E8%AE%AD%E7%BB%83/" style="font-size: 10px;">RL训练</a> <a href="/tags/SEO/" style="font-size: 10px;">SEO</a> <a href="/tags/Sidecar/" style="font-size: 10px;">Sidecar</a> <a href="/tags/macOS/" style="font-size: 10px;">macOS</a> <a href="/tags/vLLM/" style="font-size: 10px;">vLLM</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8E%8B%E7%BC%A9/" style="font-size: 10px;">上下文压缩</a> <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" style="font-size: 14px;">上下文工程</a> <a href="/tags/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" style="font-size: 10px;">事件驱动</a> <a href="/tags/%E5%81%A5%E5%BA%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">健康管理</a> <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">决策模型</a> <a href="/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" style="font-size: 10px;">多智能体</a> <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" style="font-size: 10px;">多模态</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%AD%99%E5%AE%87%E6%99%A8/" style="font-size: 10px;">孙宇晨</a> <a href="/tags/%E5%BC%80%E6%BA%90/" style="font-size: 10px;">开源</a> <a href="/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/" style="font-size: 10px;">思维链</a> <a href="/tags/%E6%80%9D%E8%80%83%E9%A2%98/" style="font-size: 10px;">思考题</a> <a href="/tags/%E6%8E%92%E6%9F%A5/" style="font-size: 10px;">排查</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B/" style="font-size: 12px;">提示工程</a> <a href="/tags/%E6%8F%90%E7%A4%BA%E6%B3%A8%E5%85%A5/" style="font-size: 10px;">提示注入</a> <a href="/tags/%E6%98%BE%E5%AD%98/" style="font-size: 10px;">显存</a> <a href="/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">架构设计</a> <a href="/tags/%E6%A2%81%E6%96%87%E9%94%8B/" style="font-size: 10px;">梁文锋</a> <a href="/tags/%E6%A3%80%E7%B4%A2%E7%AE%97%E6%B3%95/" style="font-size: 10px;">检索算法</a> <a href="/tags/%E6%A8%A1%E5%9E%8B%E5%8D%B3-Agent/" style="font-size: 10px;">模型即 Agent</a> <a href="/tags/%E6%B2%99%E7%AE%B1/" style="font-size: 10px;">沙箱</a> <a href="/tags/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6/" style="font-size: 10px;">混合精度</a> <a href="/tags/%E7%94%A8%E6%88%B7%E8%AE%B0%E5%BF%86/" style="font-size: 10px;">用户记忆</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" style="font-size: 10px;">知识图谱</a> <a href="/tags/%E7%A7%81%E6%9C%89API/" style="font-size: 10px;">私有API</a> <a href="/tags/%E7%AE%80%E4%BB%8B/" style="font-size: 10px;">简介</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 14px;">系统设计</a> <a href="/tags/%E8%96%84%E8%82%8C%E7%90%86%E8%AE%BA/" style="font-size: 10px;">薄肌理论</a> <a href="/tags/%E8%AE%A4%E7%9F%A5%E5%8D%87%E7%BA%A7/" style="font-size: 12px;">认知升级</a> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="font-size: 18px;">读书笔记</a> <a href="/tags/%E8%BD%AC%E5%9E%8B/" style="font-size: 10px;">转型</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E5%82%A8%E5%A4%87/" style="font-size: 10px;">面试储备</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/11/">十一月 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/10/">十月 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">九月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/11/03/agent-book-ch6-observation-action-space/">Agent 精读（十五）：世界不会等你回完话，Agent 也不该只有一个会话</a>
+          </li>
+        
+          <li>
+            <a href="/2026/11/01/dsh-superagent-attention-bottleneck/">一个人只能同时盯 5 个会话，于是 Agent 被拆成了两层</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/27/agent-book-ch4-multimodal-paths/">Agent 精读（十四）：给 Agent 接多模态，看原图、转文字、叫外援</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/26/agent-book-ch5-coding-agent-core/">Agent 精读（十三）：为什么最通用的 Agent，内核偏偏是写代码</a>
+          </li>
+        
+          <li>
+            <a href="/2026/10/18/sunyuchen-alan-2/">我把孙宇晨那 4 小时拆成清单：能抄的 6 条，和别抄的 5 条</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 东玄蟒<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/learning/" class="mobile-nav-link">学习路径</a>
+  
+    <a href="/agent-book/" class="mobile-nav-link">Agent 精读</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
